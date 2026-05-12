@@ -7,6 +7,7 @@ import Detail    from '@/components/detail.vue'
 import Knowledge from '@/components/Knowledge.vue'
 import Portfolio from '@/components/Portfolio.vue'
 import TestResult from '@/components/TestResult.vue'
+import courses from '@/components/Courses.vue'
 
 const routes = [
   { path: '/',           component: index      },
@@ -17,6 +18,7 @@ const routes = [
   { path: '/knowledge',  component: Knowledge },
   { path: '/portfolio',  component: Portfolio },
   { path: '/result', component: TestResult },
+  { path: '/course', component: courses },
 ]
 
 export default createRouter({
