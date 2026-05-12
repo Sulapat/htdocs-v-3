@@ -1,0 +1,192 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    padding-top: 50px;
+}
+
+.footer {
+    background: #1a1a1a;
+    color: #f1f1f1;
+    padding: 2rem 2rem 1rem;
+}
+
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 3rem;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.footer-contact {
+    flex: 1 1 45%;
+    min-width: 300px;
+    text-align: left;
+}
+
+.footer-contact h3 {
+    color: #12db5c;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+}
+
+.footer-contact p {
+    line-height: 1.8;
+    color: #ccc;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.footer-contact a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-contact a:hover {
+    color: #a9f4eb;
+}
+
+/* Social + QR */
+.footer-social {
+    flex: 1 1 45%;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.social-icons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.social-icons a {
+    width: 48px;
+    height: 48px;
+    background: #333;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+}
+
+.social-icons a:hover {
+    background: #a9f4eb;
+    transform: translateY(-4px);
+}
+
+/* QR Code */
+.qr {
+    width: 200px;
+    height: 200px;
+    border-radius: 12px;
+    border: 2px solid #444;
+    transition: transform 0.3s;
+}
+
+.qr:hover {
+    transform: scale(1.05);
+}
+
+/* ส่วนล่างสุด */
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid #333;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+/* สำหรับมือถือ */
+@media (max-width: 768px) {
+    .footer {
+        padding: 1.5rem 0.5rem 0.5rem;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1.5rem;
+    }
+
+    .footer-contact, .footer-social {
+        flex: 1 1 100%;
+        max-width: 100%;
+        min-width: unset;
+    }
+
+    .footer-contact h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .footer-contact p {
+        font-size: 0.85rem;
+        line-height: 1.6;
+        margin-bottom: 0.8rem;
+    }
+
+    .social-icons {
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .social-icons a {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .qr {
+        width: 140px;
+        height: 140px;
+    }
+
+    .footer-bottom {
+        font-size: 0.8rem;
+        margin-top: 1.5rem;
+        padding-top: 0.8rem;
+    }
+}
+@media (max-width: 480px) {
+    .footer-container {
+        gap: 1rem;
+    }
+
+    .footer-contact h3 {
+        font-size: 1.1rem;
+    }
+
+    .footer-contact p {
+        font-size: 0.8rem;
+    }
+
+    .social-icons a {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+    }
+
+    .qr {
+        width: 120px;
+        height: 120px;
+    }
+}

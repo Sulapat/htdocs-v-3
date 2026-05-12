@@ -1,0 +1,278 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1;
+    color: #333;
+    padding-top: 80px; 
+}
+
+/* Portfolio Section */
+.portfolio-container {
+  background: #fff;
+  padding: 50px 30px;
+  margin: 50px auto;
+  border-radius: 20px;
+  max-width: 1100px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.portfolio-header {
+  text-align: center;
+  margin-bottom: 40px;
+  color: #03030d;
+}
+
+.portfolio-header h1 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+
+.portfolio-header p {
+  color: #6c6c6c;
+  font-size: 1rem;
+  max-width: 750px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.clients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+  justify-items: center;
+  align-items: center;
+}
+
+.client-card {
+  background: white;
+  border-radius: 15px;
+  padding: 10px;
+  width: 130px;
+  height: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.client-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Hover Overlay Effect */
+.client-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 15px;
+  z-index: 1;
+}
+
+.client-card:hover::before {
+  opacity: 0.9;
+}
+
+.client-logo {
+  width: 90%;
+  height: 65px;
+  object-fit: contain;
+  margin-top: 8px;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.client-card:hover .client-logo {
+  filter: opacity(0.6);
+  transform: scale(0.9);
+}
+
+.client-info {
+  text-align: center;
+  margin-top: 2px; 
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  color: rgb(65, 64, 64);
+  z-index: 2;
+  position: relative;
+}
+
+.client-card:hover .client-info {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.client-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 1px;
+}
+
+.client-description {
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+/* ===== Wave Animation ===== */
+.wave-text {
+  display: inline-block;
+  opacity: 0;
+  animation: fadeInWave 1.2s ease forwards;
+}
+
+.wave-text span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(15px);
+  animation: waveIn 0.8s ease forwards;
+}
+
+@keyframes waveIn {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInWave {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Responsive Media Queries ===== */
+@media (max-width: 968px) {
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    
+    .featured-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .featured-image {
+        width: 250px;
+        height: 250px;
+    }
+}
+
+/* Tablet และ Mobile ทั่วไป */
+@media (max-width: 768px) {
+    #navbar {
+        padding: 1rem;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .nav-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    /* Portfolio Mobile Styles */
+    .portfolio-container {
+        padding: 30px 15px;
+        margin: 30px 15px;
+        border-radius: 15px;
+    }
+
+    .portfolio-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .portfolio-header p {
+        font-size: 0.9rem;
+        padding: 0 10px;
+    }
+
+    .clients-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+    }
+
+    .client-card {
+        width: 100px;
+        height: 100px;
+        padding: 8px;
+        border-radius: 12px;
+    }
+
+    .client-logo {
+        height: 50px;
+        margin-top: 5px;
+    }
+
+    .client-name {
+        font-size: 0.8rem;
+    }
+
+    .client-description {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .portfolio-container {
+        padding: 10px 10px;
+    }
+
+    .portfolio-header h1 {
+        font-size: 1rem;
+        margin-bottom: 2px;
+    }
+
+    .clients-grid {
+        grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+        gap: 1px;
+    }
+
+    .client-card {
+        width: 75px;
+        height: 75px;
+        padding: 5px;
+        border-radius: 8px;
+    }
+
+    .client-logo {
+        height: 40px;
+        margin-top: 3px;
+    }
+
+    .client-name {
+        font-size: 0.7rem;
+    }
+
+    .client-description {
+        font-size: 0.65rem;
+    }
+}
