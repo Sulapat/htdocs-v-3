@@ -15,7 +15,7 @@
                 <li><router-link to="/knowledge">ประชาสัมพันธ์</router-link></li>
                 <li><router-link to="/clients">Clients</router-link></li>
                 <li><router-link to="/result">VI Certified Analysts</router-link></li>
-                <li><router-link to="/result">Courses</router-link></li>
+                <li><router-link to="/courses">Courses</router-link></li>
             </ul>
             <div class="social-links">
                 <a href="https://mail.google.com/mail/?view=cm&to=patineer@outlook.com" 
