@@ -38,7 +38,7 @@
       <!-- All Results (before search) -->
       <div v-if="isEmpty" class="results-container">
         <div class="results-grid">
-          <div v-for="result in pagedData" :key="result.ID" class="result-card">
+          <div v-for="(result, index) in pagedData" :key="result.ID" class="result-card" :style="{ borderColor: cardBorderColor(index, pagedData.length) }">
             <div class="result-header">
               <div class="result-name">{{ result['First Name'] }} {{ result['Last Name'] }}</div>
             </div>
@@ -94,7 +94,7 @@
       <!-- Search Results -->
       <div v-else-if="!isEmpty" class="results-container">
         <div class="results-grid">
-          <div v-for="result in pagedSearchData" :key="result.ID" class="result-card">
+          <div v-for="(result, index) in pagedSearchData" :key="result.ID" class="result-card" :style="{ borderColor: cardBorderColor(index, pagedSearchData.length) }">
             <div class="result-header">
               <div class="result-name">{{ result['First Name'] }} {{ result['Last Name'] }}</div>
             </div>
@@ -182,6 +182,17 @@ const pagedSearchData  = computed(() => {
   const start = (searchPage.value - 1) * perPage
   return results.value.slice(start, start + perPage)
 })
+
+// ไล่สี border จากเข้ม (#6b7280) → อ่อน (#e5e7eb) ตามลำดับการ์ด
+const cardBorderColor = (index, total) => {
+  const dark  = [107, 114, 128]  // #6b7280
+  const light = [229, 231, 235]  // #e5e7eb
+  const t = total <= 1 ? 0 : index / (total - 1)
+  const r = Math.round(dark[0] + (light[0] - dark[0]) * t)
+  const g = Math.round(dark[1] + (light[1] - dark[1]) * t)
+  const b = Math.round(dark[2] + (light[2] - dark[2]) * t)
+  return `rgb(${r},${g},${b})`
+}
 
 const handleSearch = () => {
   const q = searchQuery.value.toLowerCase().trim()
@@ -494,4 +505,4 @@ watch(searchQuery, (val) => {
   .result-header        { flex-direction: column; }
   .results-grid         { grid-template-columns: 1fr; }
 }
-</style>  
+</style>
