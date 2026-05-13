@@ -162,7 +162,7 @@
           <i :class="item.icon"></i>
         </div>
         <h3>{{ item.title }}</h3>
-        <p>{{ item.desc }}</p>
+        <p style="text-wrap: balance;">{{ item.desc }}</p>
       </div>
     </div>
   </section>
