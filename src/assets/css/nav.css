@@ -135,3 +135,117 @@
     color: #000000;
     font-weight: 600;
 }
+
+/* =============================================
+   VI Certified Analysts — Nav Dropdown
+   ============================================= */
+.nav-dropdown-wrap {
+    position: relative;
+}
+
+.nav-dropdown-trigger {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 5px;
+}
+
+.nav-drop-chevron {
+    transition: transform 0.2s ease;
+    opacity: 0.7;
+}
+.nav-drop-chevron.open {
+    transform: rotate(180deg);
+}
+
+/* padding-top เท่ากับ gap เพื่อกัน mouse leave ตอนเลื่อนลง */
+.nav-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    min-width: 240px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    list-style: none;
+    padding: 16px 0 6px 0; /* padding-top 16px ต่อเนื่องกับ trigger ไม่มี gap */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    z-index: 999;
+}
+
+/* arrow ชี้ขึ้น */
+.nav-dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #ffffff;
+    filter: drop-shadow(0 -1px 1px rgba(0,0,0,0.06));
+}
+
+.nav-dropdown-menu.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+}
+
+.nav-dropdown-menu li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    font-size: 0.875rem;
+    color: #1e293b !important;
+    font-weight: 400 !important;
+    text-decoration: none;
+    transition: background 0.12s ease;
+    white-space: nowrap;
+    transform: none !important; /* กัน hover translateX จาก .nav-links a */
+}
+.nav-dropdown-menu li a:hover {
+    background: #eff6ff;
+    color: #2563eb !important;
+}
+.nav-dropdown-menu li:first-child a { border-radius: 0; }
+.nav-dropdown-menu li:last-child  a { border-radius: 0 0 10px 10px; }
+
+.nav-drop-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.dot-all { background: #94a3b8; }
+.dot-bmv { background: #10b981; }
+.dot-va2 { background: #3b82f6; }
+
+/* Mobile: dropdown แบบ inline แทน absolute */
+@media (max-width: 768px) {
+    .nav-dropdown-menu {
+        position: static;
+        transform: none;
+        box-shadow: none;
+        border: none;
+        border-left: 2px solid #e2e8f0;
+        border-radius: 0;
+        padding: 0 0 0 1rem;
+        margin: 4px 0 4px 8px;
+        min-width: unset;
+        background: transparent;
+    }
+    .nav-dropdown-menu::before { display: none; }
+    .nav-dropdown-menu.open {
+        transform: none;
+    }
+    .nav-dropdown-menu li a {
+        padding: 8px 8px;
+        font-size: 0.875rem;
+        white-space: normal;
+    }
+}
