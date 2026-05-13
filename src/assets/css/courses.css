@@ -214,9 +214,10 @@ body {
     border-radius: 20px;
     border: 1px solid #e2e8f0;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-    overflow: hidden;
+    overflow-y: auto;
     position: sticky;
     top: 100px;
+    max-height: calc(100vh - 120px);
 }
 
 .sidebar-header {
