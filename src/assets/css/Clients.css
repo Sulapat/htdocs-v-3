@@ -4,11 +4,16 @@
     box-sizing: border-box;
 }
 
+html {
+    overflow-x: hidden;  /* กัน horizontal scroll จาก element ที่เกินจอ */
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1;
     color: #333;
-    padding-top: 80px; 
+    padding-top: 80px;
+    overflow-x: hidden;  /* กัน horizontal scroll */
 }
 
 /* Portfolio Section */
@@ -43,88 +48,107 @@ body {
 
 .clients-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: 8px;
-  justify-items: center;
-  align-items: center;
+  justify-items: stretch;
+  align-items: stretch;
+  isolation: isolate;
 }
 
 .client-card {
   background: white;
   border-radius: 15px;
   padding: 10px;
-  width: 130px;
-  height: 130px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
   position: relative;
-  overflow: hidden;
+  overflow: visible;     /* ให้ tooltip โผล่ขึ้นมาได้ */
   cursor: pointer;
 }
 
 .client-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  z-index: 10;
 }
 
-/* Hover Overlay Effect */
-.client-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  border-radius: 15px;
-  z-index: 1;
-}
-
-.client-card:hover::before {
-  opacity: 0.9;
+/* transition สำหรับ dim effect */
+.client-card {
+  transition: all 0.3s ease;
 }
 
 .client-logo {
-  width: 90%;
-  height: 65px;
+  width: 80%;
+  height: 60%;
   object-fit: contain;
-  margin-top: 8px;
   z-index: 2;
   transition: all 0.3s ease;
 }
 
 .client-card:hover .client-logo {
-  filter: opacity(0.6);
-  transform: scale(0.9);
+  filter: none;
+  transform: scale(1.05);
+}
+
+/* เมื่อ grid มี hover ให้ card อื่นจางลง */
+.clients-grid:has(.client-card:hover) .client-card:not(:hover) {
+  opacity: 0.4;
+  filter: grayscale(40%);
 }
 
 .client-info {
-  text-align: center;
-  margin-top: 2px; 
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: rgba(15, 23, 42, 0.95);
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  white-space: nowrap;
+  pointer-events: none;
   opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.3s ease;
-  color: rgb(65, 64, 64);
-  z-index: 2;
-  position: relative;
+  transition: all 0.25s ease;
+  z-index: 9999;          /* สูงกว่า navbar */
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  text-align: center;
+}
+
+/* ลูกศรชี้ลง */
+.client-info::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(15, 23, 42, 0.95);
 }
 
 .client-card:hover .client-info {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateX(-50%) translateY(0);
 }
 
 .client-name {
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   font-weight: 600;
+  white-space: nowrap;
+  color: #fff;
   margin-bottom: 1px;
 }
 
 .client-description {
-  font-size: 0.8rem;
-  opacity: 0.9;
+  font-size: 0.7rem;
+  opacity: 0.85;
+  color: #fff;
+  white-space: nowrap;
 }
 
 /* ===== Wave Animation ===== */
@@ -216,28 +240,30 @@ body {
     }
 
     .clients-grid {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-        gap: 10px;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 6px;
     }
 
     .client-card {
-        width: 100px;
-        height: 100px;
-        padding: 8px;
-        border-radius: 12px;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+        padding: 6px;
+        border-radius: 10px;
     }
 
     .client-logo {
-        height: 50px;
-        margin-top: 5px;
+        width: 80%;
+        height: 55%;
+        margin-top: 0;
     }
 
     .client-name {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
     }
 
     .client-description {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
     }
 }
 
@@ -252,20 +278,22 @@ body {
     }
 
     .clients-grid {
-        grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
-        gap: 1px;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 4px;
     }
 
     .client-card {
-        width: 75px;
-        height: 75px;
-        padding: 5px;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+        padding: 4px;
         border-radius: 8px;
     }
 
     .client-logo {
-        height: 40px;
-        margin-top: 3px;
+        width: 80%;
+        height: 55%;
+        margin-top: 0;
     }
 
     .client-name {

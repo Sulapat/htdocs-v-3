@@ -448,6 +448,7 @@ body {
     background: #fff;
     cursor: pointer;
     outline: none;
+    width: 100%;        /* ยาวเต็ม container */
 }
 
 .mobile-cat-select:focus {
@@ -1157,17 +1158,28 @@ body {
 
     /* Hero */
     .courses-hero {
-        padding: 2rem 1rem;
-        padding-top: calc(70px + 2rem);
-        min-height: 40vh;
+        padding: 1.5rem 1rem;
+        padding-top: calc(64px + 1rem);
+        min-height: unset;
     }
 
     .courses-hero h1 {
-        font-size: 2.5rem;
+        font-size: 1.8rem;
+        margin-bottom: 0.75rem;
     }
 
     .courses-hero p {
-        font-size: 1rem;
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    /* dropdown ยาวเต็มกรอบ */
+    .mobile-filter {
+        width: 100%;
+    }
+
+    .mobile-cat-select {
+        width: 100%;
     }
 
     /* Courses section */

@@ -6,9 +6,11 @@
     padding: 0.8rem 2rem;
     background: rgba(0, 0, 0, 0);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0);
-    width: 100%;      
     top: 0;    
     left: 0;
+    right: 0;
+    width: 100%;
+    box-sizing: border-box;  /* รวม padding ในความกว้าง ไม่ให้เกิน 100vw */
     z-index: 1000;  
 }
 
@@ -62,17 +64,30 @@
 
 /* ========== RESPONSIVE NAVBAR ========== */
 @media (max-width: 768px) {
+    #navbar {
+        padding: 0.8rem 0.8rem;
+        max-width: 100vw;   /* กันเกินจอโดยไม่ตัด click area ของ hamburger */
+    }
+
     .nav-links {
         display: none;
         flex-direction: column;
-        position: absolute;
+
+        position: fixed;   /* เปลี่ยนจาก absolute */
         top: 70px;
-        right: 15px;
+        right: 10px;
+
+        width: 220px;      /* กำหนดความกว้างแน่นอน */
+        max-width: calc(100vw - 20px);
+
         background: white;
         padding: 0.5rem 1rem;
+
         box-shadow: 0 5px 20px rgba(0,0,0,0.1);
         border-radius: 10px;
+
         z-index: 1000;
+        box-sizing: border-box;
     }
 
     .nav-links.show {
@@ -84,13 +99,19 @@
     }
 
     .hamburger {
-        display: block;    
-        position: absolute;
-        right: 1.5rem;   /* เดิม 135px → ใช้ระยะคงที่จากขอบขวาแทน */
-        top: 1.2rem;
-        font-size: 1.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        margin-left: auto;
+
+        font-size: 1.2rem;
         cursor: pointer;
-        z-index: 1200; /* ให้แน่ใจว่าอยู่บนสุด */
+
+        z-index: 1200;
+
+        padding: 4px 6px; /* ลด padding */
+        flex-shrink: 0;
     }
         
     .hamburger i {

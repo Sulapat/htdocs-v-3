@@ -45,6 +45,7 @@
             ทั้งหมด
           </span>
           <span class="cat-count">{{ _courses.length }}</span>
+
         </button>
 
         <!-- Category list -->
@@ -250,7 +251,12 @@ import { categoryConfig } from '@/data/categoryConfig'
 const router = useRouter()
 
 // ── Courses data ──────────────────────────
-const _courses = courses
+const _courses = computed(() =>
+  courses.map(c => ({
+    ...c,
+    categoryColor: categoryConfig[c.category]?.color ?? '#475569'
+  }))
+)
 
 // ── Category definitions ──────────────────
 
@@ -269,13 +275,13 @@ function selectCategory(code) {
 }
 
 function getCategoryCount(code) {
-  return _courses.filter(c => c.category === code).length
+  return _courses.value.filter(c => c.category === code).length
 }
 
 const filteredCourses = computed(() => {
   let list = selectedCategory.value === 'ALL'
-    ? _courses
-    : _courses.filter(c => c.category === selectedCategory.value)
+    ? _courses.value
+    : _courses.value.filter(c => c.category === selectedCategory.value)
 
   if (searchQuery.value.trim()) {
     const q = searchQuery.value.trim().toLowerCase()
