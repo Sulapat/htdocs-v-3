@@ -16,7 +16,7 @@ export const sampleData = [
   { ID: 37,  'First Name': 'Metee',    'Last Name': 'Meerabeab',          Company: 'GC Maintenance & Engineering',                        Mail: 'metee.m@pttgcgroup.com',              Level: 'ยังมีรายชื่ออยู่ใน VI | CATII' },
   { ID: 38,  'First Name': 'Nitigorn', 'Last Name': 'Eakchay',            Company: 'GC Maintenance & Engineering',                        Mail: 'nitigorn.e@pttgcgroup.com',           Level: 'ยังมีรายชื่ออยู่ใน VI | CATII' },
   { ID: 45,  'First Name': 'Jakkarin', 'Last Name': 'Sumethasorn',        Company: 'SKF Thailand',                                        Mail: 'jakkarin.sumethasorn@skf.com',        Level: 'ยังมีรายชื่ออยู่ใน VI | CATII' },
-  { ID: 57,  'First Name': 'Anutr',    'Last Name': 'Ratipann',           Company: 'Bridgestone Asia Pacific',                            Mail: 'anutr.ratipann1@bridgestone.com',     Level: 'ยังมีรายชื่ออยู่ใน VI | CATII, BMV' },
+  { ID: 57,  'First Name': 'Anutr',    'Last Name': 'Ratipann',           Company: 'Bridgestone Asia Pacific',                            Mail: 'anutr.ratipann1@bridgestone.com',     Level: 'ยังมีรายชื่ออยู่ใน VI | CATII' },
 ]
 
 // ----- Derived helpers (ใช้ได้ทั้ง 2 หน้า) -----
