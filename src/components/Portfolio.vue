@@ -120,5 +120,5 @@ export default {
 </script>
 
 <style>
-@import "@/assets/css/Knowledge.css";
+@import "@/assets/css/Portfolio.css";
 </style>
