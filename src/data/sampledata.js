@@ -4,7 +4,7 @@
 
 export const sampleData = [
   { ID: 1,   'First Name': 'Karn',      'Last Name': 'Deeying',           Company: 'Rayong Engineering & Plant Service Co., Ltd. (REPCO)',  Mail: 'repconex@scg.com',                    Level: 'ยังมีรายชื่ออยู่ใน VI | CATII',         Member: '0001' },
-  { ID: 2,   'First Name': 'Chotiwit',  'Last Name': 'Kunathananon',       Company: 'Rayong Engineering & Plant Service Co., Ltd. (REPCO)', Mail: 'repconex@scg.com',                    Level: 'ยังมีรายชื่ออยู่ใน VI | CATII',         Member: '0002' },
+  { ID: 2,   'First Name': 'Chotiwit',  'Last Name': 'Kunathananon',      Company: 'Rayong Engineering & Plant Service Co., Ltd. (REPCO)',  Mail: 'repconex@scg.com',                    Level: 'ยังมีรายชื่ออยู่ใน VI | CATII',         Member: '0002' },
   { ID: 3,   'First Name': 'Khemapat', 'Last Name': 'Tontiwattanakul',    Company: 'KMUTNB',                                                Mail: 'khemapat.t@eng.kmutnb.ac.th',         Level: 'ยังมีรายชื่ออยู่ใน VI | CATII',         Member: '0003' },
   { ID: 6,   'First Name': 'Pisit',    'Last Name': 'Sirisoponwattana',   Company: 'Rayong Engineering and Plant Service Co., Ltd.',        Mail: 'Pisitsirisoponwattana@gmail.com',     Level: 'ยังมีรายชื่ออยู่ใน VI | CATII',         Member: '0004' },
   { ID: 8,   'First Name': 'Kolawach', 'Last Name': 'Chalermpong',        Company: 'KMITL',                                                 Mail: 'kolawach.ch@kmitl.ac.th',             Level: 'ยังมีรายชื่ออยู่ใน VI | CATII',         Member: '0005' },
