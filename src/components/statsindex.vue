@@ -177,6 +177,7 @@ const totalCertified = sampleData.length
 const courseDistribution = [
   { key: 'CATII',  code: 'VA-II',  name: 'Category II Vibration Analyst',  count: countByCourse.CATII,  tagClass: 'tag-va2', fillClass: 'fill-c2' },
   { key: 'CATIII', code: 'VA-III', name: 'Category III Vibration Analyst', count: countByCourse.CATIII, tagClass: 'tag-va3', fillClass: 'fill-c3' },
+  { key: 'CATIV', code: 'VA-IV', name: 'Category IV Vibration Analyst', count: countByCourse.CATIV, tagClass: 'tag-va4', fillClass: 'fill-c4' },
   { key: 'BMV',    code: 'BMV',    name: 'Basic Machinery Vibration',       count: countByCourse.BMV,    tagClass: 'tag-bmv', fillClass: 'fill-bmv' },
 ]
 
