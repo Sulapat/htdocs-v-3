@@ -27,6 +27,7 @@ onMounted(async () => {
           <th>บริษัท</th>
           <th>Email</th>
           <th>Level</th>
+          <th>Member</th>
         </tr>
       </thead>
       <tbody>
