@@ -38,6 +38,7 @@ onMounted(async () => {
           <td>{{ row.Company }}</td>
           <td>{{ row.Mail }}</td>
           <td>{{ row.Level }}</td>
+          <td>{{ row.Member }}</td>
         </tr>
       </tbody>
     </table>
