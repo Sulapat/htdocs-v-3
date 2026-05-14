@@ -21,14 +21,14 @@
                     @mouseenter="handleMouseEnter"
                     @mouseleave="handleMouseLeave"
                 >
-                  <a href="javascript:void(0)" class="nav-dropdown-trigger" @click="toggleViDrop">
+                  <router-link to="/result" class="nav-dropdown-trigger" @click.prevent="handleViClick">
                     VI Certified Analysts
                     <svg class="nav-drop-chevron" :class="{ open: viDropOpen }"
                       xmlns="http://www.w3.org/2000/svg" width="13" height="13"
                       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                       <polyline points="6 9 12 15 18 9"/>
                     </svg>
-                  </a>
+                  </router-link>
 
                   <transition name="fade-slide">
                     <ul class="nav-dropdown-menu" 
@@ -129,6 +129,16 @@ export default {
     },
     toggleViDrop() {
       this.viDropOpen = !this.viDropOpen;
+    },
+    handleViClick() {
+      if (this.windowWidth <= 768) {
+        // มือถือ: toggle dropdown เหมือนเดิม
+        this.viDropOpen = !this.viDropOpen;
+      } else {
+        // Desktop: ไปหน้า /result เลย
+        this.closeAll();
+        this.$router.push('/result');
+      }
     },
     handleMouseEnter() {
       if (this.windowWidth > 768) this.viDropOpen = true;

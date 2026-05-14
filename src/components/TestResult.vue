@@ -195,24 +195,44 @@ const dropdownRef  = ref(null)
 const dropdownOpen = ref(false)
 const menuStyle    = ref({})
 
+// คำนวณความสูง navbar เพื่อไม่ให้ dropdown ทับ
+const getNavbarHeight = () => {
+  const navbar = document.querySelector('nav, header, .navbar, .nav-bar, [class*="navbar"], [class*="nav-bar"]')
+  return navbar ? navbar.getBoundingClientRect().bottom : 0
+}
+
+const calcMenuStyle = (rect) => {
+  const navbarBottom = getNavbarHeight()
+  const top = Math.max(rect.bottom, navbarBottom)
+  return {
+    position: 'fixed',
+    top:      `${top}px`,
+    left:     `${rect.left}px`,
+    width:    `${rect.width}px`,
+    zIndex:   9999,
+    // clip ไม่ให้ขึ้นเกิน navbar
+    maxHeight: `calc(100vh - ${top}px - 8px)`,
+    overflowY: 'auto',
+  }
+}
+
 const toggleDropdown = async () => {
   dropdownOpen.value = !dropdownOpen.value
   if (dropdownOpen.value) {
     await nextTick()
     const rect = dropdownRef.value?.getBoundingClientRect()
-    if (rect) {
-      menuStyle.value = {
-        position: 'fixed',
-        top:      `${rect.bottom}px`,
-        left:     `${rect.left}px`,
-        width:    `${rect.width}px`,
-        zIndex:   9999,
-      }
-    }
+    if (rect) menuStyle.value = calcMenuStyle(rect)
   }
 }
 
 const closeDropdown = () => { dropdownOpen.value = false }
+
+// อัปเดต position ของ menu ให้ตาม trigger เมื่อ scroll
+const updateMenuPosition = () => {
+  if (!dropdownOpen.value) return
+  const rect = dropdownRef.value?.getBoundingClientRect()
+  if (rect) menuStyle.value = calcMenuStyle(rect)
+}
 
 // ปิดเมื่อคลิกนอก
 const handleGlobalClick = (e) => {
@@ -224,12 +244,16 @@ const handleGlobalClick = (e) => {
 
 onMounted(() => {
   document.addEventListener('click', handleGlobalClick)
+  window.addEventListener('scroll', updateMenuPosition, true)
   const courseParam = route.query.course
   if (courseParam && ['BMV', 'C2VA', 'C3VA', 'C4VA'].includes(courseParam)) {
     selectedCourse.value = courseParam
   }
 })
-onUnmounted(() => document.removeEventListener('click', handleGlobalClick))
+onUnmounted(() => {
+  document.removeEventListener('click', handleGlobalClick)
+  window.removeEventListener('scroll', updateMenuPosition, true)
+})
 
 // sync เมื่อ navigate ระหว่าง /result?course=xxx โดยไม่ reload
 watch(() => route.query.course, (val) => {
