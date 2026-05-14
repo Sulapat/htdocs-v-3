@@ -67,7 +67,7 @@
             <path d="m21 21-4.3-4.3" />
           </svg>
           <input v-model="searchQuery" type="text" class="search-input"
-            placeholder="ID, First Name, Last Name, Company หรือ Email" />
+            placeholder="Member ID, First Name, Last Name, หรือ Email" />
         </div>
         <button type="submit" class="search-button">ค้นหา</button>
       </form>
@@ -91,19 +91,15 @@
       <!-- All Results (before search) -->
       <div v-else-if="isEmpty" class="results-container">
         <div class="results-grid">
-          <div v-for="(result, index) in pagedData" :key="result.ID" class="result-card" :style="{ borderColor: cardBorderColor(index, pagedData.length) }">
+          <div v-for="(result, index) in pagedData" :key="result.Member" class="result-card" :style="{ borderColor: cardBorderColor(index, pagedData.length) }">
             <div class="result-header">
               <div class="result-name">{{ result['First Name'] }} {{ result['Last Name'] }}</div>
             </div>
             <div class="result-details">
               <div class="result-detail-item">
-                <span class="result-detail-label">Candidate ID</span>
-                <span class="result-detail-value">{{ result.ID }}</span>
-              </div>
-              <div class="result-detail-item">
-                <span class="result-detail-label">Company</span>
-                <span class="result-detail-value">{{ result.Company }}</span>
-              </div>
+                <span class="result-detail-label">Member ID</span>
+                <span class="result-detail-value">{{ result.Member }}</span>
+              </div> 
               <div class="result-detail-item">
                 <span class="result-detail-label">Email</span>
                 <span class="result-detail-value">{{ result.Mail }}</span>
@@ -148,18 +144,14 @@
       <!-- Search Results -->
       <div v-else-if="!isEmpty" class="results-container">
         <div class="results-grid">
-          <div v-for="(result, index) in pagedSearchData" :key="result.ID" class="result-card" :style="{ borderColor: cardBorderColor(index, pagedSearchData.length) }">
+          <div v-for="(result, index) in pagedSearchData" :key="result.Member" class="result-card" :style="{ borderColor: cardBorderColor(index, pagedSearchData.length) }">
             <div class="result-header">
               <div class="result-name">{{ result['First Name'] }} {{ result['Last Name'] }}</div>
             </div>
             <div class="result-details">
               <div class="result-detail-item">
-                <span class="result-detail-label">Candidate ID</span>
-                <span class="result-detail-value">{{ result.ID }}</span>
-              </div>
-              <div class="result-detail-item">
-                <span class="result-detail-label">Company</span>
-                <span class="result-detail-value">{{ result.Company }}</span>
+                <span class="result-detail-label">Member ID</span>
+                <span class="result-detail-value">{{ result.Member }}</span>
               </div>
               <div class="result-detail-item">
                 <span class="result-detail-label">Email</span>
@@ -320,11 +312,10 @@ const selectCourse = (val) => {
   loading.value = true
   setTimeout(() => {
     results.value = activeData.value.filter(item =>
-      String(item.ID).includes(q) ||
+      String(item.Member).includes(q) ||
       item['First Name'].toLowerCase().includes(q) ||
       item['Last Name'].toLowerCase().includes(q) ||
       `${item['First Name']} ${item['Last Name']}`.toLowerCase().includes(q) ||
-      item.Company.toLowerCase().includes(q) ||
       item.Mail.toLowerCase().includes(q)
     )
     loading.value = false
@@ -371,11 +362,10 @@ const handleSearch = () => {
   searchPage.value = 1
   setTimeout(() => {
     results.value = activeData.value.filter(item =>
-      String(item.ID).includes(q) ||
+      String(item.Member).includes(q) ||
       item['First Name'].toLowerCase().includes(q) ||
       item['Last Name'].toLowerCase().includes(q) ||
       `${item['First Name']} ${item['Last Name']}`.toLowerCase().includes(q) ||
-      item.Company.toLowerCase().includes(q) ||
       item.Mail.toLowerCase().includes(q)
     )
     loading.value = false

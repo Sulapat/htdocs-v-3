@@ -288,35 +288,11 @@ body {
 }
 
 .result-header::after {
-  content: '';
-  position: absolute;
-  right: 1.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 32px;
-  height: 32px;
-  background: var(--color-success-bg);
-  border-radius: var(--radius-full);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: none;
 }
 
 .result-header::before {
-  content: '✓';
-  position: absolute;
-  right: 1.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-success);
-  font-weight: 700;
-  font-size: 0.875rem;
-  z-index: 1;
+  display: none;
 }
 
 .result-name {
