@@ -142,7 +142,7 @@
           <line x1="8" y1="11" x2="14" y2="11" />
         </svg>
         <h3>ไม่พบผลการค้นหา</h3>
-        <p>ไม่พบข้อมูลสำหรับ "{{ searchQuery }}" กรุณาลองค้นหาด้วยคำค้นอื่น</p>
+        <p>ไม่พบข้อมูลสำหรับ "{{ submittedQuery }}" กรุณาลองค้นหาด้วยคำค้นอื่น</p>
       </div>
 
       <!-- Search Results -->
@@ -262,6 +262,7 @@ watch(() => route.query.course, (val) => {
 })
 
 const searchQuery = ref('')
+const submittedQuery = ref('')
 const results     = ref([])
 const loading     = ref(false)
 const error       = ref('')
@@ -362,8 +363,9 @@ const cardBorderColor = (index, total) => {
 
 const handleSearch = () => {
   const q = searchQuery.value.toLowerCase().trim()
-  if (!q) { isEmpty.value = true; results.value = []; return }
+  if (!q) { isEmpty.value = true; results.value = []; submittedQuery.value = ''; return }
 
+  submittedQuery.value = searchQuery.value.trim()
   isEmpty.value = false
   loading.value = true
   searchPage.value = 1
@@ -381,7 +383,7 @@ const handleSearch = () => {
 }
 
 watch(searchQuery, (val) => {
-  if (!val.trim()) { isEmpty.value = true; results.value = [] }
+  if (!val.trim()) { isEmpty.value = true; results.value = []; submittedQuery.value = '' }
 })
 </script>
 
