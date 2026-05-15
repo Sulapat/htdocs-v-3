@@ -255,10 +255,10 @@ const router = useRouter()
 const courseImages = import.meta.glob('@/assets/images/courses/*.png', { eager: true })
 
 function getCourseImage(c) {
+  // ดึงรูปจาก assets โดย map จาก id เช่น TPM001.png
+  const mod = courseImages[`/src/assets/images/courses/${c.id}.png`]  
   // ถ้า course มีรูปของตัวเองอยู่แล้วให้ใช้ของตัวเอง
   if (c.image) return c.image
-  // ดึงรูปจาก assets โดย map จาก id เช่น TPM001.png
-  const mod = courseImages[`/src/assets/images/courses/${c.id}.png`]
   return mod ? mod.default : ''
 }
 
