@@ -251,9 +251,21 @@ import { categoryConfig } from '@/data/categoryConfig'
 const router = useRouter()
 
 // ── Courses data ──────────────────────────
+// Import รูปทั้งหมดใน assets/images/courses/ ผ่าน Vite glob
+const courseImages = import.meta.glob('@/assets/images/courses/*.png', { eager: true })
+
+function getCourseImage(c) {
+  // ถ้า course มีรูปของตัวเองอยู่แล้วให้ใช้ของตัวเอง
+  if (c.image) return c.image
+  // ดึงรูปจาก assets โดย map จาก id เช่น TPM001.png
+  const mod = courseImages[`/src/assets/images/courses/${c.id}.png`]
+  return mod ? mod.default : ''
+}
+
 const _courses = computed(() =>
   courses.map(c => ({
     ...c,
+    image: getCourseImage(c),
     categoryColor: categoryConfig[c.category]?.color ?? '#475569'
   }))
 )
@@ -268,10 +280,12 @@ const categories = Object.entries(categoryConfig).map(([code, cfg]) => ({
 const searchQuery = ref('')
 
 // ── Sidebar filter state ──────────────────
-const selectedCategory = ref('ALL')
+// Restore from sessionStorage so category persists when navigating back
+const selectedCategory = ref(sessionStorage.getItem('coursesCategory') || 'ALL')
 
 function selectCategory(code) {
   selectedCategory.value = code
+  sessionStorage.setItem('coursesCategory', code)
 }
 
 function getCategoryCount(code) {
@@ -335,7 +349,7 @@ const minDate = (() => {
 
 // ── Navigation ───────────────────────────
 function goToDetail(slug) {
-  router.push('/courses/' + slug)
+  router.push({ path: '/courses/' + slug })
 }
 
 // ── Modal functions ───────────────────────
