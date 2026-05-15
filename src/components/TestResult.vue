@@ -92,6 +92,15 @@
       <div v-else-if="isEmpty" class="results-container">
         <div class="results-grid">
           <div v-for="(result, index) in pagedData" :key="result.Member" class="result-card" :style="{ borderColor: cardBorderColor(index, pagedData.length) }">
+            <div class="result-avatar-area">
+              <div class="result-avatar-placeholder">
+                <img v-if="getcandidatesrPhoto(result.ID)" :src="getcandidatesrPhoto(result.ID)" :alt="result['First Name'] + ' ' + result['Last Name']" />
+                <svg v-else xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="8" r="4"/>
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                </svg>
+              </div>
+            </div>
             <div class="result-header">
               <div class="result-name">{{ result['First Name'] }} {{ result['Last Name'] }}</div>
             </div>
@@ -145,6 +154,15 @@
       <div v-else-if="!isEmpty" class="results-container">
         <div class="results-grid">
           <div v-for="(result, index) in pagedSearchData" :key="result.Member" class="result-card" :style="{ borderColor: cardBorderColor(index, pagedSearchData.length) }">
+            <div class="result-avatar-area">
+              <div class="result-avatar-placeholder">
+                <img v-if="getcandidatesrPhoto(result.ID)" :src="getcandidatesrPhoto(result.ID)" :alt="result['First Name'] + ' ' + result['Last Name']" />
+                <svg v-else xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="8" r="4"/>
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                </svg>
+              </div>
+            </div>
             <div class="result-header">
               <div class="result-name">{{ result['First Name'] }} {{ result['Last Name'] }}</div>
             </div>
@@ -181,6 +199,18 @@ import { ref, watch, computed, nextTick, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 // ✅ เปลี่ยนมาใช้ getDataByFilter แทน dataByFilter (static object)
 import { sampleData, getDataByFilter } from '@/data/sampleData.js'
+
+// โหลดรูปภาพทั้งหมดใน assets/images/candidates/ ชื่อไฟล์ตรงกับ ID (เช่น 1.png, 2.png)
+const candidateImages = import.meta.glob('@/assets/images/candidates/*.{png,jpg,jpeg,webp}', { eager: true })
+
+function getcandidatesrPhoto(id) {
+  const exts = ['png', 'jpg', 'jpeg', 'webp']
+  for (const ext of exts) {
+    const mod = candidateImages[`/src/assets/images/candidates/${id}.${ext}`]
+    if (mod) return mod.default
+  }
+  return null
+}
 
 const route = useRoute()
 const dropdownRef  = ref(null)
