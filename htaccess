@@ -1,0 +1,10 @@
+Options -MultiViews
+RewriteEngine On
+RewriteBase /
+
+# ถ้าเป็นไฟล์จริงหรือโฟลเดอร์จริง ให้เข้าถึงได้ปกติ
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# ทุก request ที่ไม่ใช่ไฟล์จริง ให้ redirect ไป index.html
+RewriteRule ^ index.html [L]

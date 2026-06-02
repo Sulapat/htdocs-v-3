@@ -1,0 +1,869 @@
+/* ========================================
+   RESET & BASE STYLES
+   ======================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Prompt', 'Sarabun', -apple-system, sans-serif;
+    overflow-x: hidden;
+    background: #ffffff;
+}
+
+/* ========================================
+   HERO SECTION - Main Container
+   ======================================== */
+.hero {
+    margin-top: 5px;
+    padding: 4rem;
+    padding-top: calc(80px + 2rem);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #f0f4f8 100%);
+}
+
+.hero-left {
+    padding-right: 2rem;
+    text-align: left;  /* ← เพิ่มบรรทัดนี้ */
+}
+/* ========================================
+   HERO SECTION - Morphing Background Animations
+   ======================================== */
+/* Morphing Background 1 (Right side - Soft Blue/Purple) */
+    .morphing-bg {
+        position: absolute;
+        right: -10%;
+        top: 50%;
+        width: 900px;
+        height: 1000px;
+        pointer-events: none;
+        z-index: 0;
+        filter: blur(80px);
+        will-change: transform;
+        background: radial-gradient(circle,
+            rgba(99, 102, 241, 0.15) 0%,   
+            rgba(139, 92, 246, 0.12) 40%,    
+            transparent 70%);
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        animation: float 20s ease-in-out infinite, morph 15s ease-in-out infinite;
+    }
+
+@keyframes morph {
+    0%, 100% { 
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    }
+    33% { 
+        border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    }
+    66% { 
+        border-radius: 70% 30% 50% 50% / 30% 70% 50% 50%;
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, -50%) scale(1);
+    }
+    33% {
+        transform: translate(-150px, -40%) scale(1.05);
+    }
+    66% {
+        transform: translate(-200px, -60%) scale(1.08);
+    }
+}
+
+/* Morphing Background 2 (Left side - Soft Teal/Blue) */
+.morphing-bg-2 {
+    position: absolute;
+    left: -8%;
+    bottom: 10%;
+    width: 650px;
+    height: 650px;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(80px);
+    will-change: transform;
+    background: radial-gradient(circle,
+        rgba(56, 189, 248, 0.12) 0%,   
+        rgba(14, 165, 233, 0.10) 40%,   
+        transparent 70%);
+    border-radius: 40% 60% 50% 50% / 60% 40% 60% 50%;
+    animation: float-alt 18s ease-in-out infinite, morph2 12s ease-in-out infinite;
+}
+
+@keyframes morph2 {
+    0%, 100% { 
+        border-radius: 40% 60% 50% 50% / 60% 40% 60% 50%;
+    }
+    33% { 
+        border-radius: 60% 40% 40% 60% / 50% 70% 40% 60%;
+    }
+    66% { 
+        border-radius: 50% 50% 60% 40% / 40% 60% 50% 60%;
+    }
+}
+
+@keyframes float-alt {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    33% {
+        transform: translate(120px, -50px) scale(1.08);
+    }
+    66% {
+        transform: translate(180px, 30px) scale(1.05);
+    }
+}
+
+/* ========================================
+   HERO SECTION - Content Layout
+   ======================================== */
+.hero-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* Hero Left Content (Text & Button) */
+.hero-left {
+    padding-right: 2rem;
+}
+
+.hero-left h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #1e293b;
+    margin-bottom: 1.2rem;
+}
+
+.hero-left h1 .highlight {
+    color: #1a60ec;
+}
+
+.hero-left p {
+    font-size: 1.05rem;
+    color: #64748b;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    max-width: 500px;
+    margin-left: 0;    /* ← เพิ่ม */
+    margin-right: 0;   /* ← เพิ่ม */
+}
+
+/* CTA Button */
+.cta-button {
+    min-width: 250px;
+    min-height: 50px;
+    display: inline-flex;
+    font-family: 'Prompt', 'Nunito', sans-serif;
+    font-size: 16px;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 1.3px;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #2a0f69 0%, #070be9 100%);
+    border: none;
+    border-radius: 50px;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    padding: 1px;
+    text-decoration: none;
+}
+
+.cta-button:hover, 
+.cta-button:focus {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(99, 102, 241, 0.35);
+}
+
+/* ========================================
+   HERO SECTION - Card Slider (Right side)
+   ======================================== */
+.hero-right.card-slider {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 550px;
+    position: relative;
+}
+
+.slider__radio {
+    display: none;
+}
+
+.slider__holder {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.slider__item {
+    position: absolute;
+    width: 320px;
+    height: 480px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 0;
+    pointer-events: none;
+    transform: translateX(0) scale(0.65);
+    opacity: 0;
+    z-index: -1;
+}
+
+.slider__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Card 1 Positions */
+.slider__item--1 {
+    #slide-1:checked ~ .slider__holder & {
+        transform: translateX(0) scale(1);
+        z-index: 5;
+        opacity: 1;
+    }
+    #slide-2:checked ~ .slider__holder & {
+        transform: translateX(-130px) scale(0.85);
+        z-index: 4;
+        opacity: 0.9;
+    }
+    #slide-3:checked ~ .slider__holder & {
+        transform: translateX(-240px) scale(0.7);
+        z-index: 3;
+        opacity: 0.4;
+    }
+    #slide-4:checked ~ .slider__holder &,
+    #slide-5:checked ~ .slider__holder &,
+    #slide-6:checked ~ .slider__holder &,
+    #slide-7:checked ~ .slider__holder &,
+    #slide-8:checked ~ .slider__holder & {
+        transform: translateX(-280px) scale(0.6);
+        z-index: -1;
+        opacity: 0;
+    }
+}
+
+/* Card 2 Positions */
+.slider__item--2 {
+    #slide-1:checked ~ .slider__holder & {
+        transform: translateX(130px) scale(0.85);
+        z-index: 4;
+        opacity: 0.9;
+    }
+    #slide-2:checked ~ .slider__holder & {
+        transform: translateX(0) scale(1);
+        z-index: 5;
+        opacity: 1;
+    }
+    #slide-3:checked ~ .slider__holder & {
+        transform: translateX(-130px) scale(0.85);
+        z-index: 4;
+        opacity: 0.9;
+    }
+    #slide-4:checked ~ .slider__holder & {
+        transform: translateX(-240px) scale(0.7);
+        z-index: 3;
+        opacity: 0.4;
+    }
+    #slide-5:checked ~ .slider__holder &,
+    #slide-6:checked ~ .slider__holder &,
+    #slide-7:checked ~ .slider__holder &,
+    #slide-8:checked ~ .slider__holder & {
+        transform: translateX(-280px) scale(0.6);
+        z-index: -1;
+        opacity: 0;
+    }
+}
+
+/* Card 3 Positions */
+.slider__item--3 {
+    #slide-1:checked ~ .slider__holder & {
+        transform: translateX(240px) scale(0.7);
+        z-index: 3;
+        opacity: 0.4;
+    }
+    #slide-2:checked ~ .slider__holder & {
+        transform: translateX(130px) scale(0.85);
+        z-index: 4;
+        opacity: 0.9;
+    }
+    #slide-3:checked ~ .slider__holder & {
+        transform: translateX(0) scale(1);
+        z-index: 5;
+        opacity: 1;
+    }
+    #slide-4:checked ~ .slider__holder & {
+        transform: translateX(-130px) scale(0.85);
+        z-index: 4;
+        opacity: 0.9;
+    }
+    #slide-5:checked ~ .slider__holder & {
+        transform: translateX(-240px) scale(0.7);
+        z-index: 3;
+        opacity: 0.4;
+    }
+    #slide-6:checked ~ .slider__holder &,
+    #slide-7:checked ~ .slider__holder &,
+    #slide-8:checked ~ .slider__holder & {
+        transform: translateX(-280px) scale(0.6);
+        z-index: -1;
+        opacity: 0;
+    }
+}
+
+/* Card 4 Positions */
+.slider__item--4 {
+    #slide-1:checked ~ .slider__holder &,
+    #slide-2:checked ~ .slider__holder & {
+        transform: translateX(280px) scale(0.6);
+        z-index: -1;
+        opacity: 0;
+    }
+    #slide-3:checked ~ .slider__holder & {
+        transform: translateX(130px) scale(0.85);
+        z-index: 4;
+        opacity: 0.9;
+    }
+    #slide-4:checked ~ .slider__holder & {
+        transform: translateX(0) scale(1);
+        z-index: 5;
+        opacity: 1;
+    }
+    #slide-5:checked ~ .slider__holder & {
+        transform: translateX(-130px) scale(0.85);
+        z-index: 4;
+        opacity: 0.9;
+    }
+    #slide-6:checked ~ .slider__holder & {
+        transform: translateX(-240px) scale(0.7);
+        z-index: 3;
+        opacity: 0.4;
+    }
+    #slide-7:checked ~ .slider__holder &,
+    #slide-8:checked ~ .slider__holder & {
+        transform: translateX(-280px) scale(0.6);
+        z-index: -1;
+        opacity: 0;
+    }
+}
+
+/* Card 5 Positions */
+.slider__item--5 {
+    #slide-1:checked ~ .slider__holder &,
+    #slide-2:checked ~ .slider__holder &,
+    #slide-3:checked ~ .slider__holder & {
+        transform: translateX(280px) scale(0.6);
+        z-index: -1;
+        opacity: 0;
+    }
+    #slide-4:checked ~ .slider__holder & {
+        transform: translateX(130px) scale(0.85);
+        z-index: 4;
+        opacity: 0.9;
+    }
+    #slide-5:checked ~ .slider__holder & {
+        transform: translateX(0) scale(1);
+        z-index: 5;
+        opacity: 1;
+    }
+    #slide-6:checked ~ .slider__holder & {
+        transform: translateX(-130px) scale(0.85);
+        z-index: 4;
+        opacity: 0.9;
+    }
+    #slide-7:checked ~ .slider__holder & {
+        transform: translateX(-240px) scale(0.7);
+        z-index: 3;
+        opacity: 0.4;
+    }
+    #slide-8:checked ~ .slider__holder & {
+        transform: translateX(-280px) scale(0.6);
+        z-index: -1;
+        opacity: 0;
+    }
+}
+
+/* Card 6 Positions */
+.slider__item--6 {
+    #slide-1:checked ~ .slider__holder &,
+    #slide-2:checked ~ .slider__holder &,
+    #slide-3:checked ~ .slider__holder &,
+    #slide-4:checked ~ .slider__holder & {
+        transform: translateX(280px) scale(0.6);
+        z-index: -1;
+        opacity: 0;
+    }
+    #slide-5:checked ~ .slider__holder & {
+        transform: translateX(130px) scale(0.85);
+        z-index: 4;
+        opacity: 0.9;
+    }
+    #slide-6:checked ~ .slider__holder & {
+        transform: translateX(0) scale(1);
+        z-index: 5;
+        opacity: 1;
+    }
+    #slide-7:checked ~ .slider__holder & {
+        transform: translateX(-130px) scale(0.85);
+        z-index: 4;
+        opacity: 0.9;
+    }
+    #slide-8:checked ~ .slider__holder & {
+        transform: translateX(-240px) scale(0.7);
+        z-index: 3;
+        opacity: 0.4;
+    }
+}
+
+/* Card 7 Positions */
+.slider__item--7 {
+    #slide-1:checked ~ .slider__holder &,
+    #slide-2:checked ~ .slider__holder &,
+    #slide-3:checked ~ .slider__holder &,
+    #slide-4:checked ~ .slider__holder &,
+    #slide-5:checked ~ .slider__holder & {
+        transform: translateX(280px) scale(0.6);
+        z-index: -1;
+        opacity: 0;
+    }
+    #slide-6:checked ~ .slider__holder & {
+        transform: translateX(130px) scale(0.85);
+        z-index: 4;
+        opacity: 0.9;
+    }
+    #slide-7:checked ~ .slider__holder & {
+        transform: translateX(0) scale(1);
+        z-index: 5;
+        opacity: 1;
+    }
+    #slide-8:checked ~ .slider__holder & {
+        transform: translateX(-130px) scale(0.85);
+        z-index: 4;
+        opacity: 0.9;
+    }
+}
+
+/* Card 8 Positions */
+.slider__item--8 {
+    #slide-1:checked ~ .slider__holder &,
+    #slide-2:checked ~ .slider__holder &,
+    #slide-3:checked ~ .slider__holder &,
+    #slide-4:checked ~ .slider__holder &,
+    #slide-5:checked ~ .slider__holder &,
+    #slide-6:checked ~ .slider__holder & {
+        transform: translateX(280px) scale(0.6);
+        z-index: -1;
+        opacity: 0;
+    }
+    #slide-7:checked ~ .slider__holder & {
+        transform: translateX(130px) scale(0.85);
+        z-index: 4;
+        opacity: 0.9;
+    }
+    #slide-8:checked ~ .slider__holder & {
+        transform: translateX(0) scale(1);
+        z-index: 5;
+        opacity: 1;
+    }
+}
+
+/* Bullet Navigation */
+.bullets {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.bullets__item {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.bullets__item:hover {
+    background: #94a3b8;
+    transform: scale(1.2);
+}
+
+#slide-1:checked ~ .bullets .bullets__item--1,
+#slide-2:checked ~ .bullets .bullets__item--2,
+#slide-3:checked ~ .bullets .bullets__item--3,
+#slide-4:checked ~ .bullets .bullets__item--4,
+#slide-5:checked ~ .bullets .bullets__item--5,
+#slide-6:checked ~ .bullets .bullets__item--6,
+#slide-7:checked ~ .bullets .bullets__item--7,
+#slide-8:checked ~ .bullets .bullets__item--8 {
+    background: #6366f1;
+    transform: scale(1.3);
+}
+
+/* ========================================
+   SERVICE SECTION
+   ======================================== */
+
+/* แก้เป็น */
+.service-section {
+    width: 100%;
+    background: #ffffff;
+    padding: 80px 20px;
+}
+
+.service-section .section-title,
+.service-section .services-grid {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.8rem;
+    color: #103d85;
+    margin-bottom: 60px;
+    font-weight: 700;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
+}
+
+.service-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.service-card.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(99, 102, 241, 0.15);
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+.service-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 25px;
+    background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #6366f1;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.15);
+    transform: translateY(0) scale(1);
+    transition: all 0.5s ease;
+}
+
+.service-card.animate .service-icon {
+    transform: translateY(-10px) scale(1.05);
+}
+
+.service-card:hover .service-icon {
+    background: linear-gradient(135deg, #1a1ef6 0%, #4415b1 100%);
+    color: #ffffff;
+    transform: translateY(-10px) scale(1.1) rotate(5deg);
+}
+
+.service-card h3 {
+    font-size: 1.5rem;
+    color: #1e293b;
+    margin-bottom: 15px;
+    font-weight: 600;
+    transform: translateY(0);
+    transition: all 0.5s ease 0.1s;
+}
+
+.service-card.animate h3 {
+    transform: translateY(0);
+}
+
+.service-card p {
+    color: #64748b;
+    line-height: 1.7;
+    font-size: 0.95rem;
+    transform: translateY(0);
+    transition: all 0.5s ease 0.2s;
+}
+
+.service-card.animate p {
+    transform: translateY(0);
+}
+
+/* VI Section Container */
+.about-vi {
+    padding: 80px 20px;
+    text-align: center;
+    background: linear-gradient(135deg, #ecedef 0%, #ffffff 100%);
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.logo-box {
+    max-width: 280px;
+    width: 100%;
+    transition: transform 0.3s ease;
+}
+
+.logo-box:hover {
+    transform: translateY(-5px);
+}
+
+.logo-box img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.logo-divider {
+    font-size: 40px;          
+    font-weight: 700;          
+    color: #0d3b8a;            
+    margin: 0 15px;
+    display: flex;
+    align-items: center;
+}
+
+.about-vi h1 {
+    font-size: 2.2rem;
+    line-height: 1.4;
+    margin-bottom: 15px;
+    font-weight: 700;
+    color: #1e293b;
+    letter-spacing: 0.5px;
+}
+
+.about-vi .subtitle {
+    margin-bottom: 20px;
+}
+
+.about-vi .subtitle a {
+    display: inline-block;
+    color: #ffffff;
+    background: linear-gradient(135deg, #2a0f69 0%, #070be9 100%);
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 14px 32px;
+    border-radius: 50px;
+    border: 2px solid transparent;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+.about-vi .subtitle a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
+    background: linear-gradient(135deg, #210b8f 0%, #3475ca 100%);
+}
+
+.about-vi .description {
+    max-width: 800px;
+    margin: 30px auto 0;
+    font-size: 1.1rem;
+    color: #64748b;
+    line-height: 1.8;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Tablet & Medium Screens (max-width: 1200px) */
+@media (max-width: 1200px) {
+    .hero-container {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .hero-left {
+        padding-right: 0;
+        text-align: center;
+    }
+
+    .hero-left h1 {
+        font-size: 3rem;
+    }
+
+    .hero-left p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .morphing-bg {
+        width: 700px;
+        height: 700px;
+    }
+
+    .morphing-bg-2 {
+        width: 500px;
+        height: 500px;
+    }
+}
+
+/* Mobile & Small Screens (max-width: 768px) */
+@media (max-width: 768px) {
+    .hero {
+        padding: 2rem;
+    }
+
+    .hero-left h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero-left p {
+        font-size: 1rem;
+    }
+
+    .hero-right.card-slider {
+        height: 450px;
+    }
+
+    .slider__holder {
+        height: 400px;
+    }
+
+    .slider__item {
+        width: 240px;
+        height: 360px;
+    }
+
+    .morphing-bg {
+        width: 500px;
+        height: 500px;
+    }
+
+    .morphing-bg-2 {
+        width: 400px;
+        height: 400px;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .service-card {
+        padding: 30px 20px;
+    }
+
+    /* VI Section Mobile */
+    .logo-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .logo-box {
+        max-width: 220px;
+    }
+
+    .logo-divider {
+        font-size: 50px;
+        margin: 2px 0;
+    }
+
+    .about-vi h1 {
+        font-size: 1.6rem;
+    }
+
+    .about-vi .subtitle a {
+        font-size: 0.95rem;
+        padding: 12px 24px;
+    }
+
+    .about-vi .description {
+        font-size: 1rem;
+    }
+}
+
+/* Extra Small Screens (max-width: 480px) */
+@media (max-width: 480px) {
+    .hero-left h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-right.card-slider {
+        height: 400px;
+    }
+
+    .slider__holder {
+        height: 350px;
+    }
+
+    .slider__item {
+        width: 200px;
+        height: 300px;
+    }
+
+    .morphing-bg {
+        width: 400px;
+        height: 400px;
+    }
+
+    .morphing-bg-2 {
+        width: 300px;
+        height: 300px;
+    }
+
+    .logo-box {
+        max-width: 180px;
+    }
+
+    .about-vi h1 {
+        font-size: 1.3rem;
+    }
+}   

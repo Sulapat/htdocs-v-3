@@ -1,0 +1,251 @@
+#navbar {
+    position: fixed; 
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.8rem 2rem;
+    background: rgba(0, 0, 0, 0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0);
+    top: 0;    
+    left: 0;
+    right: 0;
+    width: 100%;
+    box-sizing: border-box;  /* รวม padding ในความกว้าง ไม่ให้เกิน 100vw */
+    z-index: 1000;  
+}
+
+.logo img {
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.logo img:hover {
+    transform: scale(1.05);
+}
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.nav-links a:hover,
+.nav-links a:focus,
+.nav-links a:active {
+    color: #007BFF;
+    transform: translateX(2px);
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-links a {
+    color: #333;
+    font-size: 1.1rem;
+    transition: color 0.3s;
+}
+
+.social-links a:hover {
+    color: #007BFF;
+}
+
+.hamburger {
+    display: none;
+}
+
+/* ========== RESPONSIVE NAVBAR ========== */
+@media (max-width: 768px) {
+    #navbar {
+        padding: 0.8rem 0.8rem;
+        max-width: 100vw;   /* กันเกินจอโดยไม่ตัด click area ของ hamburger */
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+
+        position: fixed;   /* เปลี่ยนจาก absolute */
+        top: 70px;
+        right: 10px;
+
+        width: 220px;      /* กำหนดความกว้างแน่นอน */
+        max-width: calc(100vw - 20px);
+
+        background: white;
+        padding: 0.5rem 1rem;
+
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        border-radius: 10px;
+
+        z-index: 1000;
+        box-sizing: border-box;
+    }
+
+    .nav-links.show {
+        display: flex;
+    }
+
+    .social-links {
+        display: none;
+    }
+
+    .hamburger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        margin-left: auto;
+
+        font-size: 1.2rem;
+        cursor: pointer;
+
+        z-index: 1200;
+
+        padding: 4px 6px; /* ลด padding */
+        flex-shrink: 0;
+    }
+        
+    .hamburger i {
+        font-size: 1.2rem; 
+        color: #333;       
+        transition: color 0.3s ease, transform 0.2s ease;
+    }
+
+    .hamburger i:hover {
+        color: #007BFF; 
+        transform: scale(1.1);
+    }
+    
+    .nav-links.active {
+        display: flex;
+    }
+}
+
+.nav-links .router-link-active,
+.nav-links .router-link-exact-active {
+    color: #000000;
+    font-weight: 600;
+}
+
+/* =============================================
+   VI Certified Analysts — Nav Dropdown
+   ============================================= */
+.nav-dropdown-wrap {
+    position: relative;
+}
+
+.nav-dropdown-trigger {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 5px;
+}
+
+.nav-drop-chevron {
+    transition: transform 0.2s ease;
+    opacity: 0.7;
+}
+.nav-drop-chevron.open {
+    transform: rotate(180deg);
+}
+
+/* padding-top เท่ากับ gap เพื่อกัน mouse leave ตอนเลื่อนลง */
+.nav-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    min-width: 240px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    list-style: none;
+    padding: 16px 0 6px 0; /* padding-top 16px ต่อเนื่องกับ trigger ไม่มี gap */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    z-index: 999;
+}
+
+/* arrow ชี้ขึ้น */
+.nav-dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #ffffff;
+    filter: drop-shadow(0 -1px 1px rgba(0,0,0,0.06));
+}
+
+.nav-dropdown-menu.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+}
+
+.nav-dropdown-menu li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    font-size: 0.875rem;
+    color: #1e293b !important;
+    font-weight: 400 !important;
+    text-decoration: none;
+    transition: background 0.12s ease;
+    white-space: nowrap;
+    transform: none !important; /* กัน hover translateX จาก .nav-links a */
+}
+.nav-dropdown-menu li a:hover {
+    background: #eff6ff;
+    color: #2563eb !important;
+}
+.nav-dropdown-menu li:first-child a { border-radius: 0; }
+.nav-dropdown-menu li:last-child  a { border-radius: 0 0 10px 10px; }
+
+.nav-drop-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.dot-all { background: #94a3b8; }
+.dot-bmv { background: #10b981; }
+.dot-va2 { background: #3b82f6; }
+
+/* Mobile: dropdown แบบ inline แทน absolute */
+@media (max-width: 768px) {
+    .nav-dropdown-menu {
+        position: static;
+        transform: none;
+        box-shadow: none;
+        border: none;
+        border-left: 2px solid #e2e8f0;
+        border-radius: 0;
+        padding: 0 0 0 1rem;
+        margin: 4px 0 4px 8px;
+        min-width: unset;
+        background: transparent;
+    }
+    .nav-dropdown-menu::before { display: none; }
+    .nav-dropdown-menu.open {
+        transform: none;
+    }
+    .nav-dropdown-menu li a {
+        padding: 8px 8px;
+        font-size: 0.875rem;
+        white-space: normal;
+    }
+}

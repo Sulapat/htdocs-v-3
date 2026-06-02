@@ -1,0 +1,306 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    overflow-x: hidden;  /* กัน horizontal scroll จาก element ที่เกินจอ */
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1;
+    color: #333;
+    padding-top: 80px;
+    overflow-x: hidden;  /* กัน horizontal scroll */
+}
+
+/* Portfolio Section */
+.portfolio-container {
+  background: #fff;
+  padding: 50px 30px;
+  margin: 50px auto;
+  border-radius: 20px;
+  max-width: 1100px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.portfolio-header {
+  text-align: center;
+  margin-bottom: 40px;
+  color: #03030d;
+}
+
+.portfolio-header h1 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+
+.portfolio-header p {
+  color: #6c6c6c;
+  font-size: 1rem;
+  max-width: 750px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.clients-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  justify-items: stretch;
+  align-items: stretch;
+  isolation: isolate;
+}
+
+.client-card {
+  background: white;
+  border-radius: 15px;
+  padding: 10px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: visible;     /* ให้ tooltip โผล่ขึ้นมาได้ */
+  cursor: pointer;
+}
+
+.client-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+/* transition สำหรับ dim effect */
+.client-card {
+  transition: all 0.3s ease;
+}
+
+.client-logo {
+  width: 80%;
+  height: 60%;
+  object-fit: contain;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.client-card:hover .client-logo {
+  filter: none;
+  transform: scale(1.05);
+}
+
+/* เมื่อ grid มี hover ให้ card อื่นจางลง */
+.clients-grid:has(.client-card:hover) .client-card:not(:hover) {
+  opacity: 0.4;
+  filter: grayscale(40%);
+}
+
+.client-info {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: rgba(15, 23, 42, 0.95);
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.25s ease;
+  z-index: 9999;          /* สูงกว่า navbar */
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  text-align: center;
+}
+
+/* ลูกศรชี้ลง */
+.client-info::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(15, 23, 42, 0.95);
+}
+
+.client-card:hover .client-info {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.client-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #fff;
+  margin-bottom: 1px;
+}
+
+.client-description {
+  font-size: 0.7rem;
+  opacity: 0.85;
+  color: #fff;
+  white-space: nowrap;
+}
+
+/* ===== Wave Animation ===== */
+.wave-text {
+  display: inline-block;
+  opacity: 0;
+  animation: fadeInWave 1.2s ease forwards;
+}
+
+.wave-text span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(15px);
+  animation: waveIn 0.8s ease forwards;
+}
+
+@keyframes waveIn {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInWave {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Responsive Media Queries ===== */
+@media (max-width: 968px) {
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    
+    .featured-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .featured-image {
+        width: 250px;
+        height: 250px;
+    }
+}
+
+/* Tablet และ Mobile ทั่วไป */
+@media (max-width: 768px) {
+    #navbar {
+        padding: 1rem;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .nav-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    /* Portfolio Mobile Styles */
+    .portfolio-container {
+        padding: 30px 15px;
+        margin: 30px 15px;
+        border-radius: 15px;
+    }
+
+    .portfolio-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .portfolio-header p {
+        font-size: 0.9rem;
+        padding: 0 10px;
+    }
+
+    .clients-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 6px;
+    }
+
+    .client-card {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+        padding: 6px;
+        border-radius: 10px;
+    }
+
+    .client-logo {
+        width: 80%;
+        height: 55%;
+        margin-top: 0;
+    }
+
+    .client-name {
+        font-size: 0.75rem;
+    }
+
+    .client-description {
+        font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .portfolio-container {
+        padding: 10px 10px;
+    }
+
+    .portfolio-header h1 {
+        font-size: 1rem;
+        margin-bottom: 2px;
+    }
+
+    .clients-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 4px;
+    }
+
+    .client-card {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+        padding: 4px;
+        border-radius: 8px;
+    }
+
+    .client-logo {
+        width: 80%;
+        height: 55%;
+        margin-top: 0;
+    }
+
+    .client-name {
+        font-size: 0.7rem;
+    }
+
+    .client-description {
+        font-size: 0.65rem;
+    }
+}
