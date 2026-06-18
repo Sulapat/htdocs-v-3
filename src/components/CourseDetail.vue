@@ -289,12 +289,23 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getCourseBySlug } from '@/data/coursesdetail'
+import { getCourseBySlug } from '@/services/api'
 import emailjs from '@emailjs/browser'
 
 const route  = useRoute()
 const router = useRouter()
-const course = ref(getCourseBySlug(route.params.slug))
+const course = ref(null)
+
+// ── ดึงข้อมูลหลักสูตรจาก API Service ──
+onMounted(async () => {
+  const data = await getCourseBySlug(route.params.slug)
+  course.value = data
+  document.addEventListener('keydown', onKeydown)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', onKeydown)
+})
 
 // ── ตรวจสอบราคา ──────────────────────────────────────────────
 const hasPrice = computed(() => {

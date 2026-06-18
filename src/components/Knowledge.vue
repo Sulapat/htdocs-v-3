@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import newsData from '@/data/newsData.js'
+import { getNewsList } from '@/services/api.js'
 
 // Glob รูปทั้งหมดใน training
 const trainingImages = import.meta.glob('@/assets/images/training/**/*.{jpg,png}', { eager: true })
@@ -68,26 +68,28 @@ function resolveImage(path) {
   return mod ? mod.default : ''
 }
 
+function mapArticle(n) {
+  let category = 'news'
+  if (n.tags && n.tags.includes('Category II')) {
+    category = 'category2'
+  } else if (n.tags && (n.tags.includes('อบรม') || n.tags.includes('สัมมนา'))) {
+    category = 'training'
+  }
+  return {
+    id: n.id,
+    title: n.title,
+    description: n.shortDesc,
+    image: resolveImage(n.image),
+    date: n.date,
+    category: category
+  }
+}
+
 export default {
   name: 'Knowledge',
   data() {
     return {
-      articles: newsData.map(function(n) {
-        let category = 'news'
-        if (n.tags && n.tags.includes('Category II')) {
-          category = 'category2'
-        } else if (n.tags && (n.tags.includes('อบรม') || n.tags.includes('สัมมนา'))) {
-          category = 'training'
-        }
-        return {
-          id: n.id,
-          title: n.title,
-          description: n.shortDesc,
-          image: resolveImage(n.image),   // ← แปลง path
-          date: n.date,
-          category: category
-        }
-      }),
+      articles: [],
       filteredArticles: [],
       searchQuery: '',
       activeCategory: 'all',
@@ -104,7 +106,9 @@ export default {
       return this.filteredArticles.slice(start, start + this.itemsPerPage)
     }
   },
-  mounted() {
+  async mounted() {
+    const newsData = await getNewsList()
+    this.articles = newsData.map(mapArticle)
     this.filteredArticles = [...this.articles].sort((a, b) => b.id - a.id)
   },
   methods: {

@@ -13,7 +13,17 @@
   <section class="courses-section">
     <h2 class="section-title">หลักสูตรที่เปิดสอน</h2>
 
-    <div class="courses-layout">
+    <!-- Loading -->
+    <div v-if="loading" class="loading-state">
+      <i class="fas fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...
+    </div>
+
+    <!-- Error -->
+    <div v-else-if="loadError" class="error-state">
+      <i class="fas fa-exclamation-circle"></i> {{ loadError }}
+    </div>
+
+    <div v-else class="courses-layout">
 
       <!-- ─── Sidebar ─────────────────────────── -->
       <aside class="courses-sidebar">
@@ -34,7 +44,7 @@
           </button>
         </div>
 
-                <!-- All -->
+        <!-- All -->
         <button
           class="sidebar-all"
           :class="{ active: selectedCategory === 'ALL' }"
@@ -45,7 +55,6 @@
             ทั้งหมด
           </span>
           <span class="cat-count">{{ _courses.length }}</span>
-
         </button>
 
         <!-- Category list -->
@@ -214,45 +223,74 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { courses } from '@/data/coursesdetail'
-import { categoryConfig } from '@/data/categoryConfig'
+import { getCourses, getCategories } from '@/services/api.js'
 import emailjs from '@emailjs/browser'
 
 // ── Router ───────────────────────────────
 const router = useRouter()
 
-// ── Courses data ──────────────────────────
-// Import รูปทั้งหมดใน assets/images/courses/ ผ่าน Vite glob
+// ── API state ─────────────────────────────
+const loading    = ref(true)
+const loadError  = ref(null)
+
+// ── Raw data from API ─────────────────────
+const coursesRaw     = ref([])
+const categoryConfig = ref({})
+
+// ── Load data on mount ────────────────────
+onMounted(async () => {
+  try {
+    const [coursesData, categoriesData] = await Promise.all([
+      getCourses(),
+      getCategories()
+    ])
+    coursesRaw.value = coursesData
+    // categories API คืน array [{code, label, icon, color}, ...]
+    // แปลงเป็น object key=code เพื่อให้ใช้ categoryConfig[code] ได้เหมือนเดิม
+    categoryConfig.value = Object.fromEntries(
+      categoriesData.map(c => [c.code, c])
+    )
+  } catch (e) {
+    loadError.value = 'โหลดข้อมูลคอร์สไม่สำเร็จ: ' + e.message
+  } finally {
+    loading.value = false
+    // รอให้ DOM render เสร็จก่อน init animation
+    await nextTick()
+    initCardAnimations()
+  }
+})
+
+// ── Course images (Vite glob) ──────────────
 const courseImages = import.meta.glob('@/assets/images/courses/*.png', { eager: true })
 
 function getCourseImage(c) {
-  const mod = courseImages[`/src/assets/images/courses/${c.id}.png`]
+  // ใช้ courseCode จับคู่ชื่อไฟล์ เช่น MNT001.png
+  const mod = courseImages[`/src/assets/images/courses/${c.courseCode}.png`]
   if (mod) return mod.default
-  if (c.image) return c.image
-  return '/images/data/placeholder.png'  // ← รูป default ถ้าไม่มีรูปของตัวเอง
+
+  // placeholder ถ้าไม่มีรูป
+  return new URL('@/assets/images/data/imagestate.png', import.meta.url).href
 }
 
+// ── Computed courses (with image + categoryColor) ──
 const _courses = computed(() =>
-  courses.map(c => ({
+  coursesRaw.value.map(c => ({
     ...c,
     image: getCourseImage(c),
-    categoryColor: categoryConfig[c.category]?.color ?? '#475569'
+    categoryColor: categoryConfig.value[c.category]?.color ?? '#475569'
   }))
 )
 
-// ── Category definitions ──────────────────
+// ── Category list (derived from API data) ──
+const categories = computed(() =>
+  Object.entries(categoryConfig.value).map(([code, cfg]) => ({ code, ...cfg }))
+)
 
-const categories = Object.entries(categoryConfig).map(([code, cfg]) => ({
-  code,
-  ...cfg
-}))
-
+// ── Search & filter ───────────────────────
 const searchQuery = ref('')
 
-// ── Sidebar filter state ──────────────────
-// Restore from sessionStorage so category persists when navigating back
 const selectedCategory = ref(sessionStorage.getItem('coursesCategory') || 'ALL')
 
 function selectCategory(code) {
@@ -282,12 +320,12 @@ const filteredCourses = computed(() => {
 
 const activeCategoryLabel = computed(() => {
   if (selectedCategory.value === 'ALL') return 'ทั้งหมด'
-  const cat = categories.find(c => c.code === selectedCategory.value)
+  const cat = categories.value.find(c => c.code === selectedCategory.value)
   return cat ? `${cat.code} – ${cat.label}` : selectedCategory.value
 })
 
 const activeCategoryColor = computed(() => {
-  const cat = categories.find(c => c.code === selectedCategory.value)
+  const cat = categories.value.find(c => c.code === selectedCategory.value)
   return cat ? cat.color : '#6366f1'
 })
 
@@ -308,8 +346,7 @@ const submitting       = ref(false)
 
 const form = ref({ fullName: '', phone: '', email: '' })
 
-
-// ── Navigation ───────────────────────────
+// ── Navigation ────────────────────────────
 function goToDetail(slug) {
   router.push({ path: '/courses/' + slug })
 }
@@ -365,9 +402,9 @@ async function submitBooking() {
   try {
     await emailjs.send(
       'service_r1g3hlq',
-      'template_yihwf5c',    // Template ID ใหม่
+      'template_yihwf5c',
       templateParams,
-      'jFrquSpMoGPiPa_t-'   // Public Key ใหม่
+      'jFrquSpMoGPiPa_t-'
     )
     closeBookingModal()
     showSuccessModal.value = true
@@ -415,7 +452,7 @@ function initCardAnimations() {
 
 onMounted(() => {
   document.addEventListener('keydown', onKeydown)
-  initCardAnimations()
+  // initCardAnimations จะถูกเรียกใน onMounted หลัง API โหลดเสร็จแล้ว (ข้างบน)
 })
 
 onUnmounted(() => {

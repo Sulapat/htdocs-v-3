@@ -148,7 +148,7 @@
 </template>
 
 <script>
-import newsData from '@/data/newsData.js'
+import { getNewsList } from '@/services/api.js'
 
 const trainingImages = import.meta.glob('@/assets/images/training/**/*.{jpg,png}', { eager: true })
 
@@ -162,10 +162,7 @@ export default {
   name: 'Service',
   data() {
     return {
-      newsData: newsData.map(n => ({
-        ...n,
-        image: resolveImage(n.image)
-      })),
+      newsData: [],
       currentFeaturedIndex: 0
     }
   },
@@ -237,7 +234,9 @@ export default {
       })
     }
   },
-  mounted() {
+  async mounted() {
+    const data = await getNewsList()
+    this.newsData = data.map(n => ({ ...n, image: resolveImage(n.image) }))
     this.initPartnersScroll()
     this.initScrollAnimations()
     window.addEventListener('resize', this.updateCarousel)
