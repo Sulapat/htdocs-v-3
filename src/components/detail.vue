@@ -47,8 +47,8 @@
 
                     <!-- Contact -->
                     <div class="contact-box">
-                        <h3><i class="fas fa-phone-alt"></i> สนใจสอบถามเพิ่มเติม</h3>
-                        <p>ติดต่อเราได้ตลอด 24 ชั่วโมง</p>
+                        <h3><i class="fas fa-phone-alt"></i> <span>{{ $t('detail.contactTitle') }}</span></h3>
+                        <p>{{ $t('detail.contactSubtitle') }}</p>
                         <div class="contact-buttons">
                             <a href="tel:0961879595" class="contact-btn">
                                 <i class="fas fa-phone"></i> 096-1879595
@@ -57,7 +57,7 @@
                                 <i class="fab fa-line"></i> @530ddhwa
                             </a>
                             <a href="mailto:patineer@outlook.com" class="contact-btn">
-                                <i class="fas fa-envelope"></i> อีเมล
+                                <i class="fas fa-envelope"></i> <span>{{ $t('detail.emailLabel') }}</span>
                             </a>
                         </div>
                     </div>
@@ -66,7 +66,7 @@
 
             <!-- Related News -->
             <aside class="related-news">
-                <h2><i class="fas fa-bullhorn"></i> ข่าวประชาสัมพันธ์อื่นๆ</h2>
+                <h2><i class="fas fa-bullhorn"></i> <span>{{ $t('detail.relatedNewsTitle') }}</span></h2>
                 <ul v-if="relatedNews.length" class="related-news-list">
                     <li v-for="item in relatedNews" :key="item.id">
                         <router-link :to="`?id=${item.id}`">
@@ -74,12 +74,12 @@
                         </router-link>
                     </li>
                 </ul>
-                <p v-else>ไม่มีข่าวเพิ่มเติม</p>
+                <p v-else>{{ $t('detail.noMoreNews') }}</p>
             </aside>
         </div>
 
         <div v-else class="no-news">
-            <p>ไม่พบข่าวที่ต้องการ</p>
+            <p>{{ $t('detail.notFound') }}</p>
         </div>
     </div>
 </template>

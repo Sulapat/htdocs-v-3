@@ -9,15 +9,12 @@
           <circle cx="10" cy="8" r="5" />
           <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3" />
         </svg>
-        <span>Patineer Training Center</span>
+        <span>{{ $t('testResult.hero.brand') }}</span>
       </div>
 
-      <h1 class="title">VI Certified<span class="highlight"> Analysts</span></h1>
+      <h1 class="title">VI Certified<span class="highlight">{{ $t('testResult.hero.titleHighlight') }}</span></h1>
 
-      <p class="subtitle">
-        กรอกรหัสผู้สอบ หรือชื่อ-นามสกุล เพื่อตรวจ VI Certified Analysts หลักสูตรด้าน<br />
-        เทคโนโลยีการบำรุงรักษา
-      </p>
+      <p class="subtitle" v-html="$t('testResult.hero.subtitle')"></p>
 
       <form class="search-form" @submit.prevent="handleSearch">
         <!-- Custom Dropdown -->
@@ -67,9 +64,9 @@
             <path d="m21 21-4.3-4.3" />
           </svg>
           <input v-model="searchQuery" type="text" class="search-input"
-            placeholder="Member ID, First Name, Last Name, หรือ Email" />
+            :placeholder="$t('testResult.search.placeholder')" />
         </div>
-        <button type="submit" class="search-button">ค้นหา</button>
+        <button type="submit" class="search-button">{{ $t('testResult.search.button') }}</button>
       </form>
     </section>
 
@@ -84,8 +81,8 @@
           <circle cx="9" cy="7" r="4"/>
           <line x1="23" y1="11" x2="17" y2="11"/>
         </svg>
-        <h3>ไม่มีข้อมูลผู้ที่เรียนคอร์สนี้</h3>
-        <p>ยังไม่มีผู้ผ่านการรับรองในหลักสูตรนี้</p>
+        <h3>{{ $t('testResult.empty.title') }}</h3>
+        <p>{{ $t('testResult.empty.message') }}</p>
       </div>
 
       <!-- All Results (before search) -->
@@ -106,11 +103,11 @@
             </div>
             <div class="result-details">
               <div class="result-detail-item">
-                <span class="result-detail-label">Member ID</span>
+                <span class="result-detail-label">{{ $t('testResult.card.memberIdLabel') }}</span>
                 <span class="result-detail-value">{{ result.Member }}</span>
               </div> 
               <div class="result-detail-item">
-                <span class="result-detail-label">Email</span>
+                <span class="result-detail-label">{{ $t('testResult.card.emailLabel') }}</span>
                 <span class="result-detail-value">{{ result.Mail }}</span>
               </div>
             </div>
@@ -122,9 +119,9 @@
           </div>
         </div>
         <div class="pagination">
-          <button class="page-btn" :disabled="currentPage === 1" @click="currentPage--">← ก่อนหน้า</button>
+          <button class="page-btn" :disabled="currentPage === 1" @click="currentPage--">← <span>{{ $t('testResult.pagination.prev') }}</span></button>
           <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
-          <button class="page-btn" :disabled="currentPage === totalPages" @click="currentPage++">ถัดไป →</button>
+          <button class="page-btn" :disabled="currentPage === totalPages" @click="currentPage++"><span>{{ $t('testResult.pagination.next') }}</span> →</button>
         </div>
       </div>
 
@@ -136,7 +133,7 @@
       <!-- Loading -->
       <div v-else-if="loading" class="loading-state">
         <div class="spinner"></div>
-        <p>กำลังค้นหา...</p>
+        <p>{{ $t('testResult.loading') }}</p>
       </div>
 
       <!-- No Results -->
@@ -146,8 +143,11 @@
           <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
           <line x1="8" y1="11" x2="14" y2="11" />
         </svg>
-        <h3>ไม่พบผลการค้นหา</h3>
-        <p>ไม่พบข้อมูลสำหรับ "{{ submittedQuery }}" กรุณาลองค้นหาด้วยคำค้นอื่น</p>
+        <h3>{{ $t('testResult.noResults.title') }}</h3>
+        <p>
+          <span>{{ $t('testResult.noResults.messagePrefix') }}</span> "{{ submittedQuery }}"
+          <span>{{ $t('testResult.noResults.messageSuffix') }}</span>
+        </p>
       </div>
 
       <!-- Search Results -->
@@ -168,11 +168,11 @@
             </div>
             <div class="result-details">
               <div class="result-detail-item">
-                <span class="result-detail-label">Member ID</span>
+                <span class="result-detail-label">{{ $t('testResult.card.memberIdLabel') }}</span>
                 <span class="result-detail-value">{{ result.Member }}</span>
               </div>
               <div class="result-detail-item">
-                <span class="result-detail-label">Email</span>
+                <span class="result-detail-label">{{ $t('testResult.card.emailLabel') }}</span>
                 <span class="result-detail-value">{{ result.Mail }}</span>
               </div>
             </div>
@@ -184,9 +184,9 @@
           </div>
         </div>
         <div class="pagination">
-          <button class="page-btn" :disabled="searchPage === 1" @click="searchPage--">← ก่อนหน้า</button>
+          <button class="page-btn" :disabled="searchPage === 1" @click="searchPage--">← <span>{{ $t('testResult.pagination.prev') }}</span></button>
           <span class="page-info">{{ searchPage }} / {{ totalSearchPages }}</span>
-          <button class="page-btn" :disabled="searchPage === totalSearchPages" @click="searchPage++">ถัดไป →</button>
+          <button class="page-btn" :disabled="searchPage === totalSearchPages" @click="searchPage++"><span>{{ $t('testResult.pagination.next') }}</span> →</button>
         </div>
       </div>
 
@@ -197,8 +197,11 @@
 <script setup>
 import { ref, watch, computed, nextTick, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 // ✅ เปลี่ยนมาใช้ getDataByFilter แทน dataByFilter (static object)
-import { sampleData, getDataByFilter } from '@/data/sampleData.js'
+import { sampleData, getDataByFilter } from '@/data/sampledata.js'
+
+const { t } = useI18n()
 
 // โหลดรูปภาพทั้งหมดใน assets/images/candidates/ ชื่อไฟล์ตรงกับ ID (เช่น 1.png, 2.png)
 const candidateImages = import.meta.glob('@/assets/images/candidates/*.{png,jpg,jpeg,webp}', { eager: true })
@@ -301,13 +304,14 @@ const dotClass = (val) => ({
   'dot-va4': val === 'C4VA',
 })
 
-const courseOptions = [
-  { value: 'ALL',  label: 'ทั้งหมด' },
-  { value: 'BMV',  label: 'Basic Machinery Vibration' },
-  { value: 'C2VA', label: 'Category II Vibration Analyst' },
-  { value: 'C3VA', label: 'Category III Vibration Analyst' },
-  { value: 'C4VA', label: 'Category IV Vibration Analyst' },
-]
+// courseOptions เป็น computed เพื่อให้ label เปลี่ยนตามภาษาที่เลือกแบบ reactive
+const courseOptions = computed(() => [
+  { value: 'ALL',  label: t('testResult.dropdown.all') },
+  { value: 'BMV',  label: t('nav.bmv') },
+  { value: 'C2VA', label: t('nav.c2va') },
+  { value: 'C3VA', label: t('nav.c3va') },
+  { value: 'C4VA', label: t('nav.c4va') },
+])
 
 const selectedCourse = ref('ALL')
 
@@ -375,10 +379,10 @@ const parseLevelTags = (level = '') => {
 const cardBorderColor = (index, total) => {
   const dark  = [107, 114, 128]  // #6b7280
   const light = [229, 231, 235]  // #e5e7eb
-  const t = total <= 1 ? 0 : index / (total - 1)
-  const r = Math.round(dark[0] + (light[0] - dark[0]) * t)
-  const g = Math.round(dark[1] + (light[1] - dark[1]) * t)
-  const b = Math.round(dark[2] + (light[2] - dark[2]) * t)
+  const t2 = total <= 1 ? 0 : index / (total - 1)
+  const r = Math.round(dark[0] + (light[0] - dark[0]) * t2)
+  const g = Math.round(dark[1] + (light[1] - dark[1]) * t2)
+  const b = Math.round(dark[2] + (light[2] - dark[2]) * t2)
   return `rgb(${r},${g},${b})`
 }
 

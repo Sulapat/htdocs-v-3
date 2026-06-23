@@ -6,18 +6,9 @@
       <div class="morphing-bg-2"></div>
       <div class="hero-container">
         <div class="hero-left">
-          <h1>
-            Maintenance technology<br>
-            Consulting <span class="highlight">and</span><br>
-            Training service
-          </h1>
-          <p>บริษัทแพททิเนียร์ ให้บริการด้านงานบำรุงรักษากับเครื่องจักรในภาคอุตสาหกรรม
-            ก่อตั้งขึ้นในปี พ.ศ. 2557 โดยเกิดจากความต้องการของภาคอุตสาหกรรม
-            ที่ไม่สามารถยอมให้เครื่องจักรเสียหาย (Breakdown) โดยหาสาเหตุที่แท้จริงไม่ได้
-            ทำให้เสียโอกาสในการผลิต ดังนั้น บริษัทแพททิเนียร์
-            ให้คำปรึกษาทางด้านเทคโนโลยีบำรุงรักษาเชิงคาดการณ์ (Condition Based Maintenance)
-            ซึ่งเอาไปใช้ในการตรวจสอบสภาพเครื่องจักร และนำไปสู่ประโยชน์สูงสุดในการจัดการงานบำรุงรักษา</p>
-          <router-link to="/service" class="cta-button">More About Us</router-link>
+          <h1 v-html="$t('home.hero.title')"></h1>
+          <p>{{ $t('home.hero.description') }}</p>
+          <router-link to="/service" class="cta-button">{{ $t('home.hero.ctaButton') }}</router-link>
         </div>
 
         <!-- Card Slider -->
@@ -44,22 +35,22 @@
 
     <!-- Service Section -->
     <section id="service" class="service-section">
-      <h2 class="section-title">Our Services</h2>
+      <h2 class="section-title">{{ $t('home.services.sectionTitle') }}</h2>
       <div class="services-grid">
         <div class="service-card">
           <div class="service-icon"><i class="fas fa-headset"></i></div>
-          <h3>Consult</h3>
-          <p>ทีมงานผู้เชี่ยวชาญของเราให้คำปรึกษาด้านการวางแผนและการพัฒนาระบบบำรุงรักษา และระบบการบำรุงรักษาเชิงรุก เพื่อช่วยเพิ่มประสิทธิภาพและลดต้นทุนการซ่อมบำรุงในโรงงานอุตสาหกรรม</p>
+          <h3>{{ $t('home.services.consultTitle') }}</h3>
+          <p>{{ $t('home.services.consultDesc') }}</p>
         </div>
         <div class="service-card">
           <div class="service-icon"><i class="fas fa-tools"></i></div>
-          <h3>Service</h3>
-          <p>เราบริการตรวจวัด วิเคราะห์สภาพเครื่องจักรด้วยเทคโนโลยีที่ทันสมัย การวิเคราะห์การสั่นสะเทือน เพื่อป้องกันความเสียหายและยืดอายุการใช้งานของอุปกรณ์ในโรงงาน</p>
+          <h3>{{ $t('home.services.serviceTitle') }}</h3>
+          <p>{{ $t('home.services.serviceDesc') }}</p>
         </div>
         <div class="service-card">
           <div class="service-icon"><i class="fas fa-award"></i></div>
-          <h3>Training</h3>
-          <p>เรามุ่งเน้นส่งมอบการอบรมที่มีคุณภาพสูง เพื่อพัฒนาทักษะและความรู้ด้านการวิเคราะห์สั่นสะเทือน การตรวจสอบสภาพเครื่องจักร และการบำรุงรักษาเชิงคาดการณ์ ตามมาตรฐานสากล</p>
+          <h3>{{ $t('home.services.trainingTitle') }}</h3>
+          <p>{{ $t('home.services.trainingDesc') }}</p>
         </div>
       </div>
     </section>
@@ -75,15 +66,14 @@
           <img src="@/assets/images/data/international-rep.jpg" alt="Vibration Institute Logo">
         </div>
       </div>
-      <h1>Official Training and Certification<br>Representative of the Vibration Institute</h1>
+      <h1 v-html="$t('home.vi.title')"></h1>
       <p class="subtitle">
         <a href="https://www.vi-institute.org/international-representative-directory/" target="_blank" rel="noopener noreferrer">
-          Exclusive Representative in Thailand
+          {{ $t('home.vi.exclusiveRep') }}
         </a>
       </p>
       <p class="description">
-        Patineer Co., Ltd. is the officially authorized representative of the Vibration Institute (USA) in Thailand,
-        offering professional training and certification programs in vibration analysis.
+        {{ $t('home.vi.description') }}
       </p>
     </section>
   </div>

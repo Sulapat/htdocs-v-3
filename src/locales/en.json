@@ -1,0 +1,353 @@
+{
+  "nav": {
+    "home": "Home",
+    "service": "Service",
+    "knowledge": "News",
+    "clients": "Clients",
+    "viAnalysts": "VI Certified Analysts",
+    "bmv": "Basic Machinery Vibration",
+    "c2va": "Category II Vibration Analyst",
+    "c3va": "Category III Vibration Analyst",
+    "c4va": "Category IV Vibration Analyst",
+    "courses": "Courses"
+  },
+
+  "footer": {
+    "contactUs": "Contact Us",
+    "address": "65/17 Moo 4, Don Hua Loh<br>Mueang District, Chon Buri 20000",
+    "emailLabel": "Email:",
+    "telLabel": "Tel:",
+    "emailTitle": "Send us an email",
+    "lineTitle": "Contact via LINE",
+    "facebookTitle": "Visit our Facebook"
+  },
+
+  "home": {
+    "hero": {
+      "title": "Maintenance technology<br>Consulting <span class=\"highlight\">and</span><br>Training service",
+      "description": "Patineer Co., Ltd. provides maintenance services for machinery in the industrial sector. Founded in 2014, the company was established to meet the industry's need to prevent machine breakdowns whose root causes could not be identified, leading to lost production opportunities. Patineer therefore offers consulting on Condition Based Maintenance technology, used to inspect machine condition and maximize the benefits of maintenance management.",
+      "ctaButton": "More About Us"
+    },
+    "services": {
+      "sectionTitle": "Our Services",
+      "consultTitle": "Consult",
+      "consultDesc": "Our team of experts provides consulting on planning and developing maintenance systems and proactive maintenance programs, helping to improve efficiency and reduce maintenance costs in industrial plants.",
+      "serviceTitle": "Service",
+      "serviceDesc": "We provide measurement and analysis of machine condition using modern technology and vibration analysis, to prevent damage and extend the service life of equipment in the plant.",
+      "trainingTitle": "Training",
+      "trainingDesc": "We focus on delivering high-quality training to develop skills and knowledge in vibration analysis, machine condition monitoring, and predictive maintenance, in line with international standards."
+    },
+    "vi": {
+      "title": "Official Training and Certification<br>Representative of the Vibration Institute",
+      "exclusiveRep": "Exclusive Representative in Thailand",
+      "description": "Patineer Co., Ltd. is the officially authorized representative of the Vibration Institute (USA) in Thailand, offering professional training and certification programs in vibration analysis."
+    }
+  },
+
+  "service": {
+    "hero": {
+      "title": "Where Innovation Drives<br><span>Industrial Excellence</span>",
+      "subtitle": "With over 10 years of experience providing high-quality<br>industrial machinery maintenance services",
+      "statProjects": "Completed Projects",
+      "statYears": "Years of Experience"
+    },
+    "about": {
+      "title": "About us",
+      "subtitle": "We are experts in industrial machinery",
+      "description": "With over 10 years of experience providing high-quality industrial machinery maintenance services, we help organizations carry out various types of maintenance processes to keep industrial machinery running and continuously improve production efficiency.",
+      "feature1": "Inspect and analyze machine condition using modern technology",
+      "feature2": "Train plant personnel to maintain and plan maintenance work efficiently",
+      "feature3": "Develop maintenance approaches suited to each industry"
+    },
+    "stats": {
+      "yearsInBusiness": "Years in Business",
+      "clientsServed": "Clients Served",
+      "traineesCertified": "Trainees Certified"
+    },
+    "featured": {
+      "sectionTitle": "News",
+      "readMore": "Read More"
+    }
+  },
+
+  "clients": {
+    "title": "Our Clients",
+    "subtitle": "We are proud to have served leading clients across a wide range of industries. Our clients matter to us and are part of our growth. We are committed to delivering excellent service to everyone.",
+    "desc": {
+      "atsumitec": "Parts Manufacturing",
+      "b_g": "Energy Business",
+      "bd_thailand": "Railway Business",
+      "bdms": "Healthcare",
+      "boon": "Industrial",
+      "daikin": "Industrial",
+      "egat": "Power Authority",
+      "enfourt": "Mechanical Product",
+      "gcme": "Maintenance and Engineering",
+      "griffith": "Food Industry",
+      "gulf": "Energy Group",
+      "gyproc": "Construction",
+      "ihi": "Technology Innovator",
+      "indoama": "Chemical Company",
+      "is_software": "Maintenance Solutions",
+      "jsjs": "Innovative Medicine",
+      "ki": "Sugar Industry",
+      "kkf": "Manufacturer & Distributor",
+      "mars": "International Trade",
+      "mitr_phol": "Sugar Industry",
+      "nestle": "Global Brand",
+      "npp": "Smart Energy Solution",
+      "nteq": "Technology Innovative",
+      "pae": "Technical Service",
+      "pttep": "Petroleum Exploration & Production",
+      "repo": "Industrial Solutions",
+      "sahakol": "Engineering Group",
+      "scg": "Engineering Group",
+      "seckisui": "Chemical Products",
+      "skf": "Engineering Group",
+      "sotus": "Maintenance Partner",
+      "ssg": "Global Brand",
+      "ssl": "Industrial Client",
+      "stm": "Manufacturing Client",
+      "thaioil": "Energy Leader",
+      "thanakorn": "Oil Products",
+      "trane": "Cooling Systems",
+      "transitions": "Optical Technology",
+      "ttm": "Industrial Client",
+      "wha": "Logistics & Industrial"
+    }
+  },
+
+  "knowledge": {
+    "headerText": "Stay up to date with information and best practices in maintenance",
+    "searchPlaceholder": "Search articles...",
+    "filterAll": "All",
+    "filterTraining": "Training",
+    "filterNews": "News",
+    "readMore": "Read More",
+    "noResults": "No matching articles found",
+    "categoryLabel": {
+      "category2": "Category II",
+      "training": "Training",
+      "news": "News",
+      "default": "Article"
+    }
+  },
+
+  "detail": {
+    "contactTitle": "Want to know more?",
+    "contactSubtitle": "Contact us 24 hours a day",
+    "emailLabel": "Email",
+    "relatedNewsTitle": "Other News",
+    "noMoreNews": "No more news",
+    "notFound": "News article not found"
+  },
+
+  "courses": {
+    "hero": {
+      "title": "Training",
+      "titleHighlight": "Courses",
+      "subtitle": "Develop your skills and knowledge in industrial machinery maintenance<br>with courses designed by experts"
+    },
+    "section": {
+      "title": "Available Courses"
+    },
+    "loading": "Loading data...",
+    "sidebar": {
+      "categoryHeader": "Course Categories",
+      "searchPlaceholder": "Search courses...",
+      "all": "All"
+    },
+    "filterBar": {
+      "showing": "Showing",
+      "coursesUnit": "courses",
+      "inCategory": "in category",
+      "all": "All"
+    },
+    "card": {
+      "perPerson": "/ person",
+      "bookButton": "Book Course"
+    },
+    "emptyState": {
+      "message": "No courses in this category yet",
+      "showAllButton": "View All Courses"
+    },
+    "whyUs": {
+      "sectionTitle": "Why Choose Us",
+      "item1": { "title": "Certified", "desc": "Internationally recognized certification" },
+      "item2": { "title": "Expert Instructors", "desc": "Instructors with over 10 years of experience" },
+      "item3": { "title": "Hands-On Learning", "desc": "Practice with real equipment in the lab" },
+      "item4": { "title": "Post-Training Support", "desc": "Consultation and support after course completion" }
+    },
+    "modal": {
+      "bookingTitle": "Book Course",
+      "courseLabel": "Course:",
+      "priceLabel": "Price:",
+      "perPerson": "/ person",
+      "fullNameLabel": "Full Name",
+      "fullNamePlaceholder": "Enter your full name",
+      "phoneLabel": "Phone Number",
+      "emailLabel": "Email",
+      "submitButton": "Submit Booking",
+      "submittingButton": "Submitting..."
+    },
+    "successModal": {
+      "title": "Submitted Successfully!",
+      "message": "Thank you for booking this course<br>Our team will contact you within 24 hours",
+      "closeButton": "OK"
+    },
+    "alerts": {
+      "invalidPhone": "Please enter a valid phone number",
+      "submitError": "An error occurred. Unable to submit data at this time.",
+      "loadError": "Failed to load course data: "
+    }
+  },
+
+  "courseDetail": {
+    "notFound": {
+      "title": "Course not found",
+      "backButton": "Back to Courses"
+    },
+    "hero": {
+      "back": "Back",
+      "priceLabel": "Price per person",
+      "vatNote": "VAT 7% not included",
+      "priceInquiry": "Contact for pricing",
+      "bookButton": "Book This Course",
+      "quoteButton": "Request a Quote"
+    },
+    "tabs": {
+      "detail": "Details",
+      "topics": "Topics",
+      "schedule": "Schedule",
+      "instructor": "Instructor",
+      "other": "Other"
+    },
+    "detailTab": {
+      "aboutTitle": "About this Course",
+      "objectivesTitle": "Objectives",
+      "targetGroupsTitle": "Target Groups"
+    },
+    "topicsTab": { "title": "Course Content" },
+    "scheduleTab": { "title": "Schedule" },
+    "instructorTab": {
+      "title": "Instructor",
+      "pendingTitle": "Instructor information is being updated",
+      "pendingSubtitle": "For more information, please contact our team directly"
+    },
+    "otherTab": {
+      "methodTitle": "Training Method",
+      "equipmentTitle": "Equipment",
+      "notesTitle": "Notes"
+    },
+    "sidebar": {
+      "priceLabel": "Price per person",
+      "vatNote": "VAT 7% not included",
+      "durationLabel": "Duration",
+      "capacityLabel": "Number of Trainees",
+      "instructorLabel": "Instructor",
+      "instructorPending": "Updating",
+      "equipmentLabel": "Equipment"
+    },
+    "modal": {
+      "bookingTitle": "Book Course",
+      "quoteTitle": "Request a Quote",
+      "priceUnit": "/ person",
+      "priceInquiry": "Contact for pricing",
+      "fullNameLabel": "Full Name",
+      "fullNamePlaceholder": "Enter your full name",
+      "phoneLabel": "Phone Number",
+      "emailLabel": "Email",
+      "submitButton": "Submit",
+      "submittingButton": "Submitting..."
+    },
+    "successModal": {
+      "title": "Submitted Successfully!",
+      "message": "Our team will contact you within 24 hours",
+      "closeButton": "OK"
+    },
+    "alerts": {
+      "invalidPhone": "Please enter a valid phone number",
+      "submitError": "An error occurred. Unable to submit data at this time."
+    }
+  },
+
+  "testResult": {
+    "hero": {
+      "brand": "Patineer Training Center",
+      "titleHighlight": " Analysts",
+      "subtitle": "Enter a Member ID or full name to verify VI Certified Analysts<br />in maintenance technology courses"
+    },
+    "search": {
+      "placeholder": "Member ID, First Name, Last Name, or Email",
+      "button": "Search"
+    },
+    "dropdown": {
+      "all": "All"
+    },
+    "empty": {
+      "title": "No analysts found for this course",
+      "message": "No one has been certified in this course yet"
+    },
+    "card": {
+      "memberIdLabel": "Member ID",
+      "emailLabel": "Email"
+    },
+    "pagination": {
+      "prev": "Previous",
+      "next": "Next"
+    },
+    "loading": "Searching...",
+    "noResults": {
+      "title": "No Results Found",
+      "messagePrefix": "No results found for",
+      "messageSuffix": "Please try a different search term"
+    }
+  },
+
+  "stats": {
+    "header": {
+      "brand": "Patineer Training Center",
+      "checkRights": "Check Certification",
+      "overview": "Overview"
+    },
+    "hero": {
+      "liveStatistics": "Live Statistics",
+      "subtitle": "Certification Overview",
+      "description": "Statistics on the number of Certified Analysts by course and organization, recently updated"
+    },
+    "kpi": {
+      "totalCertified": "Total Certified",
+      "organizations": "Organizations"
+    },
+    "distribution": {
+      "title": "Distribution by Course"
+    },
+    "unit": {
+      "people": "people"
+    },
+    "topCompanies": {
+      "title": "Organizations with the Most Certified Analysts"
+    },
+    "recent": {
+      "title": "Recent Additions",
+      "viewAll": "View All →",
+      "colName": "Full Name",
+      "colOrg": "Organization",
+      "colLevel": "Level"
+    },
+    "cta": {
+      "text": "Need to verify a certification?",
+      "button": "Search Certified Analysts →"
+    }
+  },
+
+  "api": {
+    "participantListTitle": "Participant List",
+    "loadingMessage": "Loading data...",
+    "tableHeader": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "company": "Company"
+    }
+  }
+}

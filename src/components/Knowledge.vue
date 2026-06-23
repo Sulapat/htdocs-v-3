@@ -1,19 +1,19 @@
 <template>
   <div class="Knowledge">
     <section class="knowledge-header">
-      <p>เพื่อให้คุณได้รับข้อมูลและแนวปฏิบัติที่ทันสมัยในงานบำรุงรักษา</p>
+      <p>{{ $t('knowledge.headerText') }}</p>
     </section>
 
     <div class="filter-section">
       <div class="search-box">
         <i class="fas fa-search"></i>
-        <input type="text" v-model="searchQuery" @input="searchArticles(searchQuery)" placeholder="ค้นหาบทความ...">
+        <input type="text" v-model="searchQuery" @input="searchArticles(searchQuery)" :placeholder="$t('knowledge.searchPlaceholder')">
       </div>
       <div class="filter-buttons">
-        <button class="filter-btn" :class="{ active: activeCategory === 'all' }" @click="filterArticles('all')">ทั้งหมด</button>
+        <button class="filter-btn" :class="{ active: activeCategory === 'all' }" @click="filterArticles('all')">{{ $t('knowledge.filterAll') }}</button>
         <button class="filter-btn" :class="{ active: activeCategory === 'category2' }" @click="filterArticles('category2')">Category II</button>
-        <button class="filter-btn" :class="{ active: activeCategory === 'training' }" @click="filterArticles('training')">อบรม</button>
-        <button class="filter-btn" :class="{ active: activeCategory === 'news' }" @click="filterArticles('news')">ข่าวสาร</button>
+        <button class="filter-btn" :class="{ active: activeCategory === 'training' }" @click="filterArticles('training')">{{ $t('knowledge.filterTraining') }}</button>
+        <button class="filter-btn" :class="{ active: activeCategory === 'news' }" @click="filterArticles('news')">{{ $t('knowledge.filterNews') }}</button>
       </div>
     </div>
 
@@ -33,12 +33,12 @@
                 <p>{{ article.description }}</p>
                 <div class="article-meta">
                 <span><i class="far fa-calendar"></i> {{ article.date }}</span>
-                <span class="btn-read-more">อ่านเพิ่มเติม <i class="fas fa-arrow-right"></i></span>
+                <span class="btn-read-more"><span>{{ $t('knowledge.readMore') }}</span> <i class="fas fa-arrow-right"></i></span>
                 </div>
             </div>
         </router-link>
         <div v-if="paginatedArticles.length === 0" class="no-results">
-          <p>ไม่พบบทความที่ค้นหา</p>
+          <p>{{ $t('knowledge.noResults') }}</p>
         </div>
       </div>
 
@@ -113,12 +113,13 @@ export default {
   },
   methods: {
     getCategoryLabel(category) {
+      // ใช้ this.$t() เพราะอยู่ใน methods (ไม่ใช่ template) ของ Options API
       const labels = {
-        'category2': 'Category II',
-        'training': 'อบรม',
-        'news': 'ข่าวสาร'
+        'category2': this.$t('knowledge.categoryLabel.category2'),
+        'training': this.$t('knowledge.categoryLabel.training'),
+        'news': this.$t('knowledge.categoryLabel.news')
       }
-      return labels[category] || 'บทความ'
+      return labels[category] || this.$t('knowledge.categoryLabel.default')
     },
     filterArticles(category) {
       this.activeCategory = category

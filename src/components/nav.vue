@@ -12,17 +12,17 @@
             </div>
 
             <ul class="nav-links" :class="{ 'show': isMenuOpen }">
-                <li><router-link to="/" @click="closeAll">Home</router-link></li>
-                <li><router-link to="/service" @click="closeAll">Service</router-link></li>
-                <li><router-link to="/knowledge" @click="closeAll">ประชาสัมพันธ์</router-link></li>
-                <li><router-link to="/clients" @click="closeAll">Clients</router-link></li>
+                <li><router-link to="/" @click="closeAll">{{ $t('nav.home') }}</router-link></li>
+                <li><router-link to="/service" @click="closeAll">{{ $t('nav.service') }}</router-link></li>
+                <li><router-link to="/knowledge" @click="closeAll">{{ $t('nav.knowledge') }}</router-link></li>
+                <li><router-link to="/clients" @click="closeAll">{{ $t('nav.clients') }}</router-link></li>
                 
                 <li class="nav-dropdown-wrap"
                     @mouseenter="handleMouseEnter"
                     @mouseleave="handleMouseLeave"
                 >
                   <router-link to="/result" class="nav-dropdown-trigger" @click.prevent="handleViClick">
-                    VI Certified Analysts
+                    {{ $t('nav.viAnalysts') }}
                     <svg class="nav-drop-chevron" :class="{ open: viDropOpen }"
                       xmlns="https://www.w3.org/2000/svg" width="13" height="13"
                       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -37,33 +37,49 @@
                       <li>
                         <router-link to="/result?course=BMV" @click="closeAll">
                           <span class="nav-drop-dot dot-bmv"></span>
-                          Basic Machinery Vibration
+                          {{ $t('nav.bmv') }}
                         </router-link>
                       </li>
                       <li>
                         <router-link to="/result?course=C2VA" @click="closeAll">
                           <span class="nav-drop-dot dot-va2"></span>
-                          Category II Vibration Analyst
+                          {{ $t('nav.c2va') }}
                         </router-link>
                       </li>
                       <li>
                         <router-link to="/result?course=C3VA" @click="closeAll">
                           <span class="nav-drop-dot dot-va3"></span>
-                          Category III Vibration Analyst
+                          {{ $t('nav.c3va') }}
                         </router-link>
                       </li>
                       <li>
                         <router-link to="/result?course=C4VA" @click="closeAll">
                           <span class="nav-drop-dot dot-va4"></span>
-                          Category IV Vibration Analyst
+                          {{ $t('nav.c4va') }}
                         </router-link>
                       </li>
                     </ul>
                   </transition>
                 </li>
 
-                <li><router-link to="/courses" @click="closeAll">Courses</router-link></li>
+                <li><router-link to="/courses" @click="closeAll">{{ $t('nav.courses') }}</router-link></li>
             </ul>
+
+            <button
+                class="lang-switch"
+                :class="{ 'is-en': currentLang === 'en' }"
+                type="button"
+                role="switch"
+                :aria-checked="currentLang === 'en'"
+                aria-label="Switch language / สลับภาษา"
+                @click="toggleLanguage"
+            >
+                <span class="lang-switch-track">
+                    <span class="lang-switch-label lang-th">TH</span>
+                    <span class="lang-switch-label lang-en">EN</span>
+                    <span class="lang-switch-thumb">{{ currentLang === 'en' ? 'EN' : 'TH' }}</span>
+                </span>
+            </button>
 
             <div class="social-links">
                 <a href="https://mail.google.com/mail/?view=cm&to=patineer@outlook.com" target="_blank"><i class="fa fa-envelope"></i></a>
@@ -81,7 +97,9 @@ export default {
     return {
       isMenuOpen: false,
       viDropOpen: false,
-      windowWidth: window.innerWidth
+      windowWidth: window.innerWidth,
+      // currentLang อ่านจาก vue-i18n locale ปัจจุบัน (sync กับ localStorage ผ่าน i18n.js)
+      currentLang: this.$i18n.locale
     }
   },
   // เพิ่ม Watcher เพื่อจับการเปลี่ยนแปลงของตัวแปรเปิด/ปิดเมนู
@@ -172,6 +190,16 @@ export default {
         navbar.style.background = 'white';
         navbar.style.boxShadow = '0 2px 5px rgba(0,0,0,0.05)';
       }
+    },
+    // สลับภาษา TH <-> EN — ต่อกับ vue-i18n จริง
+    toggleLanguage() {
+      this.currentLang = this.currentLang === 'th' ? 'en' : 'th';
+      // เปลี่ยนภาษาทั้งแอปทันที ทุก component ที่ใช้ $t() จะ re-render อัตโนมัติ
+      this.$i18n.locale = this.currentLang;
+      localStorage.setItem('lang', this.currentLang);
+      document.documentElement.setAttribute('lang', this.currentLang);
+      // ยิง custom event ไว้เผื่อ component อื่นอยากฟังการเปลี่ยนภาษา (เช่น โค้ดที่ไม่ใช่ Vue)
+      window.dispatchEvent(new CustomEvent('lang-changed', { detail: this.currentLang }));
     }
   }
 }

@@ -4,18 +4,18 @@
     <div class="morphing-bg"></div>
     <div class="morphing-bg-2"></div>
     <div class="hero-content">
-      <h1>หลักสูตร<span>อบรม</span></h1>
-      <p>พัฒนาทักษะและความรู้ด้านการบำรุงรักษาเครื่องจักรอุตสาหกรรม<br>ด้วยหลักสูตรที่ออกแบบโดยผู้เชี่ยวชาญ</p>
+      <h1><span>{{ $t('courses.hero.title') }}</span><span>{{ $t('courses.hero.titleHighlight') }}</span></h1>
+      <p v-html="$t('courses.hero.subtitle')"></p>
     </div>
   </section>
 
   <!-- Courses Section -->
   <section class="courses-section">
-    <h2 class="section-title">หลักสูตรที่เปิดสอน</h2>
+    <h2 class="section-title">{{ $t('courses.section.title') }}</h2>
 
     <!-- Loading -->
     <div v-if="loading" class="loading-state">
-      <i class="fas fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...
+      <i class="fas fa-spinner fa-spin"></i> <span>{{ $t('courses.loading') }}</span>
     </div>
 
     <!-- Error -->
@@ -29,14 +29,14 @@
       <aside class="courses-sidebar">
         <div class="sidebar-header">
           <i class="fas fa-layer-group"></i>
-          <span>หมวดหมู่หลักสูตร</span>
+          <span>{{ $t('courses.sidebar.categoryHeader') }}</span>
         </div>
         <div class="sidebar-search">
           <i class="fas fa-search"></i>
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="ค้นหาหลักสูตร..."
+            :placeholder="$t('courses.sidebar.searchPlaceholder')"
             class="sidebar-search-input"
           />
           <button v-if="searchQuery" class="sidebar-search-clear" @click="searchQuery = ''">
@@ -52,7 +52,7 @@
         >
           <span class="sidebar-all-left">
             <i class="fas fa-th-large"></i>
-            ทั้งหมด
+            <span>{{ $t('courses.sidebar.all') }}</span>
           </span>
           <span class="cat-count">{{ _courses.length }}</span>
         </button>
@@ -71,7 +71,8 @@
             </span>
             <div class="cat-info">
               <span class="cat-code">{{ cat.code }}</span>
-              <span class="cat-label">{{ cat.label }}</span>
+              <!-- ✅ cat.label อาจเป็น { th, en } จาก API -->
+              <span class="cat-label">{{ lf(cat.label) }}</span>
             </div>
             <span class="cat-count" :class="{ 'count-zero': getCategoryCount(cat.code) === 0 }">
               {{ getCategoryCount(cat.code) }}
@@ -86,9 +87,9 @@
         <!-- Filter bar -->
         <div class="filter-bar">
           <span class="filter-result">
-            แสดง <strong>{{ filteredCourses.length }}</strong> หลักสูตร
+            <span>{{ $t('courses.filterBar.showing') }}</span> <strong>{{ filteredCourses.length }}</strong> <span>{{ $t('courses.filterBar.coursesUnit') }}</span>
             <template v-if="selectedCategory !== 'ALL'">
-              ในหมวด
+              <span>{{ $t('courses.filterBar.inCategory') }}</span>
               <span class="filter-cat-chip" :style="{ background: activeCategoryColor + '18', color: activeCategoryColor }">
                 {{ activeCategoryLabel }}
               </span>
@@ -98,9 +99,10 @@
           <!-- Mobile category dropdown -->
           <div class="mobile-filter">
             <select v-model="selectedCategory" class="mobile-cat-select">
-              <option value="ALL">ทั้งหมด ({{ _courses.length }})</option>
+              <option value="ALL">{{ $t('courses.filterBar.all') }} ({{ _courses.length }})</option>
               <option v-for="cat in categories" :key="cat.code" :value="cat.code">
-                {{ cat.code }} – {{ cat.label }} ({{ getCategoryCount(cat.code) }})
+                <!-- ✅ lf() สำหรับ label ที่มาจาก API -->
+                {{ cat.code }} – {{ lf(cat.label) }} ({{ getCategoryCount(cat.code) }})
               </option>
             </select>
           </div>
@@ -118,9 +120,9 @@
             <div class="course-image">
               <img :src="course.image">
               <span v-if="course.badge" class="course-badge" :class="course.badgeClass">
-                {{ course.badge }}
+                <!-- ✅ badge อาจมีหลายภาษา -->
+                {{ lf(course.badge) }}
               </span>
-              <!-- Category chip on card -->
               <span
                 class="course-cat-chip"
                 :style="{
@@ -132,19 +134,21 @@
               </span>
             </div>
             <div class="course-content">
-              <h3>{{ course.title }}</h3>
-              <p class="course-desc">{{ course.desc }}</p>
+              <!-- ✅ title และ desc จาก API → ใช้ lf() -->
+              <h3>{{ lf(course.title) }}</h3>
+              <p class="course-desc">{{ lf(course.desc) }}</p>
               <div class="course-details">
-                <span><i class="far fa-clock"></i> {{ course.duration }}</span>
-                <span><i class="far fa-user"></i> {{ course.capacity }}</span>
+                <span><i class="far fa-clock"></i> {{ lf(course.duration) }}</span>
+                <span><i class="far fa-user"></i> {{ lf(course.capacity) }}</span>
               </div>
               <div class="course-price">
                 <span class="price">{{ course.price }}</span>
-                <span class="per-person">/ คน</span>
+                <span class="per-person">{{ $t('courses.card.perPerson') }}</span>
               </div>
               <div class="card-actions">
-                <button class="btn-book" @click.stop="openBookingModal(course.title, course.price)">
-                  <i class="fas fa-calendar-check"></i> จองหลักสูตร
+                <!-- ✅ ส่ง title ที่แปลแล้วเข้า modal -->
+                <button class="btn-book" @click.stop="openBookingModal(lf(course.title), course.price)">
+                  <i class="fas fa-calendar-check"></i> <span>{{ $t('courses.card.bookButton') }}</span>
                 </button>
               </div>
             </div>
@@ -154,8 +158,8 @@
         <!-- Empty state -->
         <div v-else class="no-courses">
           <div class="no-courses-icon"><i class="fas fa-folder-open"></i></div>
-          <p>ยังไม่มีหลักสูตรในหมวดหมู่นี้</p>
-          <button class="btn-show-all" @click="selectCategory('ALL')">ดูหลักสูตรทั้งหมด</button>
+          <p>{{ $t('courses.emptyState.message') }}</p>
+          <button class="btn-show-all" @click="selectCategory('ALL')">{{ $t('courses.emptyState.showAllButton') }}</button>
         </div>
 
       </div><!-- /courses-main -->
@@ -164,14 +168,14 @@
 
   <!-- Why Choose Us Section -->
   <section class="why-us-section">
-    <h2 class="section-title">ทำไมต้องเรียนกับเรา</h2>
+    <h2 class="section-title">{{ $t('courses.whyUs.sectionTitle') }}</h2>
     <div class="why-us-grid">
-      <div v-for="item in whyUs" :key="item.title" class="why-us-card" ref="whyCardRefs">
+      <div v-for="item in whyUs" :key="item.titleKey" class="why-us-card" ref="whyCardRefs">
         <div class="why-us-icon">
           <i :class="item.icon"></i>
         </div>
-        <h3>{{ item.title }}</h3>
-        <p style="text-wrap: balance;">{{ item.desc }}</p>
+        <h3>{{ $t(item.titleKey) }}</h3>
+        <p style="text-wrap: balance;">{{ $t(item.descKey) }}</p>
       </div>
     </div>
   </section>
@@ -183,27 +187,27 @@
         <i class="fas fa-times"></i>
       </button>
       <div class="modal-header">
-        <h2><i class="fas fa-calendar-alt"></i> จองหลักสูตร</h2>
-        <p class="selected-course">หลักสูตร: {{ selectedCourse }}</p>
-        <p class="selected-price">ราคา: {{ selectedPrice }} / คน</p>
+        <h2><i class="fas fa-calendar-alt"></i> <span>{{ $t('courses.modal.bookingTitle') }}</span></h2>
+        <p class="selected-course"><span>{{ $t('courses.modal.courseLabel') }}</span> {{ selectedCourse }}</p>
+        <p class="selected-price"><span>{{ $t('courses.modal.priceLabel') }}</span> {{ selectedPrice }} <span>{{ $t('courses.modal.perPerson') }}</span></p>
       </div>
       <form class="booking-form" @submit.prevent="submitBooking">
         <div class="form-group">
-          <label><i class="fas fa-user"></i> ชื่อ-นามสกุล <span class="required">*</span></label>
-          <input v-model="form.fullName" type="text" placeholder="กรอกชื่อ-นามสกุล" required>
+          <label><i class="fas fa-user"></i> <span>{{ $t('courses.modal.fullNameLabel') }}</span> <span class="required">*</span></label>
+          <input v-model="form.fullName" type="text" :placeholder="$t('courses.modal.fullNamePlaceholder')" required>
         </div>
         <div class="form-group">
-          <label><i class="fas fa-phone"></i> เบอร์โทรศัพท์ <span class="required">*</span></label>
+          <label><i class="fas fa-phone"></i> <span>{{ $t('courses.modal.phoneLabel') }}</span> <span class="required">*</span></label>
           <input v-model="form.phone" type="tel" placeholder="0XX-XXX-XXXX" @input="formatPhone" required>
         </div>
         <div class="form-group">
-          <label><i class="fas fa-envelope"></i> อีเมล <span class="required">*</span></label>
+          <label><i class="fas fa-envelope"></i> <span>{{ $t('courses.modal.emailLabel') }}</span> <span class="required">*</span></label>
           <input v-model="form.email" type="email" placeholder="example@email.com" required>
         </div>
         <p v-if="errorMsg" class="error-msg"><i class="fas fa-exclamation-circle"></i> {{ errorMsg }}</p>
         <button type="submit" class="btn-submit" :disabled="submitting">
           <i :class="submitting ? 'fas fa-spinner fa-spin' : 'fas fa-paper-plane'"></i>
-          {{ submitting ? 'กำลังส่งข้อมูล...' : 'ส่งข้อมูลการจอง' }}
+          {{ submitting ? $t('courses.modal.submittingButton') : $t('courses.modal.submitButton') }}
         </button>
       </form>
     </div>
@@ -215,9 +219,9 @@
       <div class="success-icon">
         <i class="fas fa-check-circle"></i>
       </div>
-      <h2>ส่งข้อมูลสำเร็จ!</h2>
-      <p>ขอบคุณสำหรับการจองหลักสูตร<br>ทีมงานจะติดต่อกลับภายใน 24 ชั่วโมง</p>
-      <button class="btn-close-success" @click="closeSuccessModal">ตกลง</button>
+      <h2>{{ $t('courses.successModal.title') }}</h2>
+      <p v-html="$t('courses.successModal.message')"></p>
+      <button class="btn-close-success" @click="closeSuccessModal">{{ $t('courses.successModal.closeButton') }}</button>
     </div>
   </div>
 </template>
@@ -225,10 +229,16 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { getCourses, getCategories } from '@/services/api.js'
 import emailjs from '@emailjs/browser'
+// ✅ import composable
+import { useLocaleField } from '@/composables/useLocaleField'
 
-// ── Router ───────────────────────────────
+const { t } = useI18n()
+// ✅ ดึง lf และ lfArray
+const { lf, lfArray } = useLocaleField()
+
 const router = useRouter()
 
 // ── API state ─────────────────────────────
@@ -247,16 +257,13 @@ onMounted(async () => {
       getCategories()
     ])
     coursesRaw.value = coursesData
-    // categories API คืน array [{code, label, icon, color}, ...]
-    // แปลงเป็น object key=code เพื่อให้ใช้ categoryConfig[code] ได้เหมือนเดิม
     categoryConfig.value = Object.fromEntries(
       categoriesData.map(c => [c.code, c])
     )
   } catch (e) {
-    loadError.value = 'โหลดข้อมูลคอร์สไม่สำเร็จ: ' + e.message
+    loadError.value = t('courses.alerts.loadError') + e.message
   } finally {
     loading.value = false
-    // รอให้ DOM render เสร็จก่อน init animation
     await nextTick()
     initCardAnimations()
   }
@@ -266,11 +273,8 @@ onMounted(async () => {
 const courseImages = import.meta.glob('@/assets/images/courses/*.png', { eager: true })
 
 function getCourseImage(c) {
-  // ใช้ courseCode จับคู่ชื่อไฟล์ เช่น MNT001.png
   const mod = courseImages[`/src/assets/images/courses/${c.courseCode}.png`]
   if (mod) return mod.default
-
-  // placeholder ถ้าไม่มีรูป
   return new URL('@/assets/images/data/imagestate.png', import.meta.url).href
 }
 
@@ -310,8 +314,9 @@ const filteredCourses = computed(() => {
   if (searchQuery.value.trim()) {
     const q = searchQuery.value.trim().toLowerCase()
     list = list.filter(c =>
-      c.title.toLowerCase().includes(q) ||
-      c.desc?.toLowerCase().includes(q) ||
+      // ✅ ค้นหาจาก lf() เพื่อให้ search ตรงกับภาษาที่แสดง
+      lf(c.title).toLowerCase().includes(q) ||
+      lf(c.desc)?.toLowerCase().includes(q) ||
       c.category?.toLowerCase().includes(q)
     )
   }
@@ -319,9 +324,10 @@ const filteredCourses = computed(() => {
 })
 
 const activeCategoryLabel = computed(() => {
-  if (selectedCategory.value === 'ALL') return 'ทั้งหมด'
+  if (selectedCategory.value === 'ALL') return t('courses.filterBar.all')
   const cat = categories.value.find(c => c.code === selectedCategory.value)
-  return cat ? `${cat.code} – ${cat.label}` : selectedCategory.value
+  // ✅ lf() สำหรับ label ของ category
+  return cat ? `${cat.code} – ${lf(cat.label)}` : selectedCategory.value
 })
 
 const activeCategoryColor = computed(() => {
@@ -329,12 +335,12 @@ const activeCategoryColor = computed(() => {
   return cat ? cat.color : '#6366f1'
 })
 
-// ── Why Us ────────────────────────────────
+// ── Why Us (ใช้ i18n key ปกติ ไม่ต้องใช้ lf) ──
 const whyUs = [
-  { icon: 'fas fa-award',               title: 'ได้รับการรับรอง',      desc: 'ใบรับรองที่ได้รับการยอมรับในระดับสากล' },
-  { icon: 'fas fa-chalkboard-teacher',  title: 'ผู้เชี่ยวชาญสอน',      desc: 'วิทยากรมีประสบการณ์มากกว่า 10 ปี' },
-  { icon: 'fas fa-tools',               title: 'เรียนรู้จริง',          desc: 'ฝึกปฏิบัติกับเครื่องมือจริงในห้องปฏิบัติการ' },
-  { icon: 'fas fa-headset',             title: 'ติดตามผลหลังอบรม',      desc: 'ให้คำปรึกษาและช่วยเหลือหลังจบหลักสูตร' },
+  { icon: 'fas fa-award',               titleKey: 'courses.whyUs.item1.title', descKey: 'courses.whyUs.item1.desc' },
+  { icon: 'fas fa-chalkboard-teacher',  titleKey: 'courses.whyUs.item2.title', descKey: 'courses.whyUs.item2.desc' },
+  { icon: 'fas fa-tools',               titleKey: 'courses.whyUs.item3.title', descKey: 'courses.whyUs.item3.desc' },
+  { icon: 'fas fa-headset',             titleKey: 'courses.whyUs.item4.title', descKey: 'courses.whyUs.item4.desc' },
 ]
 
 // ── Modal state ───────────────────────────
@@ -343,7 +349,6 @@ const showSuccessModal = ref(false)
 const selectedCourse   = ref('')
 const selectedPrice    = ref('')
 const submitting       = ref(false)
-
 const form = ref({ fullName: '', phone: '', email: '' })
 
 // ── Navigation ────────────────────────────
@@ -384,7 +389,7 @@ const errorMsg = ref('')
 async function submitBooking() {
   const phoneClean = form.value.phone.replace(/-/g, '')
   if (!/^[0-9]{9,10}$/.test(phoneClean)) {
-    alert('กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง')
+    alert(t('courses.alerts.invalidPhone'))
     return
   }
 
@@ -411,7 +416,7 @@ async function submitBooking() {
     document.body.style.overflow = 'hidden'
   } catch (error) {
     console.error('EmailJS error:', error)
-    errorMsg.value = 'เกิดข้อผิดพลาด ไม่สามารถส่งข้อมูลได้ชั่วคราว'
+    errorMsg.value = t('courses.alerts.submitError')
   } finally {
     submitting.value = false
   }
@@ -452,7 +457,6 @@ function initCardAnimations() {
 
 onMounted(() => {
   document.addEventListener('keydown', onKeydown)
-  // initCardAnimations จะถูกเรียกใน onMounted หลัง API โหลดเสร็จแล้ว (ข้างบน)
 })
 
 onUnmounted(() => {

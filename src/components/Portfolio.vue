@@ -1,124 +1,252 @@
 <template>
-  <div class="Knowledge">
-    <section class="knowledge-header">
-      <p>เพื่อให้คุณได้รับข้อมูลและแนวปฏิบัติที่ทันสมัยในงานบำรุงรักษา</p>
-    </section>
-
-    <div class="filter-section">
-      <div class="search-box">
-        <i class="fas fa-search"></i>
-        <input type="text" v-model="searchQuery" @input="searchArticles(searchQuery)" placeholder="ค้นหาบทความ...">
-      </div>
-      <div class="filter-buttons">
-        <button class="filter-btn" :class="{ active: activeCategory === 'all' }" @click="filterArticles('all')">ทั้งหมด</button>
-        <button class="filter-btn" :class="{ active: activeCategory === 'Category II' }" @click="filterArticles('Category II')">Category II</button>
-        <button class="filter-btn" :class="{ active: activeCategory === 'training' }" @click="filterArticles('training')">อบรม</button>
-        <button class="filter-btn" :class="{ active: activeCategory === 'news' }" @click="filterArticles('news')">ข่าวสาร</button>
-      </div>
-    </div>
-
-    <div class="articles-container">
-      <div class="articles-grid">
-        <div v-for="article in paginatedArticles" :key="article.id" class="article-card">
-          <img :src="article.image" :alt="article.title">
-          <div class="article-info">
-            <span class="article-category">{{ getCategoryLabel(article.category) }}</span>
-            <h3>{{ article.title }}</h3>
-            <p>{{ article.description }}</p>
-            <div class="article-meta">
-              <span><i class="far fa-calendar"></i> {{ article.date }}</span>
+  <div class="home">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="morphing-bg"></div>
+      <div class="morphing-bg-2"></div>
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 v-html="$t('service.hero.title')"></h1>
+          <p v-html="$t('service.hero.subtitle')"></p>
+          <div class="hero-stats">
+            <div class="stat-box">
+              <h3>200+</h3>
+              <p>{{ $t('service.hero.statProjects') }}</p>
             </div>
-            <router-link :to="`/detail?id=${article.id}`" class="btn-read-more">
-              อ่านเพิ่มเติม <i class="fas fa-arrow-right"></i>
-            </router-link>
+            <div class="stat-box">
+              <h3>10+</h3>
+              <p>{{ $t('service.hero.statYears') }}</p>
+            </div>
           </div>
         </div>
-
-        <div v-if="paginatedArticles.length === 0" class="no-results">
-          <p>ไม่พบบทความที่ค้นหา</p>
+        <div class="hero-image">
+          <img src="@/assets/images/data/AboutUs2.jpg" alt="Team">
         </div>
       </div>
+    </section>
 
-      <div class="pagination">
-        <button
-          v-for="page in totalPages" :key="page"
-          class="page-btn"
-          :class="{ active: currentPage === page }"
-          @click="goToPage(page)">
-          {{ page }}
-        </button>
+    <!-- About Section -->
+    <section id="about" class="about-section">
+      <div class="about-grid">
+        <div class="about-image">
+          <img src="@/assets/images/data/AboutUs.jpg" alt="About Us">
+        </div>
+        <div class="about-content">
+          <h2>{{ $t('service.about.title') }}</h2>
+          <h3>{{ $t('service.about.subtitle') }}</h3>
+          <p>{{ $t('service.about.description') }}</p>
+          <div class="about-features">
+            <div class="feature-item">
+              <div class="feature-icon"><i class="fas fa-check-circle"></i></div>
+              <p>{{ $t('service.about.feature1') }}</p>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon"><i class="fas fa-check-circle"></i></div>
+              <p>{{ $t('service.about.feature2') }}</p>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon"><i class="fas fa-check-circle"></i></div>
+              <p>{{ $t('service.about.feature3') }}</p>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+      <div class="stats-content">
+        <div class="stat-item">
+          <h2>10+</h2>
+          <p>{{ $t('service.stats.yearsInBusiness') }}</p>
+        </div>
+        <div class="stat-item">
+          <h2>150+</h2>
+          <p>{{ $t('service.stats.clientsServed') }}</p>
+        </div>
+        <div class="stat-item">
+          <h2>500+</h2>
+          <p>{{ $t('service.stats.traineesCertified') }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Section -->
+    <section class="featured-section">
+      <h1 class="section-title">{{ $t('service.featured.sectionTitle') }}</h1>
+      <div class="featured-container">
+        <div class="featured-track" ref="featuredTrack">
+          <div v-for="news in sortedNews" :key="news.id" class="featured-card">
+            <div class="featured-image">
+              <img :src="news.image" :alt="news.title" loading="lazy">
+            </div>
+            <div class="featured-content">
+              <h3>{{ news.title }}</h3>
+              <p>{{ news.shortDesc }}</p>
+              <router-link :to="`/detail?id=${news.id}`" class="btn-featured">
+                <span>{{ $t('service.featured.readMore') }}</span> <i class="fas fa-arrow-right"></i>
+              </router-link>
+            </div>
+          </div>
+        </div>
+        <div class="nav-buttons">
+          <button class="nav-btn" @click="prevFeatured">&lt;</button>
+          <button class="nav-btn" @click="nextFeatured">&gt;</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section class="partners-section">
+      <h3 class="partners-title">Our Clients</h3>
+      <div class="partners-gallery-wrapper">
+        <div class="partners-gallery">
+          <img src="@/assets/images/data/Logo_partners/Atsumitec.jpg" alt="Atsumitec">
+          <img src="@/assets/images/data/Logo_partners/B_G.jpg" alt="B.G">
+          <img src="@/assets/images/data/Logo_partners/BD_th.jpg" alt="BD Thailand">
+          <img src="@/assets/images/data/Logo_partners/BDMS.jpg" alt="BDMS">
+          <img src="@/assets/images/data/Logo_partners/Boon.jpg" alt="Boon">
+          <img src="@/assets/images/data/Logo_partners/Daikin.jpg" alt="Daikin">
+          <img src="@/assets/images/data/Logo_partners/Egat.jpg" alt="EGAT">
+          <img src="@/assets/images/data/Logo_partners/enfourt.jpg" alt="Enfourt">
+          <img src="@/assets/images/data/Logo_partners/GCME.jpg" alt="GCME">
+          <img src="@/assets/images/data/Logo_partners/Griffith.jpg" alt="Griffith">
+          <img src="@/assets/images/data/Logo_partners/Gulf.jpg" alt="Gulf">
+          <img src="@/assets/images/data/Logo_partners/GYPROC.png" alt="GYPROC">
+          <img src="@/assets/images/data/Logo_partners/IHI.jpg" alt="IHI">
+          <img src="@/assets/images/data/Logo_partners/Indoama.jpg" alt="Indoama">
+          <img src="@/assets/images/data/Logo_partners/Is_software.jpg" alt="IS Software">
+          <img src="@/assets/images/data/Logo_partners/JSJS.jpg" alt="JSJS">
+          <img src="@/assets/images/data/Logo_partners/KI.jpg" alt="KI">
+          <img src="@/assets/images/data/Logo_partners/KKF.jpg" alt="KKF">
+          <img src="@/assets/images/data/Logo_partners/Mars.jpg" alt="Mars">
+          <img src="@/assets/images/data/Logo_partners/Mitr_phol.jpg" alt="Mitr Phol">
+          <img src="@/assets/images/data/Logo_partners/Nestle.jpg" alt="Nestle">
+          <img src="@/assets/images/data/Logo_partners/Npp.jpg" alt="Npp">
+          <img src="@/assets/images/data/Logo_partners/Nteq.jpg" alt="Nteq">
+          <img src="@/assets/images/data/Logo_partners/PAE.jpg" alt="PAE">
+          <img src="@/assets/images/data/Logo_partners/Pttep.jpg" alt="PTTEP">
+          <img src="@/assets/images/data/Logo_partners/repo.jpg" alt="Repo">
+          <img src="@/assets/images/data/Logo_partners/sahakol.png" alt="Sahakol">
+          <img src="@/assets/images/data/Logo_partners/SCG.jpg" alt="SCG">
+          <img src="@/assets/images/data/Logo_partners/seckisui.png" alt="Seckisui">
+          <img src="@/assets/images/data/Logo_partners/SKF.jpg" alt="SKF">
+          <img src="@/assets/images/data/Logo_partners/Sotus.jpg" alt="Sotus">
+          <img src="@/assets/images/data/Logo_partners/SSG.jpg" alt="SSG">
+          <img src="@/assets/images/data/Logo_partners/SSL.jpg" alt="SSL">
+          <img src="@/assets/images/data/Logo_partners/STM.jpg" alt="STM">
+          <img src="@/assets/images/data/Logo_partners/Thaioil.jpg" alt="Thaioil">
+          <img src="@/assets/images/data/Logo_partners/Thanakorn.jpg" alt="Thanakorn">
+          <img src="@/assets/images/data/Logo_partners/TRANE.jpg" alt="TRANE">
+          <img src="@/assets/images/data/Logo_partners/Transitions.jpg" alt="Transitions">
+          <img src="@/assets/images/data/Logo_partners/TTM.jpg" alt="TTM">
+          <img src="@/assets/images/data/Logo_partners/WHA.jpg" alt="WHA">
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
 <script>
-import newsData from '@/data/newsData.js'
+import { getNewsList } from '@/services/api.js'
+
+const trainingImages = import.meta.glob('@/assets/images/training/**/*.{jpg,png}', { eager: true })
+
+function resolveImage(path) {
+  const assetPath = path.replace('/images/training/', '/src/assets/images/training/')
+  const mod = trainingImages[assetPath]
+  return mod ? mod.default : ''
+}
 
 export default {
-  name: 'Knowledge',
+  name: 'Service',
   data() {
     return {
-      articles: newsData.map(n => ({
-        id: n.id,
-        title: n.title,
-        description: n.shortDesc,
-        image: n.image,
-        date: n.date,
-        category: n.tags?.includes('Category II') ? 'Category II'
-                : n.tags?.includes('อบรม') ? 'training'
-                : 'news'
-      })),
-      filteredArticles: [],
-      searchQuery: '',
-      activeCategory: 'all',
-      currentPage: 1,
-      itemsPerPage: 6
+      newsData: [],
+      currentFeaturedIndex: 0
     }
   },
   computed: {
-    totalPages() {
-      return Math.ceil(this.filteredArticles.length / this.itemsPerPage)
-    },
-    paginatedArticles() {
-      const start = (this.currentPage - 1) * this.itemsPerPage
-      return this.filteredArticles.slice(start, start + this.itemsPerPage)
+    sortedNews() {
+      return [...this.newsData].sort((a, b) => b.id - a.id)
     }
-  },
-  mounted() {
-    this.filteredArticles = [...this.articles].sort((a, b) => b.id - a.id)
   },
   methods: {
-    getCategoryLabel(category) {
-      const labels = { 'Category II': 'Category II', 'training': 'อบรม', 'news': 'ข่าวสาร' }
-      return labels[category] || 'บทความ'
+    prevFeatured() {
+      if (this.currentFeaturedIndex > 0) {
+        this.currentFeaturedIndex--
+        this.updateCarousel()
+      }
     },
-    filterArticles(category) {
-      this.activeCategory = category
-      this.searchQuery = ''
-      this.filteredArticles = category === 'all'
-        ? [...this.articles].sort((a, b) => b.id - a.id)
-        : this.articles.filter(a => a.category === category)
-      this.currentPage = 1
+    nextFeatured() {
+      if (this.currentFeaturedIndex < this.sortedNews.length - 1) {
+        this.currentFeaturedIndex++
+        this.updateCarousel()
+      }
     },
-    searchArticles(query) {
-      this.activeCategory = 'all'
-      this.filteredArticles = query.trim() === ''
-        ? [...this.articles].sort((a, b) => b.id - a.id)
-        : this.articles.filter(a =>
-            a.title.toLowerCase().includes(query.toLowerCase()) ||
-            a.description.toLowerCase().includes(query.toLowerCase())
-          )
-      this.currentPage = 1
+    updateCarousel() {
+      const track = this.$refs.featuredTrack
+      if (!track) return
+      const card = track.querySelector('.featured-card')
+      if (!card) return
+      const cardWidth = card.offsetWidth
+      const gap = 30
+      track.style.transform = `translateX(-${this.currentFeaturedIndex * (cardWidth + gap)}px)`
     },
-    goToPage(page) {
-      this.currentPage = page
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+    initPartnersScroll() {
+      const galleryTrack = this.$el.querySelector('.partners-gallery')
+      if (!galleryTrack) return
+      const images = Array.from(galleryTrack.children)
+      for (let i = 0; i < 3; i++) {
+        images.forEach(img => {
+          galleryTrack.appendChild(img.cloneNode(true))
+        })
+      }
+      let scrollPosition = 0
+      let isPaused = false
+      const autoScroll = () => {
+        if (!isPaused) {
+          scrollPosition += 0.5
+          const setWidth = (150 * 40) + (64 * 40)
+          if (scrollPosition >= setWidth) scrollPosition = 0
+          galleryTrack.style.transform = `translateX(-${scrollPosition}px)`
+        }
+        requestAnimationFrame(autoScroll)
+      }
+      autoScroll()
+      galleryTrack.addEventListener('mouseenter', () => isPaused = true)
+      galleryTrack.addEventListener('mouseleave', () => isPaused = false)
+    },
+    initScrollAnimations() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1'
+            entry.target.style.transform = 'translateY(0)'
+          }
+        })
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' })
+      this.$el.querySelectorAll('.service-card, .portfolio-item').forEach(el => {
+        el.style.opacity = '0'
+        el.style.transform = 'translateY(30px)'
+        el.style.transition = 'all 0.6s ease-out'
+        observer.observe(el)
+      })
     }
+  },
+  async mounted() {
+    const data = await getNewsList()
+    this.newsData = data.map(n => ({ ...n, image: resolveImage(n.image) }))
+    this.initPartnersScroll()
+    this.initScrollAnimations()
+    window.addEventListener('resize', this.updateCarousel)
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.updateCarousel)
   }
 }
 </script>
 
 <style>
-@import "@/assets/css/Portfolio.css";
+@import "@/assets/css/service.css";
 </style>

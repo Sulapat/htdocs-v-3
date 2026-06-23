@@ -2,28 +2,28 @@
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-contact">
-                <h3>ติดต่อเรา</h3>
-                <p>65/17 หมู่ 4 ตำบลดอนหัวฬ่อ<br>อำเภอเมือง จังหวัดชลบุรี 20000</p>
+                <h3>{{ $t('footer.contactUs') }}</h3>
+                <p v-html="$t('footer.address')"></p>
                 <p>
-                    <strong>Email:</strong><br>
+                    <strong>{{ $t('footer.emailLabel') }}</strong><br>
                     <a href="mailto:patineer@outlook.com">patineer@outlook.com</a><br>
                     <a href="mailto:patineer2@outlook.com">patineer2@outlook.com</a>
                 </p>
                 <p>
-                    <strong>Tel:</strong><br>
+                    <strong>{{ $t('footer.telLabel') }}</strong><br>
                     096-1879595<br>
                     081-3927447
                 </p>
             </div>
             <div class="footer-social">
                 <div class="social-icons">
-                    <a href="mailto:patineer@outlook.com" aria-label="Email" title="ส่งอีเมลถึงเรา">
+                    <a href="mailto:patineer@outlook.com" aria-label="Email" :title="$t('footer.emailTitle')">
                         <i class="fa fa-envelope"></i>
                     </a>
-                    <a href="https://line.me/R/ti/p/@530ddhwa?oat_content=url&ts=05281716" target="_blank" rel="noopener" aria-label="Line" title="ติดต่อทาง LINE">
+                    <a href="https://line.me/R/ti/p/@530ddhwa?oat_content=url&ts=05281716" target="_blank" rel="noopener" aria-label="Line" :title="$t('footer.lineTitle')">
                         <i class="fab fa-line"></i>
                     </a>
-                    <a href="https://www.facebook.com/Patineerr?locale=th_TH" target="_blank" rel="noopener" aria-label="Facebook" title="เยี่ยมชม Facebook">
+                    <a href="https://www.facebook.com/Patineerr?locale=th_TH" target="_blank" rel="noopener" aria-label="Facebook" :title="$t('footer.facebookTitle')">
                         <i class="fab fa-facebook-f"></i>
                     </a>
                 </div>

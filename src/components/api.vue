@@ -14,17 +14,17 @@ onMounted(async () => {
 
 <template>
   <div>
-    <h2>รายชื่อผู้เข้าร่วม</h2>
+    <h2>{{ $t('api.participantListTitle') }}</h2>
 
-    <p v-if="loading">กำลังโหลดข้อมูล...</p>
+    <p v-if="loading">{{ $t('api.loadingMessage') }}</p>
 
     <table v-else border="1">
       <thead>
         <tr>
           <th>ID</th>
-          <th>ชื่อ</th>
-          <th>นามสกุล</th>
-          <th>บริษัท</th>
+          <th>{{ $t('api.tableHeader.firstName') }}</th>
+          <th>{{ $t('api.tableHeader.lastName') }}</th>
+          <th>{{ $t('api.tableHeader.company') }}</th>
           <th>Email</th>
           <th>Level</th>
           <th>Member</th>
@@ -43,4 +43,4 @@ onMounted(async () => {
       </tbody>
     </table>
   </div>
-</template>
+</template> 

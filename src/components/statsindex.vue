@@ -9,11 +9,11 @@
             <path d="M18 21a8 8 0 0 0-16 0"/><circle cx="10" cy="8" r="5"/>
             <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"/>
           </svg>
-          <span>Patineer Training Center</span>
+          <span>{{ $t('stats.header.brand') }}</span>
         </div>
         <nav class="header-nav">
-          <a href="/result" class="nav-link">ตรวจสอบสิทธิ์</a>
-          <span class="nav-active">ภาพรวม</span>
+          <a href="/result" class="nav-link">{{ $t('stats.header.checkRights') }}</a>
+          <span class="nav-active">{{ $t('stats.header.overview') }}</span>
         </nav>
       </div>
     </header>
@@ -22,10 +22,10 @@
     <section class="stats-hero">
       <div class="hero-eyebrow">
         <span class="dot dot-pulse"></span>
-        Live Statistics
+        <span>{{ $t('stats.hero.liveStatistics') }}</span>
       </div>
-      <h1 class="hero-title">VI Certified Analysts<br /><span class="hero-accent">ภาพรวมผู้ผ่านการรับรอง</span></h1>
-      <p class="hero-sub">ข้อมูลสถิติจำนวน Certified Analysts แยกตามหลักสูตรและองค์กร อัปเดตล่าสุด</p>
+      <h1 class="hero-title">VI Certified Analysts<br /><span class="hero-accent">{{ $t('stats.hero.subtitle') }}</span></h1>
+      <p class="hero-sub">{{ $t('stats.hero.description') }}</p>
     </section>
 
     <!-- ── KPI Cards ── -->
@@ -42,7 +42,7 @@
           </div>
           <div class="kpi-content">
             <div class="kpi-number">{{ totalCertified }}</div>
-            <div class="kpi-label">ผู้ผ่านการรับรองทั้งหมด</div>
+            <div class="kpi-label">{{ $t('stats.kpi.totalCertified') }}</div>
           </div>
         </div>
 
@@ -80,7 +80,7 @@
           </div>
           <div class="kpi-content">
             <div class="kpi-number">{{ uniqueCompanies.length }}</div>
-            <div class="kpi-label">องค์กร</div>
+            <div class="kpi-label">{{ $t('stats.kpi.organizations') }}</div>
           </div>
         </div>
       </div>
@@ -89,7 +89,7 @@
     <!-- ── Course Distribution Bar ── -->
     <section class="section-block">
       <div class="section-header">
-        <h2 class="section-title">สัดส่วนตามหลักสูตร</h2>
+        <h2 class="section-title">{{ $t('stats.distribution.title') }}</h2>
       </div>
       <div class="dist-bars">
         <div v-for="course in courseDistribution" :key="course.key" class="dist-row">
@@ -105,7 +105,7 @@
                 :style="{ width: barWidth(course.count) + '%' }"
               ></div>
             </div>
-            <span class="dist-count">{{ course.count }} คน</span>
+            <span class="dist-count">{{ course.count }} <span>{{ $t('stats.unit.people') }}</span></span>
           </div>
         </div>
       </div>
@@ -114,7 +114,7 @@
     <!-- ── Top Companies ── -->
     <section class="section-block">
       <div class="section-header">
-        <h2 class="section-title">องค์กรที่มีผู้ผ่านการรับรองมากที่สุด</h2>
+        <h2 class="section-title">{{ $t('stats.topCompanies.title') }}</h2>
         <span class="section-sub">Top {{ topCompanies.length }}</span>
       </div>
       <div class="company-list">
@@ -126,7 +126,7 @@
               <div class="company-bar" :style="{ width: (co.count / topCompanies[0].count * 100) + '%' }"></div>
             </div>
           </div>
-          <div class="company-count">{{ co.count }} <span>คน</span></div>
+          <div class="company-count">{{ co.count }} <span>{{ $t('stats.unit.people') }}</span></div>
         </div>
       </div>
     </section>
@@ -134,14 +134,14 @@
     <!-- ── Recent Additions ── -->
     <section class="section-block">
       <div class="section-header">
-        <h2 class="section-title">รายชื่อล่าสุด</h2>
-        <a href="/result" class="section-link">ดูทั้งหมด →</a>
+        <h2 class="section-title">{{ $t('stats.recent.title') }}</h2>
+        <a href="/result" class="section-link">{{ $t('stats.recent.viewAll') }}</a>
       </div>
       <div class="recent-table">
         <div class="table-head">
-          <span>ชื่อ-นามสกุล</span>
-          <span>องค์กร</span>
-          <span>ระดับ</span>
+          <span>{{ $t('stats.recent.colName') }}</span>
+          <span>{{ $t('stats.recent.colOrg') }}</span>
+          <span>{{ $t('stats.recent.colLevel') }}</span>
         </div>
         <div v-for="item in recentItems" :key="item.ID" class="table-row">
           <div class="table-name">{{ item['First Name'] }} {{ item['Last Name'] }}</div>
@@ -158,8 +158,8 @@
     <!-- ── CTA ── -->
     <section class="cta-section">
       <div class="cta-inner">
-        <p class="cta-text">ต้องการตรวจสอบสิทธิ์ใบรับรอง?</p>
-        <a href="/result" class="cta-btn">ค้นหาผู้ผ่านการรับรอง →</a>
+        <p class="cta-text">{{ $t('stats.cta.text') }}</p>
+        <a href="/result" class="cta-btn">{{ $t('stats.cta.button') }}</a>
       </div>
     </section>
 
@@ -168,7 +168,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { sampleData, countByCourse, uniqueCompanies } from '@/data/sampleData.js'
+import { sampleData, countByCourse, uniqueCompanies } from '@/data/sampledata.js'
 
 // ── KPI ──
 const totalCertified = sampleData.length

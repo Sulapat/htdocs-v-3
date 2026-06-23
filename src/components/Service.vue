@@ -6,16 +6,16 @@
       <div class="morphing-bg-2"></div>
       <div class="hero-content">
         <div class="hero-text">
-          <h1>Where Innovation Drives<br><span>Industrial Excellence</span></h1>
-          <p>ด้วยประสบการณ์มากกว่า 10 ปีในการให้บริการด้านบำรุงรักษา<br>เครื่องจักรอุตสาหกรรมที่มีคุณภาพสูง</p>
+          <h1 v-html="$t('service.hero.title')"></h1>
+          <p v-html="$t('service.hero.subtitle')"></p>
           <div class="hero-stats">
             <div class="stat-box">
               <h3>200+</h3>
-              <p>โครงการสำเร็จ</p>
+              <p>{{ $t('service.hero.statProjects') }}</p>
             </div>
             <div class="stat-box">
               <h3>10+</h3>
-              <p>ปีประสบการณ์</p>
+              <p>{{ $t('service.hero.statYears') }}</p>
             </div>
           </div>
         </div>
@@ -32,21 +32,21 @@
           <img src="@/assets/images/data/AboutUs.jpg" alt="About Us">
         </div>
         <div class="about-content">
-          <h2>About us</h2>
-          <h3>เราเป็นผู้เชี่ยวชาญด้านเครื่องจักรอุตสาหกรรม</h3>
-          <p>ด้วยประสบการณ์มากกว่า10ปีในการให้บริการด้านบำรุงรักษาเครื่องจักรอุตสาหกรรมที่มีคุณภาพสูง ช่วยเหลือทั้งองค์กรในกิจการโดยการซ่อมบำรุงกระบวนการประเภทต่างๆ ให้สามารถดำเนินการเครื่องจักรอุตสาหกรรม และเพิ่มประสิทธิภาพในการผลิตอย่างต่อเนื่อง</p>
+          <h2>{{ $t('service.about.title') }}</h2>
+          <h3>{{ $t('service.about.subtitle') }}</h3>
+          <p>{{ $t('service.about.description') }}</p>
           <div class="about-features">
             <div class="feature-item">
               <div class="feature-icon"><i class="fas fa-check-circle"></i></div>
-              <p>ตรวจวิเคราะห์สภาพเครื่องจักรด้วยเทคโนโลยีที่ทันสมัย</p>
+              <p>{{ $t('service.about.feature1') }}</p>
             </div>
             <div class="feature-item">
               <div class="feature-icon"><i class="fas fa-check-circle"></i></div>
-              <p>ฝึกอบรมบุคลากรในโรงงานให้สามารถดูแลและวางแผนงานซ่อมบำรุงได้อย่างมีประสิทธิภาพ</p>
+              <p>{{ $t('service.about.feature2') }}</p>
             </div>
             <div class="feature-item">
               <div class="feature-icon"><i class="fas fa-check-circle"></i></div>
-              <p>พัฒนาแนวทางการบำรุงรักษาให้เหมาะสมกับแต่ละอุตสาหกรรม</p>
+              <p>{{ $t('service.about.feature3') }}</p>
             </div>
           </div>
         </div>
@@ -58,22 +58,22 @@
       <div class="stats-content">
         <div class="stat-item">
           <h2>10+</h2>
-          <p>ปีแห่งการดำเนินธุรกิจ</p>
+          <p>{{ $t('service.stats.yearsInBusiness') }}</p>
         </div>
         <div class="stat-item">
           <h2>150+</h2>
-          <p>ลูกค้าที่ให้บริการ</p>
+          <p>{{ $t('service.stats.clientsServed') }}</p>
         </div>
         <div class="stat-item">
           <h2>500+</h2>
-          <p>ผู้เข้ารับการอบรมและรับรอง</p>
+          <p>{{ $t('service.stats.traineesCertified') }}</p>
         </div>
       </div>
     </section>
 
     <!-- Featured Section -->
     <section class="featured-section">
-      <h1 class="section-title">ประชาสัมพันธ์</h1>
+      <h1 class="section-title">{{ $t('service.featured.sectionTitle') }}</h1>
       <div class="featured-container">
         <div class="featured-track" ref="featuredTrack">
           <div v-for="news in sortedNews" :key="news.id" class="featured-card">
@@ -84,7 +84,7 @@
               <h3>{{ news.title }}</h3>
               <p>{{ news.shortDesc }}</p>
               <router-link :to="`/detail?id=${news.id}`" class="btn-featured">
-                อ่านเพิ่มเติม <i class="fas fa-arrow-right"></i>
+                <span>{{ $t('service.featured.readMore') }}</span> <i class="fas fa-arrow-right"></i>
               </router-link>
             </div>
           </div>
