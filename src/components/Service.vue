@@ -232,11 +232,21 @@ export default {
         el.style.transition = 'all 0.6s ease-out'
         observer.observe(el)
       })
+    },
+    async loadNews() {
+      const data = await getNewsList(this.$i18n.locale)
+      if (!data) return
+      this.newsData = data.map(n => ({ ...n, image: resolveImage(n.image) }))
+    }
+  },
+  watch: {
+    // เมื่อกดปุ่มสลับภาษา → fetch news ใหม่ตาม locale ปัจจุบัน
+    '$i18n.locale'() {
+      this.loadNews()
     }
   },
   async mounted() {
-    const data = await getNewsList()
-    this.newsData = data.map(n => ({ ...n, image: resolveImage(n.image) }))
+    await this.loadNews()
     this.initPartnersScroll()
     this.initScrollAnimations()
     window.addEventListener('resize', this.updateCarousel)

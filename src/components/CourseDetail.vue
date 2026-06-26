@@ -1,381 +1,344 @@
 <template>
-  <!-- Hero Section -->
-  <section class="courses-hero">
-    <div class="morphing-bg"></div>
-    <div class="morphing-bg-2"></div>
-    <div class="hero-content">
-      <h1><span>{{ $t('courses.hero.title') }}</span><span>{{ $t('courses.hero.titleHighlight') }}</span></h1>
-      <p v-html="$t('courses.hero.subtitle')"></p>
-    </div>
-  </section>
-
-  <!-- Courses Section -->
-  <section class="courses-section">
-    <h2 class="section-title">{{ $t('courses.section.title') }}</h2>
+  <div class="detail-page">
 
     <!-- Loading -->
-    <div v-if="loading" class="loading-state">
-      <i class="fas fa-spinner fa-spin"></i> <span>{{ $t('courses.loading') }}</span>
+    <div v-if="loading" class="not-found">
+      <i class="fas fa-spinner fa-spin"></i>
     </div>
 
-    <!-- Error -->
-    <div v-else-if="loadError" class="error-state">
-      <i class="fas fa-exclamation-circle"></i> {{ loadError }}
-    </div>
-
-    <div v-else class="courses-layout">
-
-      <!-- ─── Sidebar ─────────────────────────── -->
-      <aside class="courses-sidebar">
-        <div class="sidebar-header">
-          <i class="fas fa-layer-group"></i>
-          <span>{{ $t('courses.sidebar.categoryHeader') }}</span>
-        </div>
-        <div class="sidebar-search">
-          <i class="fas fa-search"></i>
-          <input
-            v-model="searchQuery"
-            type="text"
-            :placeholder="$t('courses.sidebar.searchPlaceholder')"
-            class="sidebar-search-input"
-          />
-          <button v-if="searchQuery" class="sidebar-search-clear" @click="searchQuery = ''">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-
-        <!-- All -->
-        <button
-          class="sidebar-all"
-          :class="{ active: selectedCategory === 'ALL' }"
-          @click="selectCategory('ALL')"
-        >
-          <span class="sidebar-all-left">
-            <i class="fas fa-th-large"></i>
-            <span>{{ $t('courses.sidebar.all') }}</span>
-          </span>
-          <span class="cat-count">{{ _courses.length }}</span>
-        </button>
-
-        <!-- Category list -->
-        <ul class="sidebar-list">
-          <li
-            v-for="cat in categories"
-            :key="cat.code"
-            class="sidebar-item"
-            :class="{ active: selectedCategory === cat.code }"
-            @click="selectCategory(cat.code)"
-          >
-            <span class="cat-icon" :style="{ background: cat.color + '18', color: cat.color }">
-              <i :class="cat.icon"></i>
-            </span>
-            <div class="cat-info">
-              <span class="cat-code">{{ cat.code }}</span>
-              <!-- ✅ cat.label อาจเป็น { th, en } จาก API -->
-              <span class="cat-label">{{ lf(cat.label) }}</span>
-            </div>
-            <span class="cat-count" :class="{ 'count-zero': getCategoryCount(cat.code) === 0 }">
-              {{ getCategoryCount(cat.code) }}
-            </span>
-          </li>
-        </ul>
-      </aside>
-
-      <!-- ─── Main content ────────────────────── -->
-      <div class="courses-main">
-
-        <!-- Filter bar -->
-        <div class="filter-bar">
-          <span class="filter-result">
-            <span>{{ $t('courses.filterBar.showing') }}</span> <strong>{{ filteredCourses.length }}</strong> <span>{{ $t('courses.filterBar.coursesUnit') }}</span>
-            <template v-if="selectedCategory !== 'ALL'">
-              <span>{{ $t('courses.filterBar.inCategory') }}</span>
-              <span class="filter-cat-chip" :style="{ background: activeCategoryColor + '18', color: activeCategoryColor }">
-                {{ activeCategoryLabel }}
-              </span>
-            </template>
-          </span>
-
-          <!-- Mobile category dropdown -->
-          <div class="mobile-filter">
-            <select v-model="selectedCategory" class="mobile-cat-select">
-              <option value="ALL">{{ $t('courses.filterBar.all') }} ({{ _courses.length }})</option>
-              <option v-for="cat in categories" :key="cat.code" :value="cat.code">
-                <!-- ✅ lf() สำหรับ label ที่มาจาก API -->
-                {{ cat.code }} – {{ lf(cat.label) }} ({{ getCategoryCount(cat.code) }})
-              </option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Cards grid -->
-        <div v-if="filteredCourses.length > 0" class="courses-grid">
-          <div
-            v-for="course in filteredCourses"
-            :key="course.id"
-            class="course-card"
-            ref="cardRefs"
-            @click="goToDetail(course.slug)"
-          >
-            <div class="course-image">
-              <img :src="course.image">
-              <span v-if="course.badge" class="course-badge" :class="course.badgeClass">
-                <!-- ✅ badge อาจมีหลายภาษา -->
-                {{ lf(course.badge) }}
-              </span>
-              <span
-                class="course-cat-chip"
-                :style="{
-                  background: (course.categoryColor || '#475569') + 'cc',
-                  color: '#fff'
-                }"
-              >
-                {{ course.category }}
-              </span>
-            </div>
-            <div class="course-content">
-              <!-- ✅ title และ desc จาก API → ใช้ lf() -->
-              <h3>{{ lf(course.title) }}</h3>
-              <p class="course-desc">{{ lf(course.desc) }}</p>
-              <div class="course-details">
-                <span><i class="far fa-clock"></i> {{ lf(course.duration) }}</span>
-                <span><i class="far fa-user"></i> {{ lf(course.capacity) }}</span>
-              </div>
-              <div class="course-price">
-                <span class="price">{{ course.price }}</span>
-                <span class="per-person">{{ $t('courses.card.perPerson') }}</span>
-              </div>
-              <div class="card-actions">
-                <!-- ✅ ส่ง title ที่แปลแล้วเข้า modal -->
-                <button class="btn-book" @click.stop="openBookingModal(lf(course.title), course.price)">
-                  <i class="fas fa-calendar-check"></i> <span>{{ $t('courses.card.bookButton') }}</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Empty state -->
-        <div v-else class="no-courses">
-          <div class="no-courses-icon"><i class="fas fa-folder-open"></i></div>
-          <p>{{ $t('courses.emptyState.message') }}</p>
-          <button class="btn-show-all" @click="selectCategory('ALL')">{{ $t('courses.emptyState.showAllButton') }}</button>
-        </div>
-
-      </div><!-- /courses-main -->
-    </div><!-- /courses-layout -->
-  </section>
-
-  <!-- Why Choose Us Section -->
-  <section class="why-us-section">
-    <h2 class="section-title">{{ $t('courses.whyUs.sectionTitle') }}</h2>
-    <div class="why-us-grid">
-      <div v-for="item in whyUs" :key="item.titleKey" class="why-us-card" ref="whyCardRefs">
-        <div class="why-us-icon">
-          <i :class="item.icon"></i>
-        </div>
-        <h3>{{ $t(item.titleKey) }}</h3>
-        <p style="text-wrap: balance;">{{ $t(item.descKey) }}</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Booking Modal -->
-  <div class="modal-overlay" :class="{ active: showBookingModal }" @click.self="closeBookingModal">
-    <div class="modal-container">
-      <button class="modal-close" @click="closeBookingModal">
-        <i class="fas fa-times"></i>
+    <!-- Not Found -->
+    <div v-else-if="!course" class="not-found">
+      <i class="fas fa-exclamation-circle"></i>
+      <h2>{{ $t('courseDetail.notFound.title') }}</h2>
+      <button class="btn-back" @click="router.push('/courses')">
+        <i class="fas fa-arrow-left"></i> {{ $t('courseDetail.notFound.backButton') }}
       </button>
-      <div class="modal-header">
-        <h2><i class="fas fa-calendar-alt"></i> <span>{{ $t('courses.modal.bookingTitle') }}</span></h2>
-        <p class="selected-course"><span>{{ $t('courses.modal.courseLabel') }}</span> {{ selectedCourse }}</p>
-        <p class="selected-price"><span>{{ $t('courses.modal.priceLabel') }}</span> {{ selectedPrice }} <span>{{ $t('courses.modal.perPerson') }}</span></p>
-      </div>
-      <form class="booking-form" @submit.prevent="submitBooking">
-        <div class="form-group">
-          <label><i class="fas fa-user"></i> <span>{{ $t('courses.modal.fullNameLabel') }}</span> <span class="required">*</span></label>
-          <input v-model="form.fullName" type="text" :placeholder="$t('courses.modal.fullNamePlaceholder')" required>
-        </div>
-        <div class="form-group">
-          <label><i class="fas fa-phone"></i> <span>{{ $t('courses.modal.phoneLabel') }}</span> <span class="required">*</span></label>
-          <input v-model="form.phone" type="tel" placeholder="0XX-XXX-XXXX" @input="formatPhone" required>
-        </div>
-        <div class="form-group">
-          <label><i class="fas fa-envelope"></i> <span>{{ $t('courses.modal.emailLabel') }}</span> <span class="required">*</span></label>
-          <input v-model="form.email" type="email" placeholder="example@email.com" required>
-        </div>
-        <p v-if="errorMsg" class="error-msg"><i class="fas fa-exclamation-circle"></i> {{ errorMsg }}</p>
-        <button type="submit" class="btn-submit" :disabled="submitting">
-          <i :class="submitting ? 'fas fa-spinner fa-spin' : 'fas fa-paper-plane'"></i>
-          {{ submitting ? $t('courses.modal.submittingButton') : $t('courses.modal.submitButton') }}
-        </button>
-      </form>
     </div>
-  </div>
 
-  <!-- Success Modal -->
-  <div class="modal-overlay" :class="{ active: showSuccessModal }" @click.self="closeSuccessModal">
-    <div class="modal-container success-modal">
-      <div class="success-icon">
-        <i class="fas fa-check-circle"></i>
+    <template v-else>
+
+      <!-- ── HERO ── -->
+      <section class="cd-hero">
+        <div class="cd-hero-inner">
+          <button class="cd-back" @click="router.push('/courses')">
+            <i class="fas fa-arrow-left"></i> {{ $t('courseDetail.hero.back') }}
+          </button>
+          <div class="cd-hero-body">
+            <div class="cd-hero-left">
+              <span class="cd-code">{{ course.courseCode }}</span>
+              <h1 class="cd-title">{{ course.title }}</h1>
+              <p class="cd-en">{{ course.englishTitle }}</p>
+              <div class="cd-meta">
+                <span><i class="far fa-clock"></i> {{ course.duration }}</span>
+                <span><i class="fas fa-users"></i> {{ course.capacity }}</span>
+              </div>
+            </div>
+            <div class="cd-hero-right">
+              <div class="cd-price-box">
+                <p class="cd-price-label">{{ $t('courseDetail.hero.priceLabel') }}</p>
+                <p class="cd-price-value" :class="{ 'cd-price-inquiry': !hasPrice }">
+                  {{ hasPrice ? course.price : $t('courseDetail.hero.priceInquiry') }}
+                </p>
+                <p v-if="hasPrice" class="cd-price-note">{{ $t('courseDetail.hero.vatNote') }}</p>
+              </div>
+              <button class="cd-btn-primary" @click="showBookingModal = true">
+                <i class="fas fa-calendar-check"></i>
+                {{ hasPrice ? $t('courseDetail.hero.bookButton') : $t('courseDetail.hero.quoteButton') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── TAB NAV ── -->
+      <nav class="cd-tabs">
+        <div class="cd-tabs-inner">
+          <button
+            v-for="tab in tabs" :key="tab.id"
+            class="cd-tab"
+            :class="{ active: activeTab === tab.id }"
+            @click="activeTab = tab.id"
+          >{{ tab.label }}</button>
+        </div>
+      </nav>
+
+      <!-- ── CONTENT ── -->
+      <div class="cd-content">
+        <div class="cd-main">
+
+          <!-- TAB: รายละเอียด -->
+          <template v-if="activeTab === 'detail'">
+            <section class="cd-section">
+              <h2 class="cd-section-title">{{ $t('courseDetail.detailTab.aboutTitle') }}</h2>
+              <p class="cd-prose">{{ course.description }}</p>
+            </section>
+            <section class="cd-section">
+              <h2 class="cd-section-title">{{ $t('courseDetail.detailTab.objectivesTitle') }}</h2>
+              <ul class="cd-checklist">
+                <li v-for="obj in course.objectives" :key="obj">
+                  <i class="fas fa-check"></i><span>{{ obj }}</span>
+                </li>
+              </ul>
+            </section>
+            <section class="cd-section">
+              <h2 class="cd-section-title">{{ $t('courseDetail.detailTab.targetGroupsTitle') }}</h2>
+              <div class="cd-target-grid">
+                <span v-for="g in course.targetGroups" :key="g" class="cd-target-pill">
+                  <i class="fas fa-user"></i> {{ g }}
+                </span>
+              </div>
+            </section>
+          </template>
+
+          <!-- TAB: เนื้อหา -->
+          <template v-if="activeTab === 'topics'">
+            <section class="cd-section">
+              <h2 class="cd-section-title">{{ $t('courseDetail.topicsTab.title') }}</h2>
+              <div
+                v-for="(topic, idx) in course.topics"
+                :key="topic.title"
+                class="cd-topic-block"
+              >
+                <div class="cd-topic-header">
+                  <span class="cd-topic-num">{{ String(idx + 1).padStart(2, '0') }}</span>
+                  <h3 class="cd-topic-title">{{ topic.title }}</h3>
+                </div>
+                <ul class="cd-topic-list">
+                  <li v-for="item in topic.items" :key="item">{{ item }}</li>
+                </ul>
+              </div>
+            </section>
+          </template>
+
+          <!-- TAB: กำหนดการ -->
+          <template v-if="activeTab === 'schedule'">
+            <section class="cd-section">
+              <h2 class="cd-section-title">{{ $t('courseDetail.scheduleTab.title') }}</h2>
+              <div class="cd-timeline">
+                <div
+                  v-for="s in course.schedules"
+                  :key="s.time"
+                  class="cd-timeline-row"
+                >
+                  <div class="cd-tl-time">{{ s.time }}</div>
+                  <div class="cd-tl-dot"></div>
+                  <ul class="cd-tl-acts">
+                    <li v-for="act in s.activities" :key="act">{{ act }}</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+          </template>
+
+          <!-- TAB: ผู้สอน -->
+          <template v-if="activeTab === 'instructor'">
+            <section class="cd-section">
+              <h2 class="cd-section-title">{{ $t('courseDetail.instructorTab.title') }}</h2>
+              <template v-if="course.instructor">
+                <div class="cd-instructor-card">
+                  <div class="cd-instructor-avatar">
+                    <img v-if="course.instructor.photo" :src="course.instructor.photo" :alt="course.instructor.name">
+                    <i v-else class="fas fa-user-tie"></i>
+                  </div>
+                  <div class="cd-instructor-info">
+                    <p class="cd-instructor-name">{{ course.instructor.name }}</p>
+                    <p class="cd-instructor-title">{{ course.instructor.title }}</p>
+                    <p class="cd-instructor-bio">{{ course.instructor.bio }}</p>
+                  </div>
+                </div>
+              </template>
+              <div v-else class="cd-empty-state">
+                <i class="fas fa-user-clock"></i>
+                <p>{{ $t('courseDetail.instructorTab.pendingTitle') }}</p>
+                <span>{{ $t('courseDetail.instructorTab.pendingSubtitle') }}</span>
+              </div>
+            </section>
+          </template>
+
+          <!-- TAB: อื่นๆ -->
+          <template v-if="activeTab === 'other'">
+            <section class="cd-section">
+              <h2 class="cd-section-title">{{ $t('courseDetail.otherTab.methodTitle') }}</h2>
+              <ul class="cd-simple-list">
+                <li v-for="m in course.trainingMethod" :key="m">{{ m }}</li>
+              </ul>
+            </section>
+            <section class="cd-section">
+              <h2 class="cd-section-title">{{ $t('courseDetail.otherTab.equipmentTitle') }}</h2>
+              <ul class="cd-simple-list">
+                <li v-for="e in course.equipments" :key="e">{{ e }}</li>
+              </ul>
+            </section>
+            <section class="cd-section">
+              <h2 class="cd-section-title">{{ $t('courseDetail.otherTab.notesTitle') }}</h2>
+              <ul class="cd-simple-list cd-note-list">
+                <li v-for="n in course.notes" :key="n">{{ n }}</li>
+              </ul>
+            </section>
+          </template>
+
+        </div>
+
+        <!-- ── SIDEBAR ── -->
+        <aside class="cd-sidebar">
+
+          <div class="cd-sidebar-card">
+            <p class="cd-sb-price-label">{{ $t('courseDetail.sidebar.priceLabel') }}</p>
+            <p class="cd-sb-price" :class="{ 'cd-price-inquiry': !hasPrice }">
+              {{ hasPrice ? course.price : $t('courseDetail.hero.priceInquiry') }}
+            </p>
+            <p v-if="hasPrice" class="cd-sb-vat">{{ $t('courseDetail.sidebar.vatNote') }}</p>
+            <button class="cd-btn-primary cd-btn-full" @click="showBookingModal = true">
+              <i class="fas fa-calendar-check"></i>
+              {{ hasPrice ? $t('courseDetail.hero.bookButton') : $t('courseDetail.hero.quoteButton') }}
+            </button>
+          </div>
+
+          <div class="cd-sidebar-info">
+            <div class="cd-info-row">
+              <i class="far fa-clock"></i>
+              <div>
+                <p class="cd-info-label">{{ $t('courseDetail.sidebar.durationLabel') }}</p>
+                <p class="cd-info-val">{{ course.duration }}</p>
+              </div>
+            </div>
+            <div class="cd-info-row">
+              <i class="fas fa-users"></i>
+              <div>
+                <p class="cd-info-label">{{ $t('courseDetail.sidebar.capacityLabel') }}</p>
+                <p class="cd-info-val">{{ course.capacity }}</p>
+              </div>
+            </div>
+            <div class="cd-info-row">
+              <i class="fas fa-chalkboard-teacher"></i>
+              <div>
+                <p class="cd-info-label">{{ $t('courseDetail.sidebar.instructorLabel') }}</p>
+                <p class="cd-info-val" v-if="course.instructor">{{ course.instructor.name }}</p>
+                <p class="cd-info-val cd-info-pending" v-else>{{ $t('courseDetail.sidebar.instructorPending') }}</p>
+              </div>
+            </div>
+            <div class="cd-info-row">
+              <i class="fas fa-tools"></i>
+              <div>
+                <p class="cd-info-label">{{ $t('courseDetail.sidebar.equipmentLabel') }}</p>
+                <p class="cd-info-val">{{ course.equipments?.join(', ') || '–' }}</p>
+              </div>
+            </div>
+          </div>
+
+        </aside>
       </div>
-      <h2>{{ $t('courses.successModal.title') }}</h2>
-      <p v-html="$t('courses.successModal.message')"></p>
-      <button class="btn-close-success" @click="closeSuccessModal">{{ $t('courses.successModal.closeButton') }}</button>
+
+    </template>
+
+    <!-- ── BOOKING MODAL ── -->
+    <div v-if="course" class="modal-overlay" :class="{ active: showBookingModal }" @click.self="closeModal">
+      <div class="modal-container">
+        <button class="modal-close" @click="closeModal"><i class="fas fa-times"></i></button>
+        <div class="modal-header">
+          <h2>
+            <i class="fas fa-calendar-alt"></i>
+            {{ hasPrice ? $t('courseDetail.modal.bookingTitle') : $t('courseDetail.modal.quoteTitle') }}
+          </h2>
+          <p class="selected-course">{{ course.title }}</p>
+          <p class="selected-price">
+            {{ hasPrice ? course.price + ' ' + $t('courseDetail.modal.priceUnit') : $t('courseDetail.modal.priceInquiry') }}
+          </p>
+        </div>
+        <form class="booking-form" @submit.prevent="submitBooking">
+          <div class="form-group">
+            <label><i class="fas fa-user"></i> {{ $t('courseDetail.modal.fullNameLabel') }} <span class="required">*</span></label>
+            <input v-model="form.fullName" type="text" :placeholder="$t('courseDetail.modal.fullNamePlaceholder')" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-phone"></i> {{ $t('courseDetail.modal.phoneLabel') }} <span class="required">*</span></label>
+            <input v-model="form.phone" type="tel" placeholder="0XX-XXX-XXXX" @input="formatPhone" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-envelope"></i> {{ $t('courseDetail.modal.emailLabel') }} <span class="required">*</span></label>
+            <input v-model="form.email" type="email" placeholder="example@email.com" required>
+          </div>
+          <p v-if="errorMsg" class="booking-error">
+            <i class="fas fa-exclamation-circle"></i> {{ errorMsg }}
+          </p>
+          <button type="submit" class="btn-submit" :disabled="submitting">
+            <i :class="submitting ? 'fas fa-spinner fa-spin' : 'fas fa-paper-plane'"></i>
+            {{ submitting ? $t('courseDetail.modal.submittingButton') : $t('courseDetail.modal.submitButton') }}
+          </button>
+        </form>
+      </div>
     </div>
+
+    <!-- ── SUCCESS MODAL ── -->
+    <div class="modal-overlay" :class="{ active: showSuccessModal }" @click.self="showSuccessModal = false">
+      <div class="modal-container success-modal">
+        <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+        <h2>{{ $t('courseDetail.successModal.title') }}</h2>
+        <p>{{ $t('courseDetail.successModal.message') }}</p>
+        <button class="btn-close-success" @click="showSuccessModal = false">{{ $t('courseDetail.successModal.closeButton') }}</button>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { getCourses, getCategories } from '@/services/api.js'
-import emailjs from '@emailjs/browser'
-// ✅ import composable
-import { useLocaleField } from '@/composables/useLocaleField'
+import { getCourseBySlug } from '@/services/api.js'   // ← เปลี่ยนมาใช้ api.js เหมือน Courses.vue
 
-const { t } = useI18n()
-// ✅ ดึง lf และ lfArray
-const { lf, lfArray } = useLocaleField()
-
+const route  = useRoute()
 const router = useRouter()
+const { t, locale } = useI18n()
 
-// ── API state ─────────────────────────────
-const loading    = ref(true)
-const loadError  = ref(null)
+// ── Loading & data state ──────────────────────────────────
+const loading = ref(true)
+const course  = ref(null)
 
-// ── Raw data from API ─────────────────────
-const coursesRaw     = ref([])
-const categoryConfig = ref({})
-
-// ── Load data on mount ────────────────────
-onMounted(async () => {
-  try {
-    const [coursesData, categoriesData] = await Promise.all([
-      getCourses(),
-      getCategories()
-    ])
-    coursesRaw.value = coursesData
-    categoryConfig.value = Object.fromEntries(
-      categoriesData.map(c => [c.code, c])
-    )
-  } catch (e) {
-    loadError.value = t('courses.alerts.loadError') + e.message
-  } finally {
-    loading.value = false
-    await nextTick()
-    initCardAnimations()
-  }
-})
-
-// ── Course images (Vite glob) ──────────────
-const courseImages = import.meta.glob('@/assets/images/courses/*.png', { eager: true })
-
-function getCourseImage(c) {
-  const mod = courseImages[`/src/assets/images/courses/${c.courseCode}.png`]
-  if (mod) return mod.default
-  return new URL('@/assets/images/data/imagestate.png', import.meta.url).href
+// ── โหลด course ตาม slug + locale ปัจจุบัน ───────────────
+async function loadCourse() {
+  loading.value = true
+  course.value  = await getCourseBySlug(route.params.slug, locale.value)
+  loading.value = false
 }
 
-// ── Computed courses (with image + categoryColor) ──
-const _courses = computed(() =>
-  coursesRaw.value.map(c => ({
-    ...c,
-    image: getCourseImage(c),
-    categoryColor: categoryConfig.value[c.category]?.color ?? '#475569'
-  }))
-)
+onMounted(loadCourse)
 
-// ── Category list (derived from API data) ──
-const categories = computed(() =>
-  Object.entries(categoryConfig.value).map(([code, cfg]) => ({ code, ...cfg }))
-)
+// ── เมื่อสลับภาษา → fetch ใหม่ทันที (เหมือน Courses.vue) ──
+watch(locale, loadCourse)
 
-// ── Search & filter ───────────────────────
-const searchQuery = ref('')
-
-const selectedCategory = ref(sessionStorage.getItem('coursesCategory') || 'ALL')
-
-function selectCategory(code) {
-  selectedCategory.value = code
-  sessionStorage.setItem('coursesCategory', code)
-}
-
-function getCategoryCount(code) {
-  return _courses.value.filter(c => c.category === code).length
-}
-
-const filteredCourses = computed(() => {
-  let list = selectedCategory.value === 'ALL'
-    ? _courses.value
-    : _courses.value.filter(c => c.category === selectedCategory.value)
-
-  if (searchQuery.value.trim()) {
-    const q = searchQuery.value.trim().toLowerCase()
-    list = list.filter(c =>
-      // ✅ ค้นหาจาก lf() เพื่อให้ search ตรงกับภาษาที่แสดง
-      lf(c.title).toLowerCase().includes(q) ||
-      lf(c.desc)?.toLowerCase().includes(q) ||
-      c.category?.toLowerCase().includes(q)
-    )
-  }
-  return list
+// ── ตรวจสอบราคา ──────────────────────────────────────────
+const hasPrice = computed(() => {
+  const p = course.value?.price
+  return p && p !== 'N/A' && p !== '' && p !== '-'
 })
 
-const activeCategoryLabel = computed(() => {
-  if (selectedCategory.value === 'ALL') return t('courses.filterBar.all')
-  const cat = categories.value.find(c => c.code === selectedCategory.value)
-  // ✅ lf() สำหรับ label ของ category
-  return cat ? `${cat.code} – ${lf(cat.label)}` : selectedCategory.value
-})
+// ── Tabs — computed เพื่อให้ label เปลี่ยนตาม locale ────
+const tabs = computed(() => [
+  { id: 'detail',     label: t('courseDetail.tabs.detail') },
+  { id: 'topics',     label: t('courseDetail.tabs.topics') },
+  { id: 'schedule',   label: t('courseDetail.tabs.schedule') },
+  { id: 'instructor', label: t('courseDetail.tabs.instructor') },
+  { id: 'other',      label: t('courseDetail.tabs.other') },
+])
+const activeTab = ref('detail')
 
-const activeCategoryColor = computed(() => {
-  const cat = categories.value.find(c => c.code === selectedCategory.value)
-  return cat ? cat.color : '#6366f1'
-})
-
-// ── Why Us (ใช้ i18n key ปกติ ไม่ต้องใช้ lf) ──
-const whyUs = [
-  { icon: 'fas fa-award',               titleKey: 'courses.whyUs.item1.title', descKey: 'courses.whyUs.item1.desc' },
-  { icon: 'fas fa-chalkboard-teacher',  titleKey: 'courses.whyUs.item2.title', descKey: 'courses.whyUs.item2.desc' },
-  { icon: 'fas fa-tools',               titleKey: 'courses.whyUs.item3.title', descKey: 'courses.whyUs.item3.desc' },
-  { icon: 'fas fa-headset',             titleKey: 'courses.whyUs.item4.title', descKey: 'courses.whyUs.item4.desc' },
-]
-
-// ── Modal state ───────────────────────────
+// ── Modal ─────────────────────────────────────────────────
 const showBookingModal = ref(false)
 const showSuccessModal = ref(false)
-const selectedCourse   = ref('')
-const selectedPrice    = ref('')
 const submitting       = ref(false)
+const errorMsg         = ref('')
 const form = ref({ fullName: '', phone: '', email: '' })
 
-// ── Navigation ────────────────────────────
-function goToDetail(slug) {
-  router.push({ path: '/courses/' + slug })
-}
+const API_URL = 'https://patineer.co.th/api/booking.php'
 
-// ── Modal functions ───────────────────────
-function openBookingModal(name, price) {
-  selectedCourse.value   = name
-  selectedPrice.value    = price
-  showBookingModal.value = true
-  document.body.style.overflow = 'hidden'
-}
-
-function closeBookingModal() {
+function closeModal() {
   showBookingModal.value = false
-  document.body.style.overflow = ''
+  errorMsg.value = ''
   form.value = { fullName: '', phone: '', email: '' }
 }
 
-function closeSuccessModal() {
-  showSuccessModal.value = false
-  document.body.style.overflow = ''
-}
-
-// ── Phone formatter ───────────────────────
 function formatPhone(e) {
   let v = e.target.value.replace(/\D/g, '').slice(0, 10)
   if (v.length >= 6)      v = v.slice(0,3) + '-' + v.slice(3,6) + '-' + v.slice(6)
@@ -383,88 +346,47 @@ function formatPhone(e) {
   form.value.phone = v
 }
 
-// ── Form submit ───────────────────────────
-const errorMsg = ref('')
-
 async function submitBooking() {
   const phoneClean = form.value.phone.replace(/-/g, '')
   if (!/^[0-9]{9,10}$/.test(phoneClean)) {
-    alert(t('courses.alerts.invalidPhone'))
+    alert(t('courseDetail.alerts.invalidPhone'))
     return
   }
-
   submitting.value = true
   errorMsg.value   = ''
-
-  const templateParams = {
-    fullName: form.value.fullName,
-    phone:    form.value.phone,
-    email:    form.value.email,
-    course:   selectedCourse.value,
-    price:    selectedPrice.value
-  }
-
   try {
-    await emailjs.send(
-      'service_r1g3hlq',
-      'template_yihwf5c',
-      templateParams,
-      'jFrquSpMoGPiPa_t-'
-    )
-    closeBookingModal()
-    showSuccessModal.value = true
-    document.body.style.overflow = 'hidden'
-  } catch (error) {
-    console.error('EmailJS error:', error)
-    errorMsg.value = t('courses.alerts.submitError')
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fullName: form.value.fullName,
+        phone:    form.value.phone,
+        email:    form.value.email,
+        course:   course.value.title,
+        price:    hasPrice.value ? course.value.price : t('courseDetail.hero.priceInquiry')
+      })
+    })
+    const data = await res.json()
+    if (data.success) {
+      closeModal()
+      showSuccessModal.value = true
+    } else {
+      errorMsg.value = data.message || t('courseDetail.alerts.submitError')
+    }
+  } catch {
+    errorMsg.value = t('courseDetail.alerts.submitError')
   } finally {
     submitting.value = false
   }
 }
 
-// ── Escape key ────────────────────────────
 function onKeydown(e) {
-  if (e.key === 'Escape') { closeBookingModal(); closeSuccessModal() }
+  if (e.key === 'Escape') { closeModal(); showSuccessModal.value = false }
 }
-
-// ── Card scroll animation ─────────────────
-const cardRefs    = ref([])
-const whyCardRefs = ref([])
-
-function initCardAnimations() {
-  const allCards = [...(cardRefs.value || []), ...(whyCardRefs.value || [])]
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => {
-          entry.target.style.opacity   = '1'
-          entry.target.style.transform = 'translateY(0)'
-        }, i * 100)
-        observer.unobserve(entry.target)
-      }
-    })
-  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' })
-
-  allCards.forEach(card => {
-    if (card) {
-      card.style.opacity    = '0'
-      card.style.transform  = 'translateY(30px)'
-      card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
-      observer.observe(card)
-    }
-  })
-}
-
-onMounted(() => {
-  document.addEventListener('keydown', onKeydown)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('keydown', onKeydown)
-  document.body.style.overflow = ''
-})
+onMounted(() => document.addEventListener('keydown', onKeydown))
+onUnmounted(() => document.removeEventListener('keydown', onKeydown))
 </script>
 
 <style>
-@import "@/assets/css/courses.css";
+@import "@/assets/css/courseDetail.css";
 </style>

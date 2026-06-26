@@ -107,11 +107,30 @@ export default {
     }
   },
   async mounted() {
-    const newsData = await getNewsList()
-    this.articles = newsData.map(mapArticle)
-    this.filteredArticles = [...this.articles].sort((a, b) => b.id - a.id)
+    await this.loadNews()
+  },
+  watch: {
+    // เมื่อกดปุ่มสลับภาษา → fetch news ใหม่ตาม locale ปัจจุบัน แล้ว re-apply filter/search ที่เลือกอยู่
+    '$i18n.locale'() {
+      this.loadNews()
+    }
   },
   methods: {
+    async loadNews() {
+      const newsData = await getNewsList(this.$i18n.locale)
+      if (!newsData) return
+      this.articles = newsData.map(mapArticle)
+      this.applyCurrentFilter()
+    },
+    applyCurrentFilter() {
+      if (this.searchQuery.trim() !== '') {
+        this.searchArticles(this.searchQuery)
+      } else if (this.activeCategory !== 'all') {
+        this.filterArticles(this.activeCategory)
+      } else {
+        this.filteredArticles = [...this.articles].sort((a, b) => b.id - a.id)
+      }
+    },
     getCategoryLabel(category) {
       // ใช้ this.$t() เพราะอยู่ใน methods (ไม่ใช่ template) ของ Options API
       const labels = {

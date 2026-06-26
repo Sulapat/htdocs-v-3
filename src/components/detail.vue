@@ -78,14 +78,18 @@
             </aside>
         </div>
 
+        <div v-else-if="loading" class="no-news">
+            <p>{{ $t('detail.loading') }}</p>
+        </div>
+
         <div v-else class="no-news">
-            <p>{{ $t('detail.notFound') }}</p>
+            <p>{{ error || $t('detail.notFound') }}</p>
         </div>
     </div>
 </template>
 
 <script>
-import newsData from '@/data/newsData.js'
+import { getNewsById, getNewsList } from '@/services/api.js'
 
 const trainingImages = import.meta.glob('@/assets/images/training/**/*.{jpg,png}', { eager: true })
 
@@ -99,10 +103,12 @@ export default {
   name: 'Detail',
   data() {
     return {
-      newsData: newsData,
       news: null,
+      newsList: [],   // ← list ทั้งหมด ใช้สำหรับ Related News (เหมือนเดิม filter ออกจากตัวเอง)
       images: [],
-      currentImageIndex: 0
+      currentImageIndex: 0,
+      loading: false,
+      error: ''
     }
   },
 
@@ -115,20 +121,38 @@ export default {
       return this.images && this.images.length >= 2
     },
     relatedNews() {
-      if (!this.news || !this.newsData) return []
-      return this.newsData.filter(n => n.id !== this.news.id).slice(0, 5)
+      if (!this.news || !this.newsList) return []
+      return this.newsList.filter(n => n.id !== this.news.id).slice(0, 5)
     }
   },
 
   methods: {
-    updateDetailContent() {
+    async updateDetailContent() {
       const newsId = parseInt(this.$route.query.id, 10)
-      this.news = this.newsData.find(n => n.id === newsId)
-
-      if (!this.news) {
-        console.error('ไม่พบข่าวที่ต้องการ')
+      if (!newsId) {
+        this.news = null
         return
       }
+
+      this.loading = true
+      this.error   = ''
+
+      const [detail, list] = await Promise.all([
+        getNewsById(newsId, this.$i18n.locale),
+        getNewsList(this.$i18n.locale)
+      ])
+
+      this.loading = false
+
+      if (!detail) {
+        console.error('ไม่พบข่าวที่ต้องการ')
+        this.news = null
+        this.error = this.$t('detail.notFound')
+        return
+      }
+
+      this.news     = detail
+      this.newsList = list || []
 
       // แปลง path รูปทั้งหมด
       if (Array.isArray(this.news.images) && this.news.images.length > 0) {
@@ -182,7 +206,11 @@ export default {
   },
 
   watch: {
-    '$route.query.id': function() {
+    '$route.query.id'() {
+      this.updateDetailContent()
+    },
+    // เมื่อกดสลับภาษา → fetch ใหม่ตาม locale ปัจจุบัน (เหมือน Service.vue / Knowledge.vue)
+    '$i18n.locale'() {
       this.updateDetailContent()
     }
   }

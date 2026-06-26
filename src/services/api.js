@@ -1,82 +1,135 @@
 // src/services/api.js
-// service กลางสำหรับเรียก backend PHP — ใช้แทนการ import ไฟล์ data/*.js แบบ static เดิม
+// Service กลางสำหรับเรียก backend PHP
+// ใช้ api_i18n.php เป็น endpoint เดียวสำหรับทุก action ที่ frontend ใช้
+//
+// ────────────────────────────────────────────────────────────
+// DB structure: ตารางหลัก (TH) + ตาราง _en คู่กันทุกตัว
+//   courses  ←→  courses_en
+//   news     ←→  news_en   ฯลฯ
+//
+// Logic ฝั่ง PHP:
+//   lang=th → อ่านตารางหลักตรงๆ
+//   lang=en → LEFT JOIN _en แล้ว COALESCE(en_col, th_col)
+//             ถ้า row _en ยังไม่มี → fallback เป็น TH อัตโนมัติ
+//
+// Frontend ไม่ต้อง handle fallback เอง — ทำไว้ฝั่ง PHP แล้ว
+// ────────────────────────────────────────────────────────────
 
-import { courses as coursesData } from '@/data/coursesdetail.js'
-import { categoryConfig } from '@/data/categoryConfig.js'
-
-// ปรับ BASE_URL ตามจริง:
-// - ถ้า deploy โดเมนเดียวกัน เช่น เว็บอยู่ที่ https://patineer.co.th และวาง backend ไว้ที่ /backend/api
-//   ให้ใช้ '/backend/api' (relative path ก็พอ ไม่ต้องใส่โดเมน)
+// ปรับ BASE_URL ตาม deploy จริง
+// - same-domain: '/backend/api'
+// - cross-domain: 'https://api.patineer.co.th'
 const BASE_URL = '/backend/api'
+const I18N = `${BASE_URL}/api_i18n.php`
+
+// ────── internal helpers ──────────────────────────────────
+
+/**
+ * คืนค่าจำนวนสมาชิกแยกตาม cert_code
+ * @returns {Promise<{CATII:number, CATIII:number, CATIV:number, BMV:number}|null>}
+ */
+export function getMemberStats() {
+  return fetchJSON(i18nURL('members_stats', 'th'))
+}
 
 async function fetchJSON(url) {
   try {
     const res = await fetch(url)
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status}`)
-    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const text = await res.text()
-    // Check if response looks like JSON
+    console.log('[api] raw response:', text.slice(0, 200)) // ← เพิ่มบรรทัดนี้
     if (!text.startsWith('{') && !text.startsWith('[')) {
-      throw new Error('Not JSON response')
+      throw new Error('Response is not JSON')
     }
     return JSON.parse(text)
-  } catch (error) {
-    console.warn(`API fetch failed for ${url}:`, error.message)
+  } catch (err) {
+    console.warn(`[api] fetch failed: ${url}`, err.message)
     return null
   }
 }
 
-// ----- Categories -----
-export async function getCategories() {
-  const data = await fetchJSON(`${BASE_URL}/categories.php`)
-  if (data) return data
-  
-  // Fallback to local categoryConfig
-  return Object.entries(categoryConfig).map(([code, config]) => ({
-    code,
-    ...config
-  }))
+/**
+ * i18nURL — สร้าง URL ไปยัง api_i18n.php พร้อม action + lang + params เพิ่มเติม
+ * @param {string} action
+ * @param {string} lang   'th' | 'en'
+ * @param {Record<string,string>} [extra]
+ * @returns {string}
+ */
+function i18nURL(action, lang = 'th', extra = {}) {
+  const p = new URLSearchParams({ action, lang, ...extra })
+  return `${I18N}?${p}`
 }
 
-// ----- Courses -----
-export async function getCourses(category = null) {
-  const url = category
-    ? `${BASE_URL}/courses.php?category=${encodeURIComponent(category)}`
-    : `${BASE_URL}/courses.php`
-  const data = await fetchJSON(url)
-  if (data) return data
-  
-  // Fallback to local coursesData
-  if (!category) return coursesData
-  return coursesData.filter(c => c.category === category)
+// ────── Categories ────────────────────────────────────────
+// DB: categories (th) + categories_en
+// action=categories → [{ code, icon, color, label }]
+
+/**
+ * @param {'th'|'en'} lang
+ * @returns {Promise<Array<{code:string, icon:string, color:string, label:string}>|null>}
+ */
+export function getCategories(lang = 'th') {
+  return fetchJSON(i18nURL('categories', lang))
 }
 
-export async function getCourseBySlug(slug) {
-  const data = await fetchJSON(`${BASE_URL}/courses.php?slug=${encodeURIComponent(slug)}`)
-  if (data) return data
-  
-  // Fallback to local coursesData
-  return coursesData.find(c => c.slug === slug)
+// ────── Courses ───────────────────────────────────────────
+// DB: courses (th) + courses_en, course_objectives + _en, course_topics + _en, ...
+// action=courses → list (card view)
+// action=course  → single detail (slug required)
+
+/**
+ * @param {string|null} category  category_code เช่น 'MNT' (null = ทั้งหมด)
+ * @param {'th'|'en'} lang
+ */
+export function getCourses(category = null, lang = 'th') {
+  const extra = category ? { category } : {}
+  return fetchJSON(i18nURL('courses', lang, extra))
 }
 
-// ----- News -----
-export function getNewsList() {
-  return fetchJSON(`${BASE_URL}/news.php`)
+/**
+ * @param {string} slug
+ * @param {'th'|'en'} lang
+ */
+export function getCourseBySlug(slug, lang = 'th') {
+  return fetchJSON(i18nURL('course', lang, { slug }))
 }
 
-export function getNewsById(id) {
-  return fetchJSON(`${BASE_URL}/news.php?id=${id}`)
+// ────── News ──────────────────────────────────────────────
+// DB: news (th) + news_en, news_tags + news_tags_en, news_images (ไม่มี _en — รูปใช้ร่วมกัน)
+// action=news        → list
+// action=news_detail → single (id required)
+
+/**
+ * @param {'th'|'en'} lang
+ */
+export function getNewsList(lang = 'th') {
+  return fetchJSON(i18nURL('news', lang))
 }
 
-// ----- Members (TestResult.vue / StatsIndex.vue) -----
-export function getMembers(filter = null) {
-  const url = filter
-    ? `${BASE_URL}/members.php?filter=${encodeURIComponent(filter)}`
-    : `${BASE_URL}/members.php`
-  return fetchJSON(url)
+/**
+ * @param {number|string} id
+ * @param {'th'|'en'} lang
+ */
+export function getNewsById(id, lang = 'th') {
+  return fetchJSON(i18nURL('news_detail', lang, { id: String(id) }))
 }
 
-export function getMemberStats() {
-  return fetchJSON(`${BASE_URL}/members.php?stats=1`)
+// ────── Members ───────────────────────────────────────────
+// DB: members, member_certifications (ไม่มี _en — ข้อมูลคนไม่ผันตามภาษา)
+// action=members       → search (q, cert ไม่บังคับ)
+// action=members_stats → { CATII:N, CATIII:N, CATIV:N, BMV:N }
+//
+// หมายเหตุ: lang ไม่มีผลต่อ members เพราะ PHP ไม่ JOIN _en
+// แต่ส่งไปเพื่อ consistency ของ URL pattern
+
+/**
+ * @param {string} [q]    ค้นหาชื่อ/อีเมล/member_no
+ * @param {string} [cert] กรอง cert_code เช่น 'CATII'
+ */
+export function getMembers({ q = '', cert = '' } = {}) {
+  const extra = {}
+  if (q)    extra.q    = q
+  if (cert) extra.cert = cert
+  // lang ไม่มีผล แต่ใส่ th ไปเพื่อ consistent
+  return fetchJSON(i18nURL('members', 'th', extra))
 }
+

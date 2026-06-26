@@ -6,10 +6,6 @@
                     <img src="@/assets/images/data/logo_Patineer-removebg.png">
                 </router-link>
             </div>
-            
-            <div class="hamburger" @click="toggleMenu">
-                <i class="fa" :class="isMenuOpen ? 'fa-times' : 'fa-bars'"></i>
-            </div>
 
             <ul class="nav-links" :class="{ 'show': isMenuOpen }">
                 <li><router-link to="/" @click="closeAll">{{ $t('nav.home') }}</router-link></li>
@@ -65,26 +61,32 @@
                 <li><router-link to="/courses" @click="closeAll">{{ $t('nav.courses') }}</router-link></li>
             </ul>
 
-            <button
-                class="lang-switch"
-                :class="{ 'is-en': currentLang === 'en' }"
-                type="button"
-                role="switch"
-                :aria-checked="currentLang === 'en'"
-                aria-label="Switch language / สลับภาษา"
-                @click="toggleLanguage"
-            >
-                <span class="lang-switch-track">
+            <!-- กลุ่มขวา: ปุ่มสลับภาษา + hamburger (มือถือ) + โซเชียล (เดสก์ท็อป) เป็นก้อนเดียวกัน
+                 ไม่แย่งพื้นที่กับ nav-links เพราะ nav-links ถูกตรึงกลางจอด้วย position:absolute -->
+            <div class="nav-right">
+                <button
+                    class="lang-switch"
+                    :class="{ 'is-en': currentLang === 'en' }"
+                    type="button"
+                    role="switch"
+                    :aria-checked="currentLang === 'en'"
+                    aria-label="Switch language / สลับภาษา"
+                    @click="toggleLanguage"
+                >
+                    <span class="lang-switch-thumb"></span>
                     <span class="lang-switch-label lang-th">TH</span>
                     <span class="lang-switch-label lang-en">EN</span>
-                    <span class="lang-switch-thumb">{{ currentLang === 'en' ? 'EN' : 'TH' }}</span>
-                </span>
-            </button>
+                </button>
 
-            <div class="social-links">
-                <a href="https://mail.google.com/mail/?view=cm&to=patineer@outlook.com" target="_blank"><i class="fa fa-envelope"></i></a>
-                <a href="https://line.me/R/ti/p/@530ddhwa" target="_blank"><i class="fab fa-line"></i></a>
-                <a href="https://www.facebook.com/Patineerr" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <div class="hamburger" @click="toggleMenu">
+                    <i class="fa" :class="isMenuOpen ? 'fa-times' : 'fa-bars'"></i>
+                </div>
+
+                <div class="social-links">
+                    <a href="https://mail.google.com/mail/?view=cm&to=patineer@outlook.com" target="_blank"><i class="fa fa-envelope"></i></a>
+                    <a href="https://line.me/R/ti/p/@530ddhwa" target="_blank"><i class="fab fa-line"></i></a>
+                    <a href="https://www.facebook.com/Patineerr" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                </div>
             </div>
         </nav>
     </div>

@@ -227,7 +227,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { getCourses, getCategories } from '@/services/api.js'
@@ -235,7 +235,7 @@ import emailjs from '@emailjs/browser'
 // ✅ import composable
 import { useLocaleField } from '@/composables/useLocaleField'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 // ✅ ดึง lf และ lfArray
 const { lf, lfArray } = useLocaleField()
 
@@ -249,12 +249,14 @@ const loadError  = ref(null)
 const coursesRaw     = ref([])
 const categoryConfig = ref({})
 
-// ── Load data on mount ────────────────────
-onMounted(async () => {
+// ── Load data (รับ lang ปัจจุบันจาก locale) ──
+async function loadData() {
+  loading.value = true
+  loadError.value = null
   try {
     const [coursesData, categoriesData] = await Promise.all([
-      getCourses(),
-      getCategories()
+      getCourses(null, locale.value),
+      getCategories(locale.value)
     ])
     coursesRaw.value = coursesData
     categoryConfig.value = Object.fromEntries(
@@ -267,6 +269,14 @@ onMounted(async () => {
     await nextTick()
     initCardAnimations()
   }
+}
+
+onMounted(loadData)
+
+// ✅ เมื่อสลับภาษา (locale ของ vue-i18n เปลี่ยน) ให้ fetch ข้อมูลคอร์ส/หมวดหมู่ใหม่ตามภาษานั้น
+// (ไม่ต้องพึ่ง custom event 'lang-changed' จาก nav.vue เพราะ locale เป็น reactive ref อยู่แล้ว)
+watch(locale, () => {
+  loadData()
 })
 
 // ── Course images (Vite glob) ──────────────

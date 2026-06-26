@@ -73,8 +73,19 @@
     <!-- Results Section -->
     <section class="results-section">
 
+      <!-- Error -->
+      <div v-if="error" class="no-results">
+        <p style="color:#dc2626">{{ error }}</p>
+      </div>
+
+      <!-- Loading (initial fetch or search debounce) -->
+      <div v-else-if="loading" class="loading-state">
+        <div class="spinner"></div>
+        <p>{{ $t('testResult.loading') }}</p>
+      </div>
+
       <!-- Empty course — no certified analysts yet -->
-      <div v-if="isEmpty && activeData.length === 0" class="no-results">
+      <div v-else-if="isEmpty && activeData.length === 0" class="no-results">
         <svg class="no-results-icon" xmlns="https://www.w3.org/2000/svg" width="64" height="64"
           viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
@@ -88,10 +99,10 @@
       <!-- All Results (before search) -->
       <div v-else-if="isEmpty" class="results-container">
         <div class="results-grid">
-          <div v-for="(result, index) in pagedData" :key="result.Member" class="result-card" :style="{ borderColor: cardBorderColor(index, pagedData.length) }">
+          <div v-for="(result, index) in pagedData" :key="result.id" class="result-card" :style="{ borderColor: cardBorderColor(index, pagedData.length) }">
             <div class="result-avatar-area">
               <div class="result-avatar-placeholder">
-                <img v-if="getcandidatesrPhoto(result.ID)" :src="getcandidatesrPhoto(result.ID)" :alt="result['First Name'] + ' ' + result['Last Name']" />
+                <img v-if="getcandidatesrPhoto(result.id)" :src="getcandidatesrPhoto(result.id)" :alt="result.firstName + ' ' + result.lastName" />
                 <svg v-else xmlns="https://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                   <circle cx="12" cy="8" r="4"/>
                   <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
@@ -99,20 +110,20 @@
               </div>
             </div>
             <div class="result-header">
-              <div class="result-name">{{ result['First Name'] }} {{ result['Last Name'] }}</div>
+              <div class="result-name">{{ result.firstName }} {{ result.lastName }}</div>
             </div>
             <div class="result-details">
               <div class="result-detail-item">
                 <span class="result-detail-label">{{ $t('testResult.card.memberIdLabel') }}</span>
-                <span class="result-detail-value">{{ result.Member }}</span>
+                <span class="result-detail-value">{{ result.memberNo }}</span>
               </div> 
               <div class="result-detail-item">
                 <span class="result-detail-label">{{ $t('testResult.card.emailLabel') }}</span>
-                <span class="result-detail-value">{{ result.Mail }}</span>
+                <span class="result-detail-value">{{ result.email }}</span>
               </div>
             </div>
             <div class="result-level-row">
-              <span v-for="tag in parseLevelTags(result.Level)" :key="tag.code" class="result-course-tag" :class="tag.class">
+              <span v-for="tag in parseLevelTags(result.certifications)" :key="tag.code" class="result-course-tag" :class="tag.class">
                 {{ tag.code }}
               </span>
             </div>
@@ -123,17 +134,6 @@
           <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
           <button class="page-btn" :disabled="currentPage === totalPages" @click="currentPage++"><span>{{ $t('testResult.pagination.next') }}</span> →</button>
         </div>
-      </div>
-
-      <!-- Error -->
-      <div v-if="error" class="no-results">
-        <p style="color:#dc2626">{{ error }}</p>
-      </div>
-
-      <!-- Loading -->
-      <div v-else-if="loading" class="loading-state">
-        <div class="spinner"></div>
-        <p>{{ $t('testResult.loading') }}</p>
       </div>
 
       <!-- No Results -->
@@ -153,10 +153,10 @@
       <!-- Search Results -->
       <div v-else-if="!isEmpty" class="results-container">
         <div class="results-grid">
-          <div v-for="(result, index) in pagedSearchData" :key="result.Member" class="result-card" :style="{ borderColor: cardBorderColor(index, pagedSearchData.length) }">
+          <div v-for="(result, index) in pagedSearchData" :key="result.id" class="result-card" :style="{ borderColor: cardBorderColor(index, pagedSearchData.length) }">
             <div class="result-avatar-area">
               <div class="result-avatar-placeholder">
-                <img v-if="getcandidatesrPhoto(result.ID)" :src="getcandidatesrPhoto(result.ID)" :alt="result['First Name'] + ' ' + result['Last Name']" />
+                <img v-if="getcandidatesrPhoto(result.id)" :src="getcandidatesrPhoto(result.id)" :alt="result.firstName + ' ' + result.lastName" />
                 <svg v-else xmlns="https://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                   <circle cx="12" cy="8" r="4"/>
                   <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
@@ -164,20 +164,20 @@
               </div>
             </div>
             <div class="result-header">
-              <div class="result-name">{{ result['First Name'] }} {{ result['Last Name'] }}</div>
+              <div class="result-name">{{ result.firstName }} {{ result.lastName }}</div>
             </div>
             <div class="result-details">
               <div class="result-detail-item">
                 <span class="result-detail-label">{{ $t('testResult.card.memberIdLabel') }}</span>
-                <span class="result-detail-value">{{ result.Member }}</span>
+                <span class="result-detail-value">{{ result.memberNo }}</span>
               </div>
               <div class="result-detail-item">
                 <span class="result-detail-label">{{ $t('testResult.card.emailLabel') }}</span>
-                <span class="result-detail-value">{{ result.Mail }}</span>
+                <span class="result-detail-value">{{ result.email }}</span>
               </div>
             </div>
             <div class="result-level-row">
-              <span v-for="tag in parseLevelTags(result.Level)" :key="tag.code" class="result-course-tag" :class="tag.class">
+              <span v-for="tag in parseLevelTags(result.certifications)" :key="tag.code" class="result-course-tag" :class="tag.class">
                 {{ tag.code }}
               </span>
             </div>
@@ -198,12 +198,12 @@
 import { ref, watch, computed, nextTick, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-// ✅ เปลี่ยนมาใช้ getDataByFilter แทน dataByFilter (static object)
-import { sampleData, getDataByFilter } from '@/data/sampledata.js'
+// ✅ เอา mock data (sampledata.js) ออก เปลี่ยนมาใช้ getMembers จริงจาก api.js
+import { getMembers } from '@/services/api.js'
 
 const { t } = useI18n()
 
-// โหลดรูปภาพทั้งหมดใน assets/images/candidates/ ชื่อไฟล์ตรงกับ ID (เช่น 1.png, 2.png)
+// โหลดรูปภาพทั้งหมดใน assets/images/candidates/ ชื่อไฟล์ตรงกับ id (เช่น 1.png, 2.png)
 const candidateImages = import.meta.glob('@/assets/images/candidates/*.{png,jpg,jpeg,webp}', { eager: true })
 
 function getcandidatesrPhoto(id) {
@@ -213,6 +213,31 @@ function getcandidatesrPhoto(id) {
     if (mod) return mod.default
   }
   return null
+}
+
+// map ค่า dropdown (ALL/BMV/C2VA/C3VA/C4VA) → cert_code ที่ backend ใช้จริง
+const COURSE_TO_CERT = {
+  ALL:  '',
+  BMV:  'BMV',
+  C2VA: 'CATII',
+  C3VA: 'CATIII',
+  C4VA: 'CATIV',
+}
+
+// ── ดึงสมาชิกทั้งหมดจาก backend ครั้งเดียว แล้ว filter เองฝั่ง frontend ──
+const allMembers = ref([])
+
+async function loadMembers() {
+  loading.value = true
+  error.value   = ''
+  const data = await getMembers()
+  if (!data) {
+    error.value = t('testResult.loadError')
+    allMembers.value = []
+  } else {
+    allMembers.value = data
+  }
+  loading.value = false
 }
 
 const route = useRoute()
@@ -274,6 +299,7 @@ onMounted(() => {
   if (courseParam && ['BMV', 'C2VA', 'C3VA', 'C4VA'].includes(courseParam)) {
     selectedCourse.value = courseParam
   }
+  loadMembers()
 })
 onUnmounted(() => {
   document.removeEventListener('click', handleGlobalClick)
@@ -315,8 +341,14 @@ const courseOptions = computed(() => [
 
 const selectedCourse = ref('ALL')
 
-// ✅ computed เรียก getDataByFilter(key) ทุกครั้ง → reactive ถูกต้อง
-const activeData = computed(() => getDataByFilter(selectedCourse.value))
+// ✅ filter allMembers (จาก backend) ตาม cert_code ที่ map จาก dropdown — ทำฝั่ง frontend ทั้งหมด
+const activeData = computed(() => {
+  const cert = COURSE_TO_CERT[selectedCourse.value]
+  if (!cert) return allMembers.value
+  return allMembers.value.filter(m =>
+    String(m.certifications || '').split(',').includes(cert)
+  )
+})
 
 const totalPages = computed(() => Math.max(1, Math.ceil(activeData.value.length / perPage)))
 const pagedData  = computed(() => {
@@ -346,11 +378,11 @@ const selectCourse = (val) => {
   loading.value = true
   setTimeout(() => {
     results.value = activeData.value.filter(item =>
-      String(item.Member).includes(q) ||
-      item['First Name'].toLowerCase().includes(q) ||
-      item['Last Name'].toLowerCase().includes(q) ||
-      `${item['First Name']} ${item['Last Name']}`.toLowerCase().includes(q) ||
-      item.Mail.toLowerCase().includes(q)
+      String(item.memberNo).includes(q) ||
+      item.firstName.toLowerCase().includes(q) ||
+      item.lastName.toLowerCase().includes(q) ||
+      `${item.firstName} ${item.lastName}`.toLowerCase().includes(q) ||
+      (item.email || '').toLowerCase().includes(q)
     )
     loading.value = false
   }, 300)
@@ -362,18 +394,19 @@ const pagedSearchData  = computed(() => {
   return results.value.slice(start, start + perPage)
 })
 
-// ✅ แก้ลำดับ: เช็ค CATIV → CATIII → CATII (ป้องกัน substring overlap)
-const parseLevelTags = (level = '') => {
+// รับ certifications จาก backend เป็น comma-joined string เช่น "CATII,CATIII" (มาจาก GROUP_CONCAT)
+const parseLevelTags = (certifications = '') => {
+  const codes = String(certifications || '').split(',').map(c => c.trim()).filter(Boolean)
   const tags = []
-  if (level.includes('CATIV') || level.includes('CAT IV'))
+  if (codes.includes('CATIV'))
     tags.push({ code: 'CAT-IV', label: 'Category IV Vibration Analyst', class: 'tag-va4' })
-  if (level.includes('CATIII') || level.includes('CAT III'))
+  if (codes.includes('CATIII'))
     tags.push({ code: 'CAT-III', label: 'Category III Vibration Analyst', class: 'tag-va3' })
-  if (/CATII(?![IV])/.test(level) || level.includes('CAT II'))
+  if (codes.includes('CATII'))
     tags.push({ code: 'CAT-II', label: 'Category II Vibration Analyst', class: 'tag-va2' })
-  if (level.includes('BMV'))
+  if (codes.includes('BMV'))
     tags.push({ code: 'BMV', label: 'Basic Machinery Vibration', class: 'tag-bmv' })
-  return tags.length ? tags : [{ code: level, label: level, class: 'tag-default' }]
+  return tags.length ? tags : [{ code: certifications || '-', label: certifications || '-', class: 'tag-default' }]
 }
 
 const cardBorderColor = (index, total) => {
@@ -396,11 +429,11 @@ const handleSearch = () => {
   searchPage.value = 1
   setTimeout(() => {
     results.value = activeData.value.filter(item =>
-      String(item.Member).includes(q) ||
-      item['First Name'].toLowerCase().includes(q) ||
-      item['Last Name'].toLowerCase().includes(q) ||
-      `${item['First Name']} ${item['Last Name']}`.toLowerCase().includes(q) ||
-      item.Mail.toLowerCase().includes(q)
+      String(item.memberNo).includes(q) ||
+      item.firstName.toLowerCase().includes(q) ||
+      item.lastName.toLowerCase().includes(q) ||
+      `${item.firstName} ${item.lastName}`.toLowerCase().includes(q) ||
+      (item.email || '').toLowerCase().includes(q)
     )
     loading.value = false
   }, 300)
