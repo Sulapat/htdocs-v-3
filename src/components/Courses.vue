@@ -13,7 +13,7 @@
   <section class="courses-section">
     <h2 class="section-title">{{ $t('courses.section.title') }}</h2>
 
-    <!-- Loading -->
+    <!-- Loading (ครั้งแรกเท่านั้น — ยังไม่มีข้อมูลเลย) -->
     <div v-if="loading" class="loading-state">
       <i class="fas fa-spinner fa-spin"></i> <span>{{ $t('courses.loading') }}</span>
     </div>
@@ -23,7 +23,12 @@
       <i class="fas fa-exclamation-circle"></i> {{ loadError }}
     </div>
 
-    <div v-else class="courses-layout">
+    <template v-else>
+
+      <!-- แถบบอกสถานะตอนสลับภาษา: ไม่ถอดเนื้อหาเดิม แค่ dim + แถบบาง ๆ ด้านบน -->
+      <div class="cd-lang-switch-bar" :class="{ active: switchingLang }"></div>
+
+      <div class="courses-layout" :class="{ 'cd-content-dimmed': switchingLang }">
 
       <!-- ─── Sidebar ─────────────────────────── -->
       <aside class="courses-sidebar">
@@ -163,7 +168,9 @@
         </div>
 
       </div><!-- /courses-main -->
-    </div><!-- /courses-layout -->
+      </div><!-- /courses-layout -->
+
+    </template>
   </section>
 
   <!-- Why Choose Us Section -->
@@ -242,8 +249,9 @@ const { lf, lfArray } = useLocaleField()
 const router = useRouter()
 
 // ── API state ─────────────────────────────
-const loading    = ref(true)
-const loadError  = ref(null)
+const loading       = ref(true)   // โหลดครั้งแรก (ยังไม่มีข้อมูลเลย) → โชว์ full loading state ได้
+const switchingLang  = ref(false) // โหลดเพราะสลับภาษา (มีข้อมูลเดิมอยู่แล้ว) → ไม่ถอดเนื้อหาเดิม กันกระพริบ
+const loadError      = ref(null)
 
 // ── Raw data from API ─────────────────────
 const coursesRaw     = ref([])
@@ -251,7 +259,14 @@ const categoryConfig = ref({})
 
 // ── Load data (รับ lang ปัจจุบันจาก locale) ──
 async function loadData() {
-  loading.value = true
+  // ถ้ามีข้อมูลเดิมอยู่แล้ว (กรณีสลับภาษา) ใช้ flag เบา ๆ
+  // ไม่แตะ loading ตัวหลัก เพื่อไม่ให้ v-if="loading" เอาเนื้อหาเดิมออกจากจอ
+  const hasData = coursesRaw.value.length > 0
+  if (hasData) {
+    switchingLang.value = true
+  } else {
+    loading.value = true
+  }
   loadError.value = null
   try {
     const [coursesData, categoriesData] = await Promise.all([
@@ -265,9 +280,15 @@ async function loadData() {
   } catch (e) {
     loadError.value = t('courses.alerts.loadError') + e.message
   } finally {
-    loading.value = false
-    await nextTick()
-    initCardAnimations()
+    const wasFirstLoad = loading.value
+    loading.value       = false
+    switchingLang.value = false
+    // ✅ รัน scroll-reveal animation (fade+slide) เฉพาะตอนโหลดครั้งแรกเท่านั้น
+    // ถ้ารันซ้ำตอนสลับภาษา การ์ดจะถูกเซต opacity:0 แล้ว fade-in ใหม่ → ดูเหมือนกระพริบอีกแบบ
+    if (wasFirstLoad) {
+      await nextTick()
+      initCardAnimations()
+    }
   }
 }
 

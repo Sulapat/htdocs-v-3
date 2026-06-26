@@ -1,7 +1,7 @@
 <template>
   <div class="detail-page">
 
-    <!-- Loading -->
+    <!-- Loading (ครั้งแรกเท่านั้น — ยังไม่มี course ในมือ) -->
     <div v-if="loading" class="not-found">
       <i class="fas fa-spinner fa-spin"></i>
     </div>
@@ -16,6 +16,13 @@
     </div>
 
     <template v-else>
+
+      <!-- แถบบอกสถานะตอนสลับภาษา: ไม่เอาเนื้อหาเดิมออก แค่ dim + แสดง indicator เล็ก ๆ -->
+      <div class="cd-lang-switch-bar" :class="{ active: switchingLang }">
+        <i class="fas fa-spinner fa-spin"></i>
+      </div>
+
+      <div class="cd-content-wrap" :class="{ 'cd-content-dimmed': switchingLang }">
 
       <!-- ── HERO ── -->
       <section class="cd-hero">
@@ -229,6 +236,8 @@
         </aside>
       </div>
 
+      </div><!-- /.cd-content-wrap -->
+
     </template>
 
     <!-- ── BOOKING MODAL ── -->
@@ -293,20 +302,40 @@ const router = useRouter()
 const { t, locale } = useI18n()
 
 // ── Loading & data state ──────────────────────────────────
-const loading = ref(true)
-const course  = ref(null)
+// loading       = โหลดครั้งแรก (ตอนยังไม่มี course เลย) → โชว์ full spinner ได้
+// switchingLang = โหลดเพราะสลับภาษา (มี course เดิมอยู่แล้ว) → ไม่ซ่อนเนื้อหาเดิม กัน UI กระพริบ
+const loading       = ref(true)
+const switchingLang = ref(false)
+const course        = ref(null)
 
 // ── โหลด course ตาม slug + locale ปัจจุบัน ───────────────
 async function loadCourse() {
-  loading.value = true
-  course.value  = await getCourseBySlug(route.params.slug, locale.value)
-  loading.value = false
+  // ถ้ามีข้อมูลเดิมอยู่แล้ว (กรณีสลับภาษา) ให้ใช้ flag เบา ๆ
+  // ไม่ใช้ loading ตัวหลัก เพื่อไม่ให้ v-if="loading" สั่งเอาเนื้อหาเดิมออกจากจอ
+  if (course.value) {
+    switchingLang.value = true
+  } else {
+    loading.value = true
+  }
+
+  try {
+    course.value = await getCourseBySlug(route.params.slug, locale.value)
+  } finally {
+    loading.value       = false
+    switchingLang.value = false
+  }
 }
 
 onMounted(loadCourse)
 
-// ── เมื่อสลับภาษา → fetch ใหม่ทันที (เหมือน Courses.vue) ──
+// ── เมื่อสลับภาษา → fetch ใหม่ แต่ไม่ทำให้หน้าจอกระพริบ ──
 watch(locale, loadCourse)
+
+// ── เมื่อเปลี่ยน course (slug เปลี่ยน) → เริ่ม loading ใหม่จริง ๆ ──
+watch(() => route.params.slug, () => {
+  course.value = null
+  loadCourse()
+})
 
 // ── ตรวจสอบราคา ──────────────────────────────────────────
 const hasPrice = computed(() => {

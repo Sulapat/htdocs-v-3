@@ -493,3 +493,36 @@
   .cd-timeline { margin-left: 6px; }
   .cd-tl-time { min-width: 100px; }
 }
+
+/* ── Smooth language switch: ไม่กระพริบทั้งหน้า ──
+   แค่ dim เนื้อหาเดิมเบา ๆ + โชว์แถบ indicator บาง ๆ ด้านบน
+   ระหว่างรอข้อมูลภาษาใหม่ */
+.cd-content-wrap {
+  transition: opacity 0.18s ease;
+}
+.cd-content-dimmed {
+  opacity: 0.55;
+  pointer-events: none; /* กันคลิกซ้ำตอนกำลังโหลด */
+}
+
+.cd-lang-switch-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.15), transparent);
+}
+.cd-lang-switch-bar.active {
+  opacity: 1;
+}
+.cd-lang-switch-bar i {
+  display: none; /* ใช้แถบสีอย่างเดียวพอ ไม่ต้องมี icon ลอยกลางจอ */
+}
