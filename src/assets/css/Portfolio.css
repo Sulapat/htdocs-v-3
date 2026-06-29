@@ -53,3 +53,39 @@ body {
   object-fit: cover;    /* ครอบรูปให้พอดีโดยไม่ยืด */
   border-radius: 8px;
 }
+
+/* ── Lang-switch bar (แสดงเมื่อสลับภาษา) ── */
+.kn-lang-switch-bar {
+  height: 3px;
+  background: linear-gradient(90deg, #6366f1, #818cf8, #6366f1);
+  background-size: 200% 100%;
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  margin-bottom: 8px;
+}
+.kn-lang-switch-bar.active {
+  opacity: 1;
+  animation: kn-shimmer 1.2s infinite;
+}
+@keyframes kn-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Content dim เมื่อสลับภาษา ── */
+.kn-content-dimmed {
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+/* ── Loading spinner ── */
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 0;
+  font-size: 2rem;
+  color: #6366f1;
+}
