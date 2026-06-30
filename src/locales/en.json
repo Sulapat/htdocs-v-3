@@ -9,7 +9,8 @@
     "c2va": "Category II Vibration Analyst",
     "c3va": "Category III Vibration Analyst",
     "c4va": "Category IV Vibration Analyst",
-    "courses": "Courses"
+    "courses": "Courses",
+    "article" : "Article"
   },
 
   "footer": {
@@ -114,6 +115,66 @@
       "transitions": "Optical Technology",
       "ttm": "Industrial Client",
       "wha": "Logistics & Industrial"
+    }
+  },
+
+  "articles": {
+    "hero": {
+      "title": "Articles",
+      "subtitle": "Stay up to date with information and best practices<br>in industrial machinery maintenance"
+    },
+    "section": {
+      "title": "Latest Articles"
+    },
+    "loading": "Loading data...",
+    "emptyState": {
+      "message": "No articles available yet"
+    },
+    "alerts": {
+      "loadError": "Failed to load article data: "
+    },
+    "sidebar": {
+      "searchTitle": "Search Articles",
+      "searchPlaceholder": "Search articles...",
+      "categoryTitle": "Categories",
+      "popularTitle": "Popular Articles"
+    }
+  },
+
+  "articleDetail": {
+    "notFound": {
+      "title": "Article not found",
+      "backButton": "Back to Articles"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "articles": "Articles"
+    },
+    "toc": {
+      "title": "Table of Contents",
+      "summary": "Summary"
+    },
+    "consult": {
+      "title": "Need Expert Advice?",
+      "desc": "Our team is ready to help with consulting on your machinery maintenance.",
+      "button": "Contact Us"
+    },
+    "labels": {
+      "tip": "Tip",
+      "warning": "Warning"
+    },
+    "sidebar": {
+      "downloadTitle": "Download Document",
+      "downloadButton": "Download PDF",
+      "relatedTitle": "Related Articles",
+      "viewAll": "View All Articles",
+      "tagsTitle": "Tags"
+    },
+    "cta": {
+      "title": "Interested in Our Services?",
+      "desc": "Let us help improve your machinery maintenance efficiency",
+      "viewServices": "View Services",
+      "requestQuote": "Request a Quote"
     }
   },
 

@@ -12,6 +12,7 @@
                 <li><router-link to="/service" @click="closeAll">{{ $t('nav.service') }}</router-link></li>
                 <li><router-link to="/knowledge" @click="closeAll">{{ $t('nav.knowledge') }}</router-link></li>
                 <li><router-link to="/clients" @click="closeAll">{{ $t('nav.clients') }}</router-link></li>
+                <li><router-link to="/article" @click="closeAll">{{ $t('nav.article') }}</router-link></li>
                 
                 <li class="nav-dropdown-wrap"
                     @mouseenter="handleMouseEnter"

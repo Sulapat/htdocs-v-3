@@ -9,6 +9,9 @@ import Portfolio from '@/components/Portfolio.vue'
 import TestResult from '@/components/TestResult.vue'
 import courses from '@/components/Courses.vue'
 import CourseDetail from '@/components/CourseDetail.vue'
+import Article from '@/components/Article.vue'
+import ArticleDetail from '@/components/ArticleDetail.vue'
+
 
 
 const routes = [
@@ -22,6 +25,8 @@ const routes = [
   { path: '/result', component: TestResult },
   { path: '/courses', component: courses },
   { path: '/courses/:slug', component: CourseDetail },
+  { path: '/article', component: Article },
+  { path: '/article/:slug', component: ArticleDetail },
 ]
 
 export default createRouter({

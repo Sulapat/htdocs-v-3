@@ -13,21 +13,18 @@
 
         <!-- Card Slider -->
         <div class="hero-right card-slider">
-          <input type="radio" name="slider" v-for="n in 8" :key="n"
-            :id="`slide-${n}`" class="slider__radio" :checked="n === currentSlide">
-
           <div class="slider__holder">
-            <div v-for="n in 8" :key="n" :class="`slider__item slider__item--${n}`">
+            <div v-for="n in 8" :key="n" class="slider__item" :style="getCardStyle(n)">
               <img :src="photos[n-1]" :alt="`Service ${n}`">
             </div>
           </div>
 
           <div class="bullets">
-            <label v-for="n in 8" :key="n"
-              :for="`slide-${n}`"
-              :class="`bullets__item bullets__item--${n}`"
+            <span v-for="n in 8" :key="n"
+              class="bullets__item"
+              :class="{ 'bullets__item--active': n === currentSlide }"
               @click="selectSlide(n)">
-            </label>
+            </span>
           </div>
         </div>
       </div>
@@ -95,6 +92,28 @@ export default {
     }
   },
   methods: {
+    // ── คำนวณตำแหน่ง/scale/opacity ของแต่ละการ์ด ตามระยะห่างจริงจากภาพปัจจุบัน (วนรอบ) ──
+    // ✅ แก้ปัญหาเดิม: การ์ดที่อยู่ไกลเกิน 3 ตำแหน่งเคยถูกตรึงไว้จุดเดียวกันหมด
+    //    ทำให้ตอนข้ามหลายภาพทีเดียวดูกระตุก/ไม่ลื่น เพราะไม่ได้ขยับตามระยะจริง
+    getCardStyle(n) {
+      const total = this.totalSlides
+      let diff = n - this.currentSlide
+      if (diff > total / 2) diff -= total
+      if (diff < -total / 2) diff += total
+
+      const abs = Math.min(Math.abs(diff), 3)
+      const sign = diff === 0 ? 0 : (diff > 0 ? 1 : -1)
+      const distanceTable = [0, 130, 240, 280]
+      const scaleTable = [1, 0.85, 0.7, 0.6]
+      const opacityTable = [1, 0.9, 0.4, 0]
+      const zIndexTable = [5, 4, 3, -1]
+
+      return {
+        transform: `translateX(${sign * distanceTable[abs]}px) scale(${scaleTable[abs]})`,
+        opacity: opacityTable[abs],
+        zIndex: zIndexTable[abs]
+      }
+    },
     autoSlide() {
       this.currentSlide = (this.currentSlide % this.totalSlides) + 1
     },

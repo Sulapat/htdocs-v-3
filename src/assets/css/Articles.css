@@ -1,0 +1,493 @@
+/* ========================================
+   ARTICLES HERO (with background image)
+   ======================================== */
+.articles-hero {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem 2.5rem;
+    padding-top: calc(80px + 2rem);
+    min-height: 280px;
+    text-align: left;
+}
+
+.hero-image {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 8, 25, 0.6);
+    z-index: 0;
+}
+
+.articles-hero .hero-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin: 0;
+}
+
+.articles-hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 0.1rem 0;
+    line-height: 1.1;
+    text-align: left;
+}
+
+.articles-hero p {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.7;
+    margin: 0;
+    text-align: left;
+    max-width: 500px;
+}
+
+/* ========================================
+   ARTICLES SECTION
+   ======================================== */
+.articles-section {
+    padding: 80px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #020266;
+    margin-bottom: 60px;
+    font-weight: 700;
+}
+
+/* Loading / error states */
+.loading-state,
+.error-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 80px 20px;
+    color: #64748b;
+    font-size: 1rem;
+}
+
+.error-state {
+    color: #b91c1c;
+}
+
+/* ========================================
+   ARTICLE CARDS GRID
+   ======================================== */
+.articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 26px;
+}
+
+.article-card {
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(226, 232, 240, 0.5);
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.article-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(12, 122, 46, 0.15);
+    border-color: rgba(12, 122, 46, 0.3);
+}
+
+.article-image {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.article-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.article-card:hover .article-image img {
+    transform: scale(1.1);
+}
+
+.article-tag {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgb(1, 116, 1);
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    backdrop-filter: blur(4px);
+}
+
+.article-content {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.article-content h3 {
+    font-size: 1.2rem;
+    color: #1e293b;
+    margin-bottom: 10px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.article-card:hover .article-content h3 {
+    color: #085a22;
+}
+
+.article-desc {
+    color: #64748b;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    min-height: 48px;
+}
+
+.article-meta {
+    display: flex;
+    gap: 20px;
+    color: #64748b;
+    font-size: 0.85rem;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.article-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.article-meta i {
+    color: #0c7a2e;
+}
+
+/* Empty state */
+.no-articles {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    text-align: center;
+    color: #94a3b8;
+    gap: 16px;
+}
+
+.no-articles-icon {
+    width: 80px;
+    height: 80px;
+    background: #f1f5f9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #cbd5e1;
+}
+
+.no-articles p {
+    font-size: 1rem;
+    color: #94a3b8;
+}
+
+/* ── Smooth language switch: ไม่กระพริบทั้งหน้า ──
+   แค่ dim เนื้อหาเดิมเบา ๆ + โชว์แถบ indicator บาง ๆ ด้านบน
+   ระหว่างรอข้อมูลภาษาใหม่ */
+.articles-grid-wrap {
+  transition: opacity 0.18s ease;
+}
+.al-content-dimmed {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.al-lang-switch-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.15), transparent);
+}
+.al-lang-switch-bar.active {
+  opacity: 1;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+@media (max-width: 768px) {
+    .articles-hero {
+        padding: 1.5rem 1.25rem;
+        padding-top: calc(64px + 1.5rem);
+        min-height: 220px;
+    }
+
+    .articles-hero h1 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .articles-hero p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        max-width: 100%;
+    }
+
+    .articles-section {
+        padding: 50px 15px;
+    }
+
+    .section-title {
+        font-size: 2rem;
+        margin-bottom: 40px;
+    }
+
+    .articles-grid {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+    .articles-hero h1 {
+        font-size: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1.6rem;
+    }
+
+    .article-content h3 {
+        font-size: 1.1rem;
+    }
+}
+/* ========================================
+   ARTICLES SIDEBAR (search / category / popular)
+   ======================================== */
+.articles-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 32px;
+    align-items: start;
+}
+
+.articles-main {
+    min-width: 0;
+}
+
+.articles-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: sticky;
+    top: 100px;
+}
+
+.as-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 22px;
+}
+
+.as-card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #020266;
+    margin-bottom: 16px;
+}
+
+/* ── ค้นหาบทความ ── */
+.as-search-box {
+    position: relative;
+}
+
+.as-search-box input {
+    width: 100%;
+    padding: 11px 40px 11px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: #1e293b;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.as-search-box input:focus {
+    border-color: #020266;
+}
+
+.as-search-box i {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+/* ── หมวดหมู่บทความ (dynamic) ── */
+.as-category-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.as-category-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    color: #475569;
+    transition: background 0.2s ease;
+}
+
+.as-category-list li:hover {
+    background: #f8fafc;
+}
+
+.as-category-list li.active {
+    background: #e7f4ea;
+    color: #085a22;
+    font-weight: 600;
+}
+
+.as-category-list i {
+    width: 18px;
+    text-align: center;
+    color: #0c7a2e;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.as-cat-name {
+    flex: 1;
+}
+
+.as-cat-count {
+    color: #94a3b8;
+    font-size: 0.82rem;
+}
+
+.as-category-list li.active .as-cat-count {
+    color: #085a22;
+}
+
+/* ── บทความยอดนิยม ── */
+.as-popular-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+    cursor: pointer;
+}
+
+.as-popular-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.as-popular-rank {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #020266;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.as-popular-thumb {
+    width: 56px;
+    height: 44px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.as-popular-info {
+    min-width: 0;
+}
+
+.as-popular-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #1e293b;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.as-popular-item:hover .as-popular-title {
+    color: #085a22;
+}
+
+.as-popular-date {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    margin-top: 3px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 980px) {
+    .articles-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .articles-sidebar {
+        position: static;
+        order: -1;
+    }
+}

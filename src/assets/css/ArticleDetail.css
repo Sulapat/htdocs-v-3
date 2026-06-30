@@ -1,0 +1,702 @@
+/* ========================================
+   PAGE / NOT FOUND
+   ======================================== */
+.ar-page {
+    min-height: 60vh;
+}
+
+.ar-not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 120px 20px;
+    text-align: center;
+}
+
+.ar-not-found i    { font-size: 4rem; color: #cbd5e1; }
+.ar-not-found h2   { font-size: 2rem; font-weight: 700; color: #374151; }
+
+.ar-btn-back {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #020266;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Prompt', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.ar-btn-back:hover {
+    background: #000050;
+}
+
+/* ========================================
+   BREADCRUMB
+   ======================================== */
+.ar-breadcrumb {
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.ar-breadcrumb-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.ar-breadcrumb-inner a {
+    color: #64748b;
+    text-decoration: none;
+}
+
+.ar-breadcrumb-inner a:hover {
+    color: #085a22;
+}
+
+.ar-breadcrumb-inner .sep {
+    margin: 0 8px;
+}
+
+.ar-breadcrumb-inner .current {
+    color: #1e293b;
+}
+
+/* ========================================
+   HERO
+   ======================================== */
+.ar-hero {
+    position: relative;
+    background: linear-gradient(120deg, #020266 0%, #050590 60%, #085a22 130%);
+    overflow: hidden;
+}
+
+.ar-hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 36px 24px 40px;
+    position: relative;
+    z-index: 2;
+}
+
+.ar-tag-hero {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 5px 12px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+}
+
+.ar-title {
+    color: #fff;
+    font-size: 2.1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    max-width: 700px;
+    margin-bottom: 18px;
+}
+
+.ar-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: #cfe0d4;
+    font-size: 0.85rem;
+    flex-wrap: wrap;
+}
+
+.ar-meta-row span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ========================================
+   CONTENT LAYOUT
+   ======================================== */
+.ar-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    display: grid;
+    grid-template-columns: 220px 1fr 320px;
+    gap: 32px;
+}
+
+/* ── TOC column ── */
+.ar-toc-col {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+}
+
+.ar-toc-box {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 18px;
+}
+
+.ar-toc-box h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #020266;
+    margin-bottom: 14px;
+}
+
+.ar-toc-list {
+    list-style: none;
+}
+
+.ar-toc-list li {
+    margin-bottom: 4px;
+}
+
+.ar-toc-list a {
+    display: block;
+    font-size: 0.85rem;
+    padding: 8px 10px;
+    border-radius: 8px;
+    color: #64748b;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.ar-toc-list a.active {
+    background: #e7f4ea;
+    color: #085a22;
+    font-weight: 600;
+}
+
+.ar-toc-list a:hover {
+    background: #f8fafc;
+}
+
+.ar-consult-box {
+    background: #020266;
+    border-radius: 14px;
+    padding: 22px;
+    color: #fff;
+    margin-top: 20px;
+}
+
+.ar-consult-ico {
+    width: 44px;
+    height: 44px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+    font-size: 1.2rem;
+    color: #7fd99a;
+}
+
+.ar-consult-box h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.ar-consult-box p {
+    font-size: 0.8rem;
+    color: #c2cdf0;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.ar-btn-consult {
+    display: block;
+    text-align: center;
+    background: #0c7a2e;
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 11px;
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+.ar-btn-consult:hover {
+    background: #085a22;
+}
+
+/* ── Main article body ── */
+.ar-body {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 36px;
+    min-width: 0;
+}
+
+.ar-lead {
+    font-size: 0.98rem;
+    color: #64748b;
+    line-height: 1.8;
+    margin-bottom: 32px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.ar-step-block {
+    margin-bottom: 36px;
+}
+
+.ar-step-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #020266;
+    margin-bottom: 16px;
+}
+
+.ar-step-num {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: #e7f4ea;
+    color: #085a22;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.ar-step-block p {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #1e293b;
+    margin-bottom: 16px;
+}
+
+.ar-img-frame {
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+/* ── Section bullet list (section.items จาก API) ──
+   เพิ่มเข้ามาใหม่: เดิม template ไม่มีจุด render section.items เลย
+   ทำให้ bullet list (เช่น สาเหตุการสั่นสะเทือน) ไม่แสดงในหน้า detail */
+.ar-item-list {
+    list-style: none;
+    margin-bottom: 16px;
+    padding-left: 0;
+}
+
+.ar-item-list li {
+    position: relative;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #1e293b;
+    padding-left: 24px;
+    margin-bottom: 8px;
+}
+
+.ar-item-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #0c7a2e;
+}
+
+.ar-img-frame img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.ar-tip-box {
+    background: #e7f4ea;
+    border-left: 3px solid #0c7a2e;
+    border-radius: 8px;
+    padding: 14px 18px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.ar-tip-box i {
+    font-size: 1.1rem;
+    color: #085a22;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.ar-tip-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #085a22;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.ar-tip-box p {
+    font-size: 0.85rem;
+    color: #1f4a2a;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.ar-warning-box {
+    background: #fdecea;
+    border-left: 3px solid #d64545;
+    border-radius: 8px;
+    padding: 14px 18px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.ar-warning-box i {
+    font-size: 1.1rem;
+    color: #b23030;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.ar-warn-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #b23030;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.ar-warning-box p {
+    font-size: 0.85rem;
+    color: #7a2424;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.ar-summary-block {
+    margin-bottom: 0;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.ar-summary-title {
+    font-size: 1.1rem;
+}
+
+/* ── Sidebar (right) ── */
+.ar-sidebar {
+    min-width: 0;
+}
+
+.ar-sidebar-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.ar-sidebar-card h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #020266;
+    margin-bottom: 14px;
+}
+
+.ar-pdf-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.ar-pdf-ico {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #fdecea;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.1rem;
+    color: #d64545;
+}
+
+.ar-pdf-row p {
+    font-size: 0.85rem;
+    color: #1e293b;
+    line-height: 1.4;
+}
+
+.ar-btn-download {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #020266;
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 11px;
+    border-radius: 10px;
+    width: 100%;
+    transition: background 0.3s ease;
+}
+
+.ar-btn-download:hover {
+    background: #000050;
+}
+
+.ar-related-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e2e8f0;
+    text-decoration: none;
+}
+
+.ar-related-item:last-of-type {
+    border-bottom: none;
+}
+
+.ar-related-thumb {
+    width: 60px;
+    height: 46px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+.ar-related-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #020266;
+    line-height: 1.4;
+}
+
+.ar-related-item:hover .ar-related-title {
+    color: #085a22;
+}
+
+.ar-related-date {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    margin-top: 3px;
+}
+
+.ar-related-more {
+    text-align: center;
+    margin-top: 8px;
+}
+
+.ar-related-more a {
+    font-size: 0.85rem;
+    color: #085a22;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.ar-tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.ar-tag-chip {
+    font-size: 0.78rem;
+    color: #085a22;
+    background: #e7f4ea;
+    padding: 6px 12px;
+    border-radius: 14px;
+    font-weight: 600;
+}
+
+/* ========================================
+   CTA STRIP
+   ======================================== */
+.ar-cta-strip {
+    max-width: 1200px;
+    margin: 0 auto 56px;
+    background: linear-gradient(100deg, #020266, #085a22);
+    border-radius: 16px;
+    padding: 28px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.ar-cta-text {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #fff;
+}
+
+.ar-cta-ico {
+    width: 46px;
+    height: 46px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.3rem;
+}
+
+.ar-cta-text h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.ar-cta-text p {
+    font-size: 0.85rem;
+    color: #cfe0d4;
+}
+
+.ar-cta-btns {
+    display: flex;
+    gap: 12px;
+}
+
+.ar-btn-outline {
+    border: 1px solid rgba(255,255,255,0.4);
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 11px 20px;
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+.ar-btn-outline:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.ar-btn-white {
+    background: #fff;
+    color: #085a22;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 11px 20px;
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+.ar-btn-white:hover {
+    background: #eafaee;
+}
+
+/* ── Smooth language switch ── */
+.ar-content-wrap {
+    transition: opacity 0.18s ease;
+}
+
+.ar-content-dimmed {
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+.ar-lang-switch-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.15), transparent);
+}
+
+.ar-lang-switch-bar.active {
+    opacity: 1;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+@media (max-width: 980px) {
+    .ar-content {
+        grid-template-columns: 1fr;
+    }
+
+    .ar-toc-col {
+        position: static;
+        order: -1;
+    }
+}
+
+@media (max-width: 640px) {
+    .ar-title {
+        font-size: 1.5rem;
+    }
+
+    .ar-body {
+        padding: 22px;
+    }
+
+    .ar-cta-strip {
+        padding: 22px;
+    }
+}
+
+
+/*
+  Hero cover image — เพิ่มเข้ามาใหม่ ไม่ได้แก้ articleDetail.css ตรงๆ
+  เผื่อไฟล์นั้นมี .ar-hero อยู่แล้ว (กำหนด background ผ่าน CSS) กฎข้างล่างนี้จะ
+  override เฉพาะส่วนที่เกี่ยวกับภาพพื้นหลัง ถ้าอยากย้ายไปรวมกับไฟล์ css หลักทีหลังก็ทำได้
+*/
+.ar-hero {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.ar-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.55) 0%,
+    rgba(15, 23, 42, 0.75) 100%
+  );
+  z-index: 0;
+}
+
+.ar-hero-inner {
+  position: relative;
+  z-index: 1;
+}

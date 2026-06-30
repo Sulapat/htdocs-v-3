@@ -12,13 +12,16 @@ error_reporting(E_ALL);
  *   course        → single course detail                     &slug=xxx
  *   news          → list news articles
  *   news_detail   → single news article                      &id=xxx
+ *   articles      → list Knowledge Center articles (card view)
+ *   article       → single article detail                     &slug=xxx
  *   members       → search members                          [&q=xxx][&cert=CATII]
  *   members_stats → count per cert_code { CATII, CATIII, CATIV, BMV }
  *
  * ─── DB i18n strategy ────────────────────────────────────────────────────────
  * ทุก entity มีตาราง "หลัก" (TH) และตาราง "_en" คู่กัน เช่น:
  *   courses  + courses_en
- *   news     + news_en   ฯลฯ
+ *   news     + news_en
+ *   articles + articles_en  (Knowledge Center, มี article_sections / article_section_items / article_tags คู่ _en)
  *
  * lang=th → อ่านตารางหลักตรงๆ (ไม่ JOIN _en เพื่อประหยัด query)
  * lang=en → LEFT JOIN _en ด้วย id เดียวกัน แล้ว COALESCE(en_col, th_col)
@@ -329,6 +332,110 @@ if ($action === 'news_detail') {
     ", [$id]), 'tag');
 
     ok($article);
+}
+
+// ── GET ?action=articles ──────────────────────────────────────────────────────
+// DB: articles + articles_en, article_tags + article_tags_en
+// Knowledge Center list (card view) — ใช้โดย Article.vue
+// views, cover_image, pdf_url/pdf_label ไม่ผันตามภาษา
+
+if ($action === 'articles') {
+    $join = tjoin($lang, 'articles_en', 'a_en', 'a');
+
+    $rows = db($pdo, "
+        SELECT a.id,
+               a.slug,
+               " . tcol($lang, 'a', 'a_en', 'title') . ",
+               " . tcol($lang, 'a', 'a_en', 'tag') . ",
+               " . tcol($lang, 'a', 'a_en', 'short_desc', 'desc') . ",
+               a.cover_image AS image,
+               a.views,
+               a.published_at AS date
+        FROM articles a $join
+        ORDER BY a.published_at DESC, a.id DESC
+    ");
+
+    ok($rows);
+}
+
+// ── GET ?action=article&slug=xxx ──────────────────────────────────────────────
+// DB: articles + articles_en + article_sections/_items/_tags + _en คู่กัน
+// Knowledge Center detail — ใช้โดย ArticleDetail.vue
+// section.content เก็บเป็น string เดียวคั่นพารากราฟด้วย \n\n → แปลงเป็น paragraphs[] ที่นี่
+
+if ($action === 'article') {
+    $slug = trim($_GET['slug'] ?? '');
+    if (!$slug) fail('slug is required', 400);
+
+    $join = tjoin($lang, 'articles_en', 'a_en', 'a');
+
+    $articleRow = dbOne($pdo, "
+        SELECT a.id,
+               a.slug,
+               " . tcol($lang, 'a', 'a_en', 'title') . ",
+               " . tcol($lang, 'a', 'a_en', 'tag') . ",
+               " . tcol($lang, 'a', 'a_en', 'short_desc', 'desc') . ",
+               " . tcol($lang, 'a', 'a_en', 'intro', 'lead') . ",
+               " . tcol($lang, 'a', 'a_en', 'conclusion', 'summary') . ",
+               a.cover_image AS image,
+               a.author,
+               a.views,
+               a.pdf_url    AS pdfUrl,
+               a.pdf_label  AS pdfLabel,
+               a.published_at AS date
+        FROM articles a $join
+        WHERE a.slug = ?
+    ", [$slug]);
+
+    if (!$articleRow) fail('Article not found');
+    $id = $articleRow['id'];
+
+    // ผู้เขียนถ้าไม่ระบุ ให้ frontend fallback เอง (article.author || 'PATINEER Team')
+    if (empty($articleRow['author'])) $articleRow['author'] = null;
+
+    // Sections — DB: article_sections + article_sections_en
+    $sectionJoin = tjoin($lang, 'article_sections_en', 's_en', 's');
+    $sections = db($pdo, "
+        SELECT s.id,
+               " . tcol($lang, 's', 's_en', 'heading', 'title') . ",
+               " . tcol($lang, 's', 's_en', 'content') . ",
+               " . tcol($lang, 's', 's_en', 'image') . ",
+               " . tcol($lang, 's', 's_en', 'tip') . ",
+               " . tcol($lang, 's', 's_en', 'warning') . "
+        FROM article_sections s $sectionJoin
+        WHERE s.article_id = ? ORDER BY s.sort_order
+    ", [$id]);
+
+    // Section items — DB: article_section_items + article_section_items_en
+    $itemJoin = tjoin($lang, 'article_section_items_en', 'si_en', 'si');
+    foreach ($sections as &$section) {
+        // content อาจมีหลายพารากราฟคั่นด้วย \n\n → แตกเป็น array ให้ frontend (section.paragraphs)
+        $section['paragraphs'] = $section['content'] !== null && $section['content'] !== ''
+            ? preg_split('/\r?\n\r?\n/', trim($section['content']))
+            : [];
+        unset($section['content']);
+
+        $section['items'] = array_column(db($pdo, "
+            SELECT " . tcol($lang, 'si', 'si_en', 'item') . "
+            FROM article_section_items si $itemJoin
+            WHERE si.section_id = ? ORDER BY si.sort_order
+        ", [$section['id']]), 'item');
+
+        // id ของ section ใช้เป็น anchor (#section-N) ฝั่ง frontend สำหรับ TOC/scroll-spy
+        $section['id'] = 'section-' . $section['id'];
+    }
+    unset($section);
+    $articleRow['sections'] = $sections;
+
+    // Tags — DB: article_tags + article_tags_en
+    $tagJoin = tjoin($lang, 'article_tags_en', 'at_en', 'at');
+    $articleRow['tags'] = array_column(db($pdo, "
+        SELECT " . tcol($lang, 'at', 'at_en', 'tag') . "
+        FROM article_tags at $tagJoin
+        WHERE at.article_id = ?
+    ", [$id]), 'tag');
+
+    ok($articleRow);
 }
 
 // ── GET ?action=members[&q=xxx][&cert=CATII] ──────────────────────────────────

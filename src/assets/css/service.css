@@ -1,4 +1,4 @@
-    * {
+* {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
@@ -11,7 +11,7 @@
         background: hsl(210, 17%, 98%);
     }
     /* Hero Section */
-    .hero {
+    .home .hero {
         padding: 4rem;
         padding-top: calc(80px + 2rem);
         min-height: 0vh;
@@ -20,7 +20,7 @@
         position: relative;
         overflow: hidden;
     }
-    .hero::before {
+    .home .hero::before {
         content: '';
         position: absolute;
         top: -50%;
@@ -30,7 +30,7 @@
         background: radial-gradient(circle, rgba(22, 117, 108, 0.3) 0%, transparent 70%);
         border-radius: 50%;
     }
-    .hero-text h1 {
+    .home .hero-text h1 {
         opacity: 0;
         animation: fadeInText 2s ease-in forwards;
     }
@@ -163,7 +163,7 @@
         }
     }
 
-    .hero-content {
+    .home .hero-content {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 3rem;
@@ -175,24 +175,24 @@
         color: #140c81;
     }
 
-    .hero-text h1 {
+    .home .hero-text h1 {
         font-size: 3.5rem;
         margin-bottom: 1rem;
         line-height: 1.2;
         text-align: left;
     }
 
-    .hero-text h1 span {
+    .home .hero-text h1 span {
         color: #38da6b;
     }
 
-    .hero-text p {
+    .home .hero-text p {
         font-size: 1.2rem;
         margin-bottom: 2rem;
         opacity: 0.9;
     }
 
-    .hero-stats {
+    .home .hero-stats {
         display: flex;
         gap: 2rem;
         margin-top: 2rem;
@@ -212,19 +212,19 @@
         margin-bottom: 0.5rem;
     }
 
-    .hero-image {
+    .home .hero-image {
         position: relative;
 
     }
 
-    .hero-image img {
+    .home .hero-image img {
         width: 100%;
         height: 600px;
         border-radius: 20px;
         box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     }
 
-    .hero-badge {
+    .home .hero-badge {
         position: absolute;
         top: -20px;
         right: -20px;
@@ -493,26 +493,26 @@
     /* Mobile Responsive */
     @media (max-width: 768px) {
         /* Hero Section Mobile */
-        .hero {
+        .home .hero {
             padding: 2rem 5%;
         }
 
-        .hero-content {
+        .home .hero-content {
             grid-template-columns: 1fr;
             gap: 2rem;
         }
 
-        .hero-text h1 {
+        .home .hero-text h1 {
             font-size: 2rem;
             text-align: center;
         }
 
-        .hero-text p {
+        .home .hero-text p {
             font-size: 1rem;
             text-align: center;
         }
 
-        .hero-stats {
+        .home .hero-stats {
             justify-content: center;
             gap: 1rem;
         }
@@ -529,24 +529,24 @@
             font-size: 0.9rem;
         }
 
-        .hero-image {
+        .home .hero-image {
             order: -1;
             justify-content: center;
             display: flex;
         }
 
-        .hero-image img {
+        .home .hero-image img {
             height: 300px;
 
         }
 
-        .hero-badge {
+        .home .hero-badge {
             position: static;
             margin-top: 1rem;
             padding: 1rem;
         }
 
-        .hero-badge h4 {
+        .home .hero-badge h4 {
             font-size: 0.95rem;
         }
         /* About Section Mobile */
@@ -681,11 +681,11 @@
     }
 
     @media (max-width: 480px) {
-        .hero-text h1 {
+        .home .hero-text h1 {
             font-size: 1.5rem;
         }
 
-        .hero-stats {
+        .home .hero-stats {
             display: flex;
             flex-direction: row; 
             flex-wrap: wrap;  
@@ -813,26 +813,26 @@
     /* Mobile Responsive */
     @media (max-width: 768px) {
         /* Hero Section Mobile */
-        .hero {
+        .home .hero {
             padding: 2rem 5%;
         }
 
-        .hero-content {
+        .home .hero-content {
             grid-template-columns: 1fr;
             gap: 2rem;
         }
 
-        .hero-text h1 {
+        .home .hero-text h1 {
             font-size: 2rem;
             text-align: center;
         }
 
-        .hero-text p {
+        .home .hero-text p {
             font-size: 1rem;
             text-align: center;
         }
 
-        .hero-stats {
+        .home .hero-stats {
             justify-content: center;
             gap: 1rem;
         }
@@ -849,22 +849,22 @@
             font-size: 0.9rem;
         }
 
-        .hero-image {
+        .home .hero-image {
             order: -1;
         }
 
-        .hero-image img {
+        .home .hero-image img {
             height: 300px;
             width: 300px;
         }
 
-        .hero-badge {
+        .home .hero-badge {
             position: static;
             margin-top: 1rem;
             padding: 1rem;
         }
 
-        .hero-badge h4 {
+        .home .hero-badge h4 {
             font-size: 0.95rem;
         }
 

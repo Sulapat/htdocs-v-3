@@ -19,6 +19,7 @@
 // - same-domain: '/backend/api'
 // - cross-domain: 'https://api.patineer.co.th'
 const BASE_URL = '/backend/api'
+//const BASE_URL = 'http://localhost/backend/api'
 const I18N = `${BASE_URL}/api_i18n.php`
 
 // ────── internal helpers ──────────────────────────────────
@@ -113,6 +114,28 @@ export function getNewsById(id, lang = 'th') {
   return fetchJSON(i18nURL('news_detail', lang, { id: String(id) }))
 }
 
+// ────── Articles ──────────────────────────────────────────
+// DB: articles (th) + articles_en, article_sections + _en, article_tags + _en
+// action=articles → list (card view)
+// action=article  → single detail (slug required)
+
+/**
+ * @param {'th'|'en'} lang
+ * @returns {Promise<Array<{id, slug, tag, title, desc, date, views, image}>|null>}
+ */
+export function getArticles(lang = 'th') {
+  return fetchJSON(i18nURL('articles', lang))
+}
+
+/**
+ * @param {string} slug
+ * @param {'th'|'en'} lang
+ * @returns {Promise<{id, slug, tag, title, desc, date, views, author, lead, summary, sections, tags, pdfUrl, pdfLabel}|null>}
+ */
+export function getArticleBySlug(slug, lang = 'th') {
+  return fetchJSON(i18nURL('article', lang, { slug }))
+}
+
 // ────── Members ───────────────────────────────────────────
 // DB: members, member_certifications (ไม่มี _en — ข้อมูลคนไม่ผันตามภาษา)
 // action=members       → search (q, cert ไม่บังคับ)
@@ -132,4 +155,3 @@ export function getMembers({ q = '', cert = '' } = {}) {
   // lang ไม่มีผล แต่ใส่ th ไปเพื่อ consistent
   return fetchJSON(i18nURL('members', 'th', extra))
 }
-

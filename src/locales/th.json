@@ -9,7 +9,8 @@
     "c2va": "Category II Vibration Analyst",
     "c3va": "Category III Vibration Analyst",
     "c4va": "Category IV Vibration Analyst",
-    "courses": "หลักสูตร"
+    "courses": "หลักสูตร",
+    "article": "บทความ"
   },
 
   "footer": {
@@ -114,6 +115,66 @@
       "transitions": "เทคโนโลยีด้านสายตา",
       "ttm": "ลูกค้าอุตสาหกรรม",
       "wha": "โลจิสติกส์และอุตสาหกรรม"
+    }
+  },
+
+  "articles": {
+    "hero": {
+      "title": "บทความ",
+      "subtitle": "อัปเดตข้อมูลและแนวปฏิบัติที่ดีที่สุด<br>ในงานบำรุงรักษาเครื่องจักรอุตสาหกรรม"
+    },
+    "section": {
+      "title": "บทความล่าสุด"
+    },
+    "loading": "กำลังโหลดข้อมูล...",
+    "emptyState": {
+      "message": "ยังไม่มีบทความในขณะนี้"
+    },
+    "alerts": {
+      "loadError": "โหลดข้อมูลบทความไม่สำเร็จ: "
+    },
+    "sidebar": {
+      "searchTitle": "ค้นหาบทความ",
+      "searchPlaceholder": "ค้นหาบทความ...",
+      "categoryTitle": "หมวดหมู่",
+      "popularTitle": "บทความยอดนิยม"
+    }
+  },
+
+  "articleDetail": {
+    "notFound": {
+      "title": "ไม่พบบทความนี้",
+      "backButton": "กลับไปหน้าบทความ"
+    },
+    "breadcrumb": {
+      "home": "หน้าแรก",
+      "articles": "บทความ"
+    },
+    "toc": {
+      "title": "สารบัญ",
+      "summary": "สรุป"
+    },
+    "consult": {
+      "title": "ต้องการคำปรึกษาจากผู้เชี่ยวชาญ?",
+      "desc": "ทีมงานของเราพร้อมให้คำปรึกษาด้านการบำรุงรักษาเครื่องจักรของคุณ",
+      "button": "ติดต่อเรา"
+    },
+    "labels": {
+      "tip": "เคล็ดลับ",
+      "warning": "คำเตือน"
+    },
+    "sidebar": {
+      "downloadTitle": "ดาวน์โหลดเอกสาร",
+      "downloadButton": "ดาวน์โหลด PDF",
+      "relatedTitle": "บทความที่เกี่ยวข้อง",
+      "viewAll": "ดูบทความทั้งหมด",
+      "tagsTitle": "แท็ก"
+    },
+    "cta": {
+      "title": "สนใจบริการของเรา?",
+      "desc": "ให้เราช่วยเพิ่มประสิทธิภาพการบำรุงรักษาเครื่องจักรของคุณ",
+      "viewServices": "ดูบริการของเรา",
+      "requestQuote": "ขอใบเสนอราคา"
     }
   },
 
