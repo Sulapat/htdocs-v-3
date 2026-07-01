@@ -1,5 +1,5 @@
 #navbar {
-    position: fixed; 
+    position: sticky; 
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -191,15 +191,17 @@
     left: 3px;
     width: calc(50% - 3px);
     height: calc(100% - 6px);
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    background: linear-gradient(135deg, #22c55e, #16a34a);
     border-radius: 999px;
-    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35);
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 6px rgba(22, 163, 74, 0.35);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background 0.25s ease, box-shadow 0.25s ease;
     z-index: 1;
 }
 
 .lang-switch.is-en .lang-switch-thumb {
     transform: translateX(100%);
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35);
 }
 
 .lang-switch-label {

@@ -2,72 +2,87 @@
   <div class="tr-page">
 
     <!-- Hero Section -->
-    <section class="hero">
-      <div class="badge">
-        <svg class="badge-icon" xmlns="https://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M18 21a8 8 0 0 0-16 0" />
-          <circle cx="10" cy="8" r="5" />
-          <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3" />
-        </svg>
-        <span>{{ $t('testResult.hero.brand') }}</span>
-      </div>
+    <section class="tr-hero">
+      <div class="tr-hero-inner">
 
-      <h1 class="title">VI Certified<span class="highlight">{{ $t('testResult.hero.titleHighlight') }}</span></h1>
-
-      <p class="subtitle" v-html="$t('testResult.hero.subtitle')"></p>
-
-      <form class="search-form" @submit.prevent="handleSearch">
-        <!-- Custom Dropdown -->
-        <div class="custom-dropdown" ref="dropdownRef">
-          <button
-            type="button"
-            class="dropdown-trigger"
-            :class="{ open: dropdownOpen }"
-            @click="toggleDropdown"
-            :aria-expanded="dropdownOpen"
-            aria-haspopup="listbox"
-          >
-            <span>{{ courseOptions.find(c => c.value === selectedCourse)?.label }}</span>
-            <svg class="dropdown-chevron" xmlns="https://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </button>
-
-          <!-- Teleport menu to body to escape any overflow:hidden parent -->
-          <Teleport to="body">
-            <div
-              v-if="dropdownOpen"
-              class="dropdown-menu-teleport"
-              :style="menuStyle"
-              role="listbox"
-            >
-              <div
-                v-for="course in courseOptions"
-                :key="course.value"
-                class="dropdown-item"
-                :class="{ selected: selectedCourse === course.value }"
-                role="option"
-                @click="onSelectCourse(course.value)"
-              >
-                <span class="dropdown-dot" :class="dotClass(course.value)"></span>
-                {{ course.label }}
-                <svg v-if="selectedCourse === course.value" class="dropdown-check" xmlns="https://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-              </div>
-            </div>
-          </Teleport>
-        </div>
-        <div class="search-input-wrapper">
-          <svg class="search-icon" xmlns="https://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.3-4.3" />
+        <div class="badge">
+          <svg class="badge-icon" xmlns="https://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 21a8 8 0 0 0-16 0" />
+            <circle cx="10" cy="8" r="5" />
+            <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3" />
           </svg>
-          <input v-model="searchQuery" type="text" class="search-input"
-            :placeholder="$t('testResult.search.placeholder')" />
+          <span>{{ $t('testResult.hero.brand') }}</span>
         </div>
-        <button type="submit" class="search-button">{{ $t('testResult.search.button') }}</button>
-      </form>
+
+        <h1 class="title">VI Certified<span class="highlight">{{ $t('testResult.hero.titleHighlight') }}</span></h1>
+
+        <p class="subtitle" v-html="$t('testResult.hero.subtitle')"></p>
+
+        <form class="search-form" @submit.prevent="handleSearch">
+          <div class="search-form-row">
+            <!-- Custom Dropdown -->
+            <div class="custom-dropdown" ref="dropdownRef">
+              <button
+                type="button"
+                class="dropdown-trigger"
+                :class="{ open: dropdownOpen }"
+                @click="toggleDropdown"
+                :aria-expanded="dropdownOpen"
+                aria-haspopup="listbox"
+              >
+                <span class="dropdown-trigger-label">
+                  <span class="dropdown-dot" :class="dotClass(selectedCourse)"></span>
+                  {{ courseOptions.find(c => c.value === selectedCourse)?.label }}
+                </span>
+                <svg class="dropdown-chevron" xmlns="https://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </button>
+
+              <!-- Teleport menu to body to escape any overflow:hidden parent -->
+              <Teleport to="body">
+                <div
+                  v-if="dropdownOpen"
+                  class="dropdown-menu-teleport"
+                  :style="menuStyle"
+                  role="listbox"
+                >
+                  <div
+                    v-for="course in courseOptions"
+                    :key="course.value"
+                    class="dropdown-item"
+                    :class="{ selected: selectedCourse === course.value }"
+                    role="option"
+                    @click="onSelectCourse(course.value)"
+                  >
+                    <span class="dropdown-dot" :class="dotClass(course.value)"></span>
+                    <span class="dropdown-item-label">{{ course.label }}</span>
+                    <svg v-if="selectedCourse === course.value" class="dropdown-check" xmlns="https://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                </div>
+              </Teleport>
+            </div>
+
+            <div class="search-input-wrapper">
+              <svg class="search-icon" xmlns="https://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+              <input
+                v-model="searchQuery"
+                type="text"
+                class="search-input"
+                :placeholder="$t('testResult.search.placeholder')"
+              />
+            </div>
+
+            <button type="submit" class="search-button">{{ $t('testResult.search.button') }}</button>
+          </div>
+        </form>
+
+      </div>
     </section>
 
     <!-- Results Section -->
@@ -119,7 +134,8 @@
               </div> 
               <div class="result-detail-item">
                 <span class="result-detail-label">{{ $t('testResult.card.emailLabel') }}</span>
-                <span class="result-detail-value">{{ result.email }}</span>
+                <span v-if="result.email" class="result-detail-value" :title="result.email">{{ result.email }}</span>
+                <span v-else class="result-detail-value">-</span>
               </div>
             </div>
             <div class="result-level-row">
@@ -173,7 +189,7 @@
               </div>
               <div class="result-detail-item">
                 <span class="result-detail-label">{{ $t('testResult.card.emailLabel') }}</span>
-                <span class="result-detail-value">{{ result.email }}</span>
+                <span class="result-detail-value" :title="result.email">{{ result.email }}</span>
               </div>
             </div>
             <div class="result-level-row">
@@ -320,7 +336,7 @@ const error       = ref('')
 const isEmpty     = ref(true)
 const currentPage = ref(1)
 const searchPage  = ref(1)
-const perPage     = 10
+const perPage     = 12
 
 const dotClass = (val) => ({
   'dot-all': val === 'ALL',
