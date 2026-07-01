@@ -119,6 +119,8 @@ export default {
     }
   },
   mounted() {
+    // ตั้งธีมสีให้ตรงกับภาษาที่ใช้อยู่ตอนโหลดหน้า (เผื่อ currentLang มาจาก localStorage ไม่ใช่ default)
+    document.documentElement.setAttribute('data-theme', this.currentLang);
     window.addEventListener('resize', this.handleResize);
     window.addEventListener('scroll', this.handleNavbarScroll);
     document.addEventListener('click', this.handleClickOutside);
@@ -201,6 +203,8 @@ export default {
       this.$i18n.locale = this.currentLang;
       localStorage.setItem('lang', this.currentLang);
       document.documentElement.setAttribute('lang', this.currentLang);
+      // สลับธีมสีทั้งเว็บตามภาษา: th = เขียว, en = น้ำเงินตามโลโก้ (ดู styles.css)
+      document.documentElement.setAttribute('data-theme', this.currentLang);
       // ยิง custom event ไว้เผื่อ component อื่นอยากฟังการเปลี่ยนภาษา (เช่น โค้ดที่ไม่ใช่ Vue)
       window.dispatchEvent(new CustomEvent('lang-changed', { detail: this.currentLang }));
     }

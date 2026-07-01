@@ -1,3 +1,5 @@
+@import "@/assets/css/styles.css";
+
 * {
         margin: 0;
         padding: 0;
@@ -163,11 +165,23 @@
         }
     }
 
+    /* ===== Hero layout (desktop) =====
+       ต้นตอที่แท้จริง: .home .hero (parent) ตั้ง display:flex ไว้ ทำให้
+       .hero-content กลายเป็น flex item ที่ไม่ได้กำหนด width ชัดเจน จึง
+       "หดตามเนื้อหา" (shrink-to-fit) เอง — ข้อความอังกฤษสั้นกว่าไทย กล่องเลย
+       แคบกว่าไปด้วย (เห็นชัดจาก dev inspector highlight ที่กว้างไม่เท่ากัน)
+
+       แก้: ใส่ width: 100% ให้ .hero-content เต็มพื้นที่ที่มีอยู่เสมอ แล้วให้
+       max-width: 1400px + margin: 0 auto ทำหน้าที่จำกัดเพดาน/จัดกึ่งกลางแทน
+       กล่องใหญ่จะเท่ากันทุกภาษา (ยึดตามกล่องใหญ่สุด = 1400px) ตัวหนังสือชิดซ้าย
+       รูปชิดขวาด้วย justify-content: space-between และรูปกว้างคงที่ 500px
+       (flex: 0 0 500px) จึงอยู่ตำแหน่ง/ขนาดเดิมเป๊ะทุกครั้ง */
     .home .hero-content {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 3rem;
+        display: flex;
         align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        gap: 3rem;
         max-width: 1400px;
         margin: 0 auto;
         position: relative;
@@ -175,11 +189,17 @@
         color: #140c81;
     }
 
+    .home .hero-text {
+        flex: 1 1 auto;
+        min-width: 0; /* หัวใจของการกันไม่ให้ข้อความดันรูปให้ขยับ */
+    }
+
     .home .hero-text h1 {
         font-size: 3.5rem;
         margin-bottom: 1rem;
         line-height: 1.2;
         text-align: left;
+        overflow-wrap: break-word;
     }
 
     .home .hero-text h1 span {
@@ -213,15 +233,17 @@
     }
 
     .home .hero-image {
+        flex: 0 0 500px; /* ห้ามยืด ห้ามหด ตายตัวที่ 500px เสมอ */
+        width: 500px;
         position: relative;
-
     }
 
     .home .hero-image img {
         width: 100%;
         height: 600px;
+        object-fit: cover;
         border-radius: 20px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        box-shadow: 0 20px 60px rgba(0, 122, 17, 0.411);
     }
 
     .home .hero-badge {
@@ -818,8 +840,17 @@
         }
 
         .home .hero-content {
-            grid-template-columns: 1fr;
+            /* บนมือถือยกเลิกการปักหมุด absolute กลับมาเป็น flow ปกติ
+               แบบเรียงต่อกัน (รูปอยู่บนสุด ตามด้วยข้อความ)
+               ใส่ width:100% ด้วยเหตุผลเดียวกับเดสก์ท็อป กัน shrink-to-fit */
+            display: flex;
+            flex-direction: column;
+            width: 100%;
             gap: 2rem;
+        }
+
+        .home .hero-text {
+            max-width: 100%;
         }
 
         .home .hero-text h1 {
@@ -850,6 +881,8 @@
         }
 
         .home .hero-image {
+            flex: 0 0 auto;
+            width: 100%;
             order: -1;
         }
 
@@ -970,3 +1003,60 @@
             height: 2.5rem;
         }
     }
+/* =============================================================
+   ภาษาอังกฤษ (EN) — สลับสีจากธีมเดิมของหน้า Service (เขียว/เขียวอมฟ้า)
+   ให้เป็นธีมน้ำเงินตามโลโก้ Patineer
+   ภาษาไทย (TH) ไม่แตะ ใช้สีเดิมของหน้าตามที่ออกแบบไว้แต่แรกทุกอย่าง
+   ตั้งค่าตอน currentLang === 'en' → <html data-theme="en"> (ดู nav.vue)
+   ============================================================= */
+[data-theme="en"] .home .hero-content {
+    color: var(--color-secondary);
+}
+
+[data-theme="en"] .home .hero-text h1 span {
+    color: var(--color-primary);
+}
+
+[data-theme="en"] .stat-box h3 {
+    color: var(--color-primary);
+}
+
+[data-theme="en"] .home .hero-badge {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+}
+
+[data-theme="en"] .about-content h2 {
+    color: var(--color-secondary);
+}
+
+[data-theme="en"] .about-image::before {
+    background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
+}
+
+[data-theme="en"] .feature-icon {
+    background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary-light));
+}
+
+[data-theme="en"] .stat-item h2 {
+    color: var(--color-primary-light);
+}
+
+[data-theme="en"] .featured-cta {
+    color: var(--color-primary);
+}
+
+[data-theme="en"] .btn-featured {
+    color: var(--color-primary);
+}
+
+[data-theme="en"] .btn-featured:hover {
+    color: var(--color-primary-dark);
+}
+
+[data-theme="en"] .nav-btn:hover {
+    background: var(--color-primary);
+}
+
+[data-theme="en"] .home .hero::before {
+    background: radial-gradient(circle, rgba(21, 41, 94, 0.3) 0%, transparent 70%);
+}

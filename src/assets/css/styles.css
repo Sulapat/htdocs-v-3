@@ -1,11 +1,12 @@
 /* =============================================
    VI Certified Analysts - Styles
-   Theme: Blue (#3b82f6) + Gray (#1e293b)
+   Theme: สลับสีตามภาษา — TH = เขียว, EN = น้ำเงินตามโลโก้
+   ควบคุมด้วย attribute data-theme บน <html>
+   (ตั้งค่าจาก nav.vue ทุกครั้งที่สลับภาษา ดูฟังก์ชัน toggleLanguage())
    ============================================= */
 
-/* CSS Variables */
+/* ต่อไปนี้คือค่าตั้งต้นของตัวแปรสี (ใช้ก่อน JS จะเซ็ต data-theme ให้ตอนโหลดหน้าครั้งแรก) */
 :root {
-  /* Patineer brand palette — navy + green from logo */
   --color-primary: #15295e;
   --color-primary-dark: #0c1c45;
   --color-primary-light: #3f5694;
@@ -23,6 +24,7 @@
   --color-border-dark: #cbd5e1;
   --color-bg: #f8fafc;
   --color-white: #ffffff;
+  /* success คงที่เป็นเขียวเสมอ ไม่ผูกกับธีม เพราะสื่อความหมาย "สำเร็จ" ตามธรรมเนียม UX */
   --color-success: #1f8a3e;
   --color-success-bg: #eaf7ee;
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -36,11 +38,51 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Reset & Base */
+/* =============================================================
+   ██████████████████████████████████████████████████████████
+   ภาษาไทย = สีเขียว (TH = GREEN THEME)
+   ตั้งค่าตอน currentLang === 'th' → <html data-theme="th">
+   ██████████████████████████████████████████████████████████
+   ============================================================= */
+[data-theme="th"] {
+  --color-primary: #1f8a3e;       /* เขียว = สีหลัก */
+  --color-primary-dark: #166830;
+  --color-primary-light: #4dab66;
+  --color-primary-bg: #eaf7ee;
+  /* accent เซ็ตให้เป็นเขียวเหมือน primary เพื่อให้ badge/ปุ่ม/ไอคอนเป็นสีเขียวล้วนทั้งหน้า (ไม่ผสม 2 สี) */
+  --color-accent: #1f8a3e;
+  --color-accent-dark: #166830;
+  --color-accent-light: #4dab66;
+  --color-accent-bg: #eaf7ee;
+  --color-secondary: #0f3d1f;
+}
+
+/* =============================================================
+   ██████████████████████████████████████████████████████████
+   ภาษาอังกฤษ = สีน้ำเงิน (EN = BLUE THEME, ตามโลโก้ Patineer)
+   ตั้งค่าตอน currentLang === 'en' → <html data-theme="en">
+   ██████████████████████████████████████████████████████████
+   ============================================================= */
+[data-theme="en"] {
+  --color-primary: #15295e;       /* น้ำเงิน = สีหลัก */
+  --color-primary-dark: #0c1c45;
+  --color-primary-light: #3f5694;
+  --color-primary-bg: #eef1fa;
+  /* accent เซ็ตให้เป็นน้ำเงินเหมือน primary เพื่อให้ badge/ปุ่ม/ไอคอนเป็นสีน้ำเงินล้วนทั้งหน้า (ไม่ผสม 2 สี) */
+  --color-accent: #15295e;
+  --color-accent-dark: #0c1c45;
+  --color-accent-light: #3f5694;
+  --color-accent-bg: #eef1fa;
+  --color-secondary: #0c1530;
+}
+/* ============================================================= */
+
+/* Reset & Base + transition นุ่มๆ ตอนสลับธีม ให้สีไล่เปลี่ยนแทนที่จะกระตุกทันที */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease;
 }
 
 body {
@@ -745,4 +787,4 @@ body {
 @keyframes ddFadeIn {
   from { opacity: 0; transform: translateY(-4px); }
   to   { opacity: 1; transform: translateY(0); }
-}
+} 

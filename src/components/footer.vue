@@ -7,7 +7,7 @@
                 <p>
                     <strong>{{ $t('footer.emailLabel') }}</strong><br>
                     <a href="mailto:patineer@outlook.com">patineer@outlook.com</a><br>
-                    <a href="mailto:patineer2@outlook.com">patineer2@outlook.com</a>
+                    <a href="mailto:Pat_eng2@patineer.co.th">Pat_eng2@patineer.co.th</a>
                 </p>
                 <p>
                     <strong>{{ $t('footer.telLabel') }}</strong><br>
