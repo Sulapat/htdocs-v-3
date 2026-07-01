@@ -1,7 +1,10 @@
 <template>
   <div class="Knowledge">
     <section class="knowledge-header">
-      <p>{{ $t('knowledge.headerText') }}</p>
+      <div class="knowledge-header-inner">
+        <h1>{{ $t('knowledge.title') }}</h1>
+        <p>{{ $t('knowledge.headerText') }}</p>
+      </div>
     </section>
 
     <div class="filter-section">

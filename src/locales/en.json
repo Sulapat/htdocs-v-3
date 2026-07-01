@@ -179,6 +179,7 @@
   },
 
   "knowledge": {
+    "title": "This News",
     "headerText": "Stay up to date with information and best practices in maintenance",
     "searchPlaceholder": "Search articles...",
     "filterAll": "All",
@@ -225,7 +226,7 @@
       "all": "All"
     },
     "card": {
-      "perPerson": "/ person",
+      "perPerson": "/ Person",
       "bookButton": "Book Course"
     },
     "emptyState": {

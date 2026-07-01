@@ -18,8 +18,8 @@
 // ปรับ BASE_URL ตาม deploy จริง
 // - same-domain: '/backend/api'
 // - cross-domain: 'https://api.patineer.co.th'
-const BASE_URL = '/backend/api'
-//const BASE_URL = 'http://localhost/backend/api'
+//const BASE_URL = '/backend/api'
+const BASE_URL = 'http://localhost/backend/api'
 const I18N = `${BASE_URL}/api_i18n.php`
 
 // ────── internal helpers ──────────────────────────────────

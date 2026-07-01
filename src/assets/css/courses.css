@@ -74,9 +74,7 @@ body {
     color: #007BFF;
 }
 
-.hamburger {
-    display: none;
-}
+/* .hamburger ถูกลบออก — ใช้ style จาก nav.css แทน เพื่อไม่ให้ชนกัน */
 
 /* ========================================
    HERO SECTION
@@ -1137,25 +1135,7 @@ body {
         display: none;
     }
 
-    .hamburger {
-        display: block;
-        position: absolute;
-        right: 1.5rem;
-        top: 1.2rem;
-        font-size: 1.8rem;
-        cursor: pointer;
-        z-index: 1200;
-    }
-
-    .hamburger i {
-        font-size: 1.2rem;
-        color: #333;
-        transition: color 0.3s ease;
-    }
-
-    .hamburger:hover i {
-        color: #007BFF;
-    }
+    /* .hamburger และ .hamburger i ถูกลบออก — ใช้ style จาก nav.css แทน เพื่อไม่ให้ position:absolute มาชนกับ .nav-right flex/gap */
 
     /* Hero */
     .courses-hero {

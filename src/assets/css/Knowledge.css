@@ -12,25 +12,83 @@ body {
     padding-top: 80px;
 }
 
-/* ===== HEADER ===== */
+/* ===== HEADER =====
+   ธีมสีดึงมาจากโลโก้ Patineer: น้ำเงินกรมท่า (#0a1172) + เขียว (#067b06)
+   ให้ความรู้สึกเดียวกับแบรนด์ พร้อมริบบิ้นทแยงมุมจางๆ ที่ล้อลายโลโก้ */
 .knowledge-header {
-    background: linear-gradient(50deg,#13054e 0%, #1e59ac 99%);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #060a3d 0%, #0a1172 45%, #123f9e 75%, #1e59ac 100%);
     color: white;
-    padding: 3rem 1rem;
+    padding: 4rem 1rem 3.5rem;
     text-align: center;
     margin-bottom: 3rem;
 }
 
+/* แถบเน้นด้านบนสุด ไล่สีน้ำเงิน -> เขียว ตามโลโก้ */
+.knowledge-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #0a1172 0%, #1e59ac 45%, #067b06 100%);
+    z-index: 2;
+}
+
+/* ริบบิ้นทแยงมุมสีเขียว ล้อลายโบว์ของโลโก้ วางเป็น watermark มุมขวาบน */
+.knowledge-header::after {
+    content: '';
+    position: absolute;
+    top: -30%;
+    right: -8%;
+    width: 420px;
+    height: 420px;
+    background: linear-gradient(
+        135deg,
+        transparent 0%,
+        transparent 42%,
+        rgba(6, 123, 6, 0.28) 44%,
+        rgba(6, 123, 6, 0.28) 54%,
+        transparent 56%,
+        transparent 100%
+    );
+    transform: rotate(-15deg);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.knowledge-header-inner {
+    position: relative;
+    z-index: 1;
+}
+
 .knowledge-header h1 {
     font-size: 2.5rem;
+    font-weight: 700;
     margin-bottom: 1rem;
+    letter-spacing: 0.01em;
 }
 
 .knowledge-header p {
     font-size: 1.1rem;
-    opacity: 0.9;
+    color: rgba(255, 255, 255, 0.85);
     max-width: 700px;
     margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+    .knowledge-header {
+        padding: 3rem 1rem 2.5rem;
+    }
+    .knowledge-header h1 {
+        font-size: 1.9rem;
+    }
+    .knowledge-header::after {
+        width: 260px;
+        height: 260px;
+    }
 }
 
 /* ===== FILTER & SEARCH ===== */

@@ -11,7 +11,6 @@
                 <li><router-link to="/" @click="closeAll">{{ $t('nav.home') }}</router-link></li>
                 <li><router-link to="/service" @click="closeAll">{{ $t('nav.service') }}</router-link></li>
                 <li><router-link to="/knowledge" @click="closeAll">{{ $t('nav.knowledge') }}</router-link></li>
-                <li><router-link to="/clients" @click="closeAll">{{ $t('nav.clients') }}</router-link></li>
                 <li><router-link to="/article" @click="closeAll">{{ $t('nav.article') }}</router-link></li>
                 
                 <li class="nav-dropdown-wrap"
@@ -60,6 +59,7 @@
                 </li>
 
                 <li><router-link to="/courses" @click="closeAll">{{ $t('nav.courses') }}</router-link></li>
+                <li><router-link to="/clients" @click="closeAll">{{ $t('nav.clients') }}</router-link></li>
             </ul>
 
             <!-- กลุ่มขวา: ปุ่มสลับภาษา + hamburger (มือถือ) + โซเชียล (เดสก์ท็อป) เป็นก้อนเดียวกัน
