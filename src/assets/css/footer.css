@@ -16,20 +16,32 @@ body {
     padding: 2rem 2rem 1rem;
 }
 
+/* Layout: contact | links | social — matches the HTML source order,
+   so no order/grid-area tricks are needed to keep columns in place.
+   Columns are sized exactly to their content (flex: 0 0 auto) and
+   space-between spaces them evenly, so gaps stay visually consistent
+   no matter how long the text in each column is. */
 .footer-container {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
     align-items: flex-start;
-    gap: 3rem;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 2rem;
     max-width: 1200px;
     margin: auto;
 }
 
+.footer-col {
+    flex: 0 0 auto;
+}
+
 .footer-contact {
-    flex: 1 1 45%;
-    min-width: 300px;
     text-align: left;
+}
+
+.footer-links {
+    text-align: left;
+    white-space: nowrap;
 }
 
 .footer-contact h3 {
@@ -55,14 +67,41 @@ body {
     color: #a9f4eb;
 }
 
+/* Quick Links */
+.footer-links h3 {
+    color: #12db5c;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+}
+
+.footer-links ul {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 0.3rem;
+}
+
+.footer-links a {
+    color: #ccc;
+    font-weight: 700;
+    text-decoration: underline;
+    font-size: 0.95rem;
+    transition: color 0.3s, padding-left 0.3s;
+    display: inline-block;
+}
+
+.footer-links a:hover {
+    color: #a9f4eb;
+    padding-left: 4px;
+}
+
 /* Social + QR */
 .footer-social {
-    flex: 1 1 45%;
-    min-width: 280px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     text-align: center;
 }
 
@@ -114,28 +153,59 @@ body {
     color: #aaa;
 }
 
-/* สำหรับมือถือ */
+/* สำหรับมือถือ: ติดต่อเรา (ซ้าย) และ ลิงก์ด่วน (ขวา) อยู่แถวเดียวกัน
+   ส่วน social + QR เต็มความกว้าง ตกลงไปอยู่บรรทัดล่างสุดเสมอ (ใช้ order) */
 @media (max-width: 768px) {
     .footer {
-        padding: 1.5rem 0.5rem 0.5rem;
+        padding: 1.5rem 1rem 0.5rem;
     }
 
     .footer-container {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 1.5rem;
-    }
-
-    .footer-contact, .footer-social {
-        flex: 1 1 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        text-align: left;
+        gap: 1.5rem 1rem;
+        width: 100%;
         max-width: 100%;
-        min-width: unset;
     }
 
-    .footer-contact h3 {
-        font-size: 1.2rem;
+    .footer-col {
+        width: auto;
+        max-width: none;
+        white-space: normal;
+    }
+
+    .footer-contact {
+        flex: 1 1 55%;
+        min-width: 0;
+        text-align: left;
+        order: 1;
+        overflow-wrap: break-word;
+    }
+
+    .footer-links {
+        flex: 1 1 35%;
+        min-width: 0;
+        text-align: left;
+        order: 2;
+        overflow-wrap: break-word;
+    }
+
+    .footer-social {
+        flex: 1 1 100%;
+        order: 3;
+    }
+
+    .footer-contact h3,
+    .footer-links h3 {
+        font-size: 1.1rem;
         margin-bottom: 0.8rem;
+    }
+
+    .footer-links li {
+        margin-bottom: 0.25rem;
     }
 
     .footer-contact p {
@@ -166,17 +236,23 @@ body {
         padding-top: 0.8rem;
     }
 }
+
 @media (max-width: 480px) {
     .footer-container {
         gap: 1rem;
     }
 
-    .footer-contact h3 {
+    .footer-contact h3,
+    .footer-links h3 {
         font-size: 1.1rem;
     }
 
     .footer-contact p {
         font-size: 0.8rem;
+    }
+
+    .footer-links a {
+        font-size: 0.85rem;
     }
 
     .social-icons a {
@@ -189,4 +265,4 @@ body {
         width: 120px;
         height: 120px;
     }
-}
+}   

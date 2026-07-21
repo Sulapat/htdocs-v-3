@@ -83,7 +83,7 @@
       "daikin": "Industrial",
       "egat": "Power Authority",
       "enfourt": "Mechanical Product",
-      "gcme": "Maintenance and Engineering",
+      "gcme": "Maintenance and Engineering", 
       "griffith": "Food Industry",
       "gulf": "Energy Group",
       "gyproc": "Construction",
@@ -114,7 +114,20 @@
       "trane": "Cooling Systems",
       "transitions": "Optical Technology",
       "ttm": "Industrial Client",
-      "wha": "Logistics & Industrial"
+      "wha": "Logistics & Industrial",
+      "ads": "Installation of machinery and equipment",
+      "nps": "Construction Contractor",
+      "ses": "Installation, construction, and assembly of materials, equipment, appliances, and heavy machinery.",
+      "murata": "Electronic components",
+      "proterial": "Manufacture of other parts and accessories for motor vehicles not elsewhere classified.",
+      "tt": "Hardware store",
+      "uservice": "Repair of electric motors, generators, transformers, and power distribution equipment.",
+      "ming": "Factory manufacturing metal-stamped parts and assembling components, equipment, spare parts, electronics, and automotive parts.",
+      "asko": "Metal turning, milling, and planing",
+      "bgc": "Wholesale of general merchandise",
+      "ewater": "Water supply and distribution for household and industrial use via the water supply system.",
+      "otani": "Manufacturing of tires and inner tubes.",
+      "mcl": "Manufacturing of tires and inner tubes."
     }
   },
 
@@ -207,7 +220,7 @@
   "courses": {
     "hero": {
       "title": "Training",
-      "titleHighlight": "Courses",
+      "titleHighlight": " Courses",
       "subtitle": "Develop your skills and knowledge in industrial machinery maintenance<br>with courses designed by experts"
     },
     "section": {

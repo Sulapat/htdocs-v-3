@@ -330,6 +330,111 @@
                         <div class="client-description">{{ $t('clients.desc.wha') }}</div>
                     </div>
                 </div>
+                
+                <div class="client-card">
+                    <img src="@/assets/images/data/Logo_partners/ADS.jpg" alt="ADS" class="client-logo">
+                    <div class="client-info">
+                        <div class="client-name">ADS SALES AND SERVICE CO., LTD.</div>
+                        <div class="client-description">{{ $t('clients.desc.ads') }}</div>
+                    </div>
+                </div>
+
+                <div class="client-card">
+                    <img src="@/assets/images/data/Logo_partners/NPS.jpg" alt="NPS" class="client-logo">
+                    <div class="client-info">
+                        <div class="client-name">NPS ENGINEERING CO.,LTD.</div>
+                        <div class="client-description">{{ $t('clients.desc.nps') }}</div>
+                    </div>
+                </div>
+
+                <div class="client-card">
+                    <img src="@/assets/images/data/Logo_partners/SES.jpg" alt="SES" class="client-logo">
+                    <div class="client-info">
+                        <div class="client-name">SES SUCCESS ENGINEERING AND SERVICE CO., LTD.</div>
+                        <div class="client-description">{{ $t('clients.desc.ses') }}</div>
+                    </div>
+                </div>
+
+                <div class="client-card">
+                    <img src="@/assets/images/data/Logo_partners/Murata.jpg" alt="MURATA" class="client-logo">
+                    <div class="client-info">
+                        <div class="client-name">MURATA ELECTRONIC (THAILAND) CO., LTD.</div>
+                        <div class="client-description">{{ $t('clients.desc.murata') }}</div>
+                    </div>
+                </div>
+
+                <div class="client-card">
+                    <img src="@/assets/images/data/Logo_partners/Proterial.png" alt="PROTERIAL" class="client-logo">
+                    <div class="client-info">
+                        <div class="client-name">PROTERIAL (THAILAND) LTD.</div>
+                        <div class="client-description">{{ $t('clients.desc.proterial') }}</div>
+                    </div>
+                </div>
+                
+                <div class="client-card">
+                    <img src="@/assets/images/data/Logo_partners/TT.png" alt="TT" class="client-logo">
+                    <div class="client-info">
+                        <div class="client-name">TT FUJI TOOL SUPPORT CO.,LTD</div>
+                        <div class="client-description">{{ $t('clients.desc.tt') }}</div>
+                    </div>
+                </div>
+
+                <div class="client-card">
+                    <img src="@/assets/images/data/Logo_partners/U-Services.jpg" alt="U-Services" class="client-logo">
+                    <div class="client-info">
+                        <div class="client-name">U-Services Thailand Co.,Ltd</div>
+                        <div class="client-description">{{ $t('clients.desc.uservice') }}</div>
+                    </div>
+                </div>
+
+                <div class="client-card">
+                    <img src="@/assets/images/data/Logo_partners/ming.png" alt="MING" class="client-logo">
+                    <div class="client-info">
+                        <div class="client-name">MING TAI INDUSTRIAL (THAILAND) CO., LTD.</div>
+                        <div class="client-description">{{ $t('clients.desc.ming') }}</div>
+                    </div>
+                </div>
+
+                <div class="client-card">
+                    <img src="@/assets/images/data/Logo_partners/ASKO.jpg" alt="ASKO" class="client-logo">
+                    <div class="client-info">
+                        <div class="client-name">ASKO EQUIPMENT COMPANY LIMITED</div>
+                        <div class="client-description">{{ $t('clients.desc.asko') }}</div>
+                    </div>
+                </div>
+
+                <div class="client-card">
+                    <img src="@/assets/images/data/Logo_partners/BGC.jpg" alt="BGC" class="client-logo">
+                    <div class="client-info">
+                        <div class="client-name">BG CONTAINER GLASS PUBLIC COMPANY LIMITED</div>
+                        <div class="client-description">{{ $t('clients.desc.bgc') }}</div>
+                    </div>  
+                </div>
+
+                <div class="client-card">
+                    <img src="@/assets/images/data/Logo_partners/EWater.jpg" alt="EW" class="client-logo">
+                    <div class="client-info">
+                        <div class="client-name">EASTERN WATER RESOURCES DEVELOPMENT AND MANAGEMENT PUBLIC COMPANY LIMITED</div>
+                        <div class="client-description">{{ $t('clients.desc.ewater') }}</div>
+                    </div>  
+                </div>
+
+                <div class="client-card">
+                    <img src="@/assets/images/data/Logo_partners/OTANI.jpg" alt="OTANI" class="client-logo">
+                    <div class="client-info">
+                        <div class="client-name">OTANI RADIAL CO.,LTD.</div>
+                        <div class="client-description">{{ $t('clients.desc.otani') }}</div>
+                    </div>  
+                </div>
+
+                <div class="client-card">
+                    <img src="@/assets/images/data/Logo_partners/MCL.png" alt="MICHELIN" class="client-logo">
+                    <div class="client-info">
+                        <div class="client-name">MICHELIN SIAM COMPANY LIMITED  </div>
+                        <div class="client-description">{{ $t('clients.desc.mcl') }}</div>
+                    </div>  
+                </div>
+
             </div>
         </div>
     </div>

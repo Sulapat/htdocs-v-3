@@ -7,9 +7,12 @@
     box-sizing: border-box;
 }
 
+html {
+    overflow-x: hidden;
+}
+
 body {
     font-family: 'Prompt', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    overflow-x: hidden;
     background: #ffffff;
 }
 
@@ -103,6 +106,8 @@ body {
     color: #1e293b;
     margin-bottom: 1.5rem;
     line-height: 1.2;
+    /* จองพื้นที่ไว้ 2 บรรทัดเสมอ เผื่อบางภาษาชื่อยาวจนตัดบรรทัด */
+    min-height: calc(3.5rem * 1.2 * 1);
 }
 
 .courses-hero h1 span {
@@ -115,6 +120,9 @@ body {
     line-height: 1.8;
     max-width: 600px;
     margin: 0 auto;
+    /* จองพื้นที่ไว้ 3 บรรทัดเสมอ กันไม่ให้ hero ยืด-หดตอนสลับภาษา
+       (ข้อความ TH/EN อาจตัดบรรทัดไม่เท่ากัน) */
+    min-height: calc(1.2rem * 1.8 * 3);
 }
 
 /* Morphing Background */
@@ -996,108 +1004,10 @@ body {
 }
 
 /* ========================================
-   FOOTER
+   FOOTER — moved to footer.css (shared component).
+   Do not redeclare .footer* rules here; page-specific
+   stylesheets should not override the shared footer.
    ======================================== */
-.footer {
-    background: #1a1a1a;
-    color: #f1f1f1;
-    padding: 2rem 2rem 1rem;
-}
-
-.footer-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 3rem;
-    max-width: 1200px;
-    margin: auto;
-}
-
-.footer-contact {
-    flex: 1 1 45%;
-    min-width: 300px;
-    text-align: left;
-}
-
-.footer-contact h3 {
-    color: #12db5c;
-    margin-bottom: 1rem;
-    font-size: 1.4rem;
-}
-
-.footer-contact p {
-    line-height: 1.8;
-    color: #ccc;
-    margin-bottom: 1rem;
-    font-size: 0.95rem;
-}
-
-.footer-contact a {
-    color: #fff;
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-.footer-contact a:hover {
-    color: #a9f4eb;
-}
-
-.footer-social {
-    flex: 1 1 45%;
-    min-width: 280px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.footer .social-icons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-}
-
-.footer .social-icons a {
-    width: 48px;
-    height: 48px;
-    background: #333;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.2rem;
-    transition: all 0.3s;
-}
-
-.footer .social-icons a:hover {
-    background: #a9f4eb;
-    transform: translateY(-4px);
-}
-
-.qr {
-    width: 200px;
-    height: 200px;
-    border-radius: 12px;
-    border: 2px solid #444;
-    transition: transform 0.3s;
-}
-
-.qr:hover {
-    transform: scale(1.05);
-}
-
-.footer-bottom {
-    text-align: center;
-    border-top: 1px solid #333;
-    margin-top: 2rem;
-    padding-top: 1rem;
-    font-size: 0.9rem;
-    color: #aaa;
-}
 
 /* ========================================
    RESPONSIVE DESIGN
@@ -1147,11 +1057,13 @@ body {
     .courses-hero h1 {
         font-size: 1.8rem;
         margin-bottom: 0.75rem;
+        min-height: 0;
     }
 
     .courses-hero p {
         font-size: 0.9rem;
         line-height: 1.6;
+        min-height: calc(0.9rem * 1.6 * 3);
     }
 
     /* dropdown ยาวเต็มกรอบ */
@@ -1226,29 +1138,7 @@ body {
         gap: 15px;
     }
 
-    /* Footer */
-    .footer {
-        padding: 1.5rem 0.5rem 0.5rem;
-    }
-
-    .footer-container {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 1.5rem;
-    }
-
-    .footer-contact,
-    .footer-social {
-        flex: 1 1 100%;
-        max-width: 100%;
-        min-width: unset;
-    }
-
-    .qr {
-        width: 140px;
-        height: 140px;
-    }
+    /* Footer responsive rules live in footer.css now */
 }
 
 @media (max-width: 480px) {

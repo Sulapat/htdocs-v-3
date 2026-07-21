@@ -7,9 +7,12 @@
     box-sizing: border-box;
 }
 
+html {
+    overflow-x: hidden;
+}
+
 body {
     font-family: 'Prompt', 'Sarabun', -apple-system, sans-serif;
-    overflow-x: hidden;
     background: #ffffff;
 }
 
@@ -271,6 +274,7 @@ body {
     width: 100%;
     background: #ffffff;
     padding: 80px 20px;
+    scroll-margin-top: 90px; /* กันเนื้อหาโดน sticky navbar บังตอนเลื่อนมาจากเมนู "บริการ" */
 }
 
 .service-section .section-title,

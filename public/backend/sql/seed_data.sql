@@ -2441,71 +2441,6 @@ INSERT INTO course_equipments (course_id, equipment, sort_order) VALUES (@course
 INSERT INTO course_notes (course_id, note, sort_order) VALUES (@course_id, 'Training fee: Exclude VAT', 0);
 
 -- news
-INSERT INTO news (title, short_desc, cover_image, event_date_text, location, full_description) VALUES ('สัมมนาฟรี: พัฒนาแรงงาน พัฒนาระบบ สู่การบำรุงรักษาแบบยั่งยืน', 'สัมมนาฟรี! "พัฒนาแรงงาน พัฒนาระบบ สู่การบำรุงรักษาแบบยั่งยืน" วันที่ 13 มิถุนายน 2568 โรงแรมแกรนด์ ปา แอนด์ รีสอร์ท ลำพูน', '/images/training/Semina_Lumphun/image1.jpg', '13 มิถุนายน 2568', 'โรงแรมแกรนด์ ปา แอนด์ รีสอร์ท ลำพูน', '
-            <h2>สัมมนาฟรี! พัฒนาแรงงาน พัฒนาระบบ สู่การบำรุงรักษาแบบยั่งยืน</h2>
-            <p><strong>ไม่เสียค่าใช้จ่าย!</strong> สัมมนาพิเศษสำหรับผู้บริหารและวิศวกรซ่อมบำรุง</p>
-            <p>พร้อมเปิดมุมมองใหม่ผ่านเทคโนโลยีและการวิเคราะห์ข้อมูลเชิงลึก</p>
-            <h3>วันที่:</h3>
-            <p>13 มิถุนายน 2568</p>
-            
-            <h3>สถานที่:</h3>
-            <p>โรงแรมแกรนด์ ปา แอนด์ รีสอร์ท จ.ลำพูน</p>
-            
-            <h3>หัวข้อสัมมนา:</h3>
-            <ul>
-                <li>การตั้งเป้า Zero Breakdown อย่างเป็นรูปธรรม</li>
-                <li>บทบาทของ “คน” กับการเปลี่ยนผ่านองค์กร</li>
-                <li> การวัดแรงสั่นสะเทือนในงานบำรุงรักษา </li>
-                <li>การวิเคราะห์น้ำมันเพื่องานซ่อมบำรุงเชิงกลยุทธ์</li>
-            </ul>
-            
-            <h3>วิทยากร:</h3>
-            <p>ผู้เชี่ยวชาญด้านซ่อมบำรุงจากอุตสาหกรรมชั้นนำ</p>
-
-            <h3>เหมาะสำหรับ:</h3>
-            <p>ผู้จัดการโรงงาน, วิศวกรซ่อมบำรุง, HRD, TPM/PM Engineer</p>
-
-            <h3>ลงทะเบียน (ฟรี!):</h3>
-            <p>Tel: 096-1879595, 081-3927447</p>
-            <p>Email: patineer@outlook.com</p>
-            <p>Line: @530ddhwa</p>
-            
-            <p><strong>*จำนวนที่นั่งจำกัด! ลงทะเบียนด่วน</strong></p>
-        ');
-SET @news_id = LAST_INSERT_ID();
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/Semina_Lumphun/image1.jpg', 0);
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/Semina_Lumphun/image2.jpg', 1);
-INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'สัมมนา');
-INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'ฟรี');
-INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'ลำพูน');
-INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'Sustainable');
-
-INSERT INTO news (title, short_desc, cover_image, event_date_text, location, full_description) VALUES ('หัวข้อการฝึกอบรมการประยุกต์ การวิเคราะห์ การสั่นสะเทือน', 'หัวข้อการฝึกอบรมการประยุกต์ การวิเคราะห์ การสั่นสะเทือน ณ ฮอลิเดย์ อินน์ แอนด์ สวีท ศรีราชา แหลมฉบัง', '/images/training/VB_17-19June2025/VB_brochure1.jpg', '17-19 มิถุนายน 2568', 'Holiday Inn & Suites ศรีราชา แหลมฉบัง จังหวัดชลบุรี', '
-            <h2>การประยุกต์ใช้งาน Vibration Analysis</h2>
-            <p>หลักสูตรเน้นการนำไปใช้จริงในโรงงานอุตสาหกรรม</p>
-            
-            <h3>หัวข้อที่สำคัญ:</h3>
-            <ul>
-                <li>การเลือกใช้อุปกรณ์วัด Vibration ให้เหมาะสม</li>
-                <li>การวางแผน Vibration Monitoring Program</li>
-                <li>Case Study การแก้ปัญหาเครื่องจักร</li>
-                <li>ROI ของการใช้ Vibration Analysis</li>
-            </ul>
-            
-            <h3>สถานที่:</h3>
-            <p>ฮอลิเดย์ อินน์ แอนด์ สวีท ศรีราชา แหลมฉบัง</p>
-            
-            <h3>ติดต่อลงทะเบียน:</h3>
-            <p>Line: @530ddhwa</p>
-            <p>Tel: 081-3927447</p>
-        ');
-SET @news_id = LAST_INSERT_ID();
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_17-19June2025/VB_brochure1.jpg', 0);
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_17-19June2025/VB_brochure2.jpg', 1);
-INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'อบรม');
-INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'Vibration');
-INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'ศรีราชา');
-
 INSERT INTO news (title, short_desc, cover_image, event_date_text, location, full_description) VALUES ('CATEGORY II VIBRATION ANALYST', 'อบรม CATEGORY II VIBRATION ANALYST เรียนรู้การตรวจวัดและวิเคราะห์การสั่นสะเทือน พร้อมสอบรับ Certificate มาตรฐาน ISO 18436-2 จาก Vibration Institute, USA', '/images/training/Training_MRchoi_July2025/Brochur1.jpg', '21-26 กรกฎาคม 2025', 'Holiday Inn & Suites ศรีราชา แหลมฉบัง จังหวัดชลบุรี', '
             <h2>หลักสูตร CATEGORY II VIBRATION ANALYST</h2>
             <p>หลักสูตรมาตรฐานสากล ได้รับการรับรองจาก Vibration Institute, USA</p>
@@ -2535,34 +2470,6 @@ INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'อบรม');
 INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'Category II');
 INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'ISO 18436-2');
 INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'International');
-
-INSERT INTO news (title, short_desc, cover_image, event_date_text, location, full_description) VALUES ('อบรม Vibration Analysis & Workshop', 'อบรม Vibration Analysis & Workshop พร้อมรับ Certificate ISO 18436-2 (Level 2) พิเศษ! มา 3 จ่าย 2 เท่านั้น!!!', '/images/training/VB_19-22Aug2025/VB_Session_2_(Aug 19-22)_11.png', '19-22 สิงหาคม 2568', 'Holiday Inn & Suites ศรีราชา แหลมฉบัง จังหวัดชลบุรี', '
-            <h2>รายละเอียดหลักสูตร Vibration Analysis & Workshop</h2>
-            <p>หลักสูตรการวิเคราะห์การสั่นสะเทือนแบบเจาะลึก พร้อม Workshop ภาคปฏิบัติจริง</p>
-            
-            <h3>สิ่งที่จะได้เรียนรู้:</h3>
-            <ul>
-                <li>ทฤษฎีพื้นฐานการสั่นสะเทือนและการประยุกต์ใช้</li>
-                <li>เทคนิคการตรวจวัดและวิเคราะห์ Vibration</li>
-                <li>การวินิจฉัยปัญหาเครื่องจักรจากสัญญาณสั่นสะเทือน</li>
-                <li>Workshop ภาคปฏิบัติกับเครื่องจักรจริง</li>
-            </ul>
-            
-            <h3>ค่าใช้จ่าย:</h3>
-            <p>โปรโมชั่นพิเศษ! <strong>มา 3 ท่าน จ่าย 2 ท่าน</strong></p>
-            <p>ราคาปกติ: 18,000 บาท/ท่าน</p>
-            
-            <h3>ติดต่อสอบถาม:</h3>
-            <p>Tel: 096-1879595, 081-3927447</p>
-            <p>Email: patineer@outlook.com</p>
-        ');
-SET @news_id = LAST_INSERT_ID();
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_19-22Aug2025/VB_Session_2_(Aug 19-22)_11.png', 0);
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_19-22Aug2025/VB_Session_2_(Aug 19-22)_12.png', 1);
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_19-22Aug2025/VB_Session_2_(Aug 19-22)_9.png', 2);
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_19-22Aug2025/VB_Session_2_(Aug 19-22)_10.png', 3);
-INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'อบรม');
-INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'Vibration');
 
 INSERT INTO news (title, short_desc, cover_image, event_date_text, location, full_description) VALUES ('อบรม CATEGORY II VIBRATION ANALYST', 'อบรม Basic Machinery Vibration (BMV) & Certification Exam พร้อมรับ Certificate ISO 18436-2 จาก Vibration Institute, USA วันที่ 15-20 ธันวาคม 2568 ณ Holiday Inn & Suites ศรีราชา แหลมฉบัง', '/images/training/Training_MRchoi_Dec2025/Brochur1.jpg', '15-20 ธันวาคม 2568', 'Holiday Inn & Suites ศรีราชา แหลมฉบัง จังหวัดชลบุรี', '
             <h2>รายละเอียดหลักสูตร CATEGORY II VIBRATION ANALYST</h2>
@@ -2595,32 +2502,6 @@ SET @news_id = LAST_INSERT_ID();
 INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/Training_MRchoi_Dec2025/Brochur1.jpg', 0);
 INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'อบรม');
 INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'Category II');
-
-INSERT INTO news (title, short_desc, cover_image, event_date_text, location, full_description) VALUES ('อบรม Vibration Analysis & Workshop', 'อบรม Vibration Analysis & Workshop พร้อมรับ Certificate ISO 18436-2 (Level 2)', '/images/training/VB_27-30Jan2026/VB_Session_1(jan19-22)_3.jpg', '27-30 มกราคม 2569', 'Holiday Inn & Suites ศรีราชา แหลมฉบัง จังหวัดชลบุรี', '
-            <h2>รายละเอียดหลักสูตร Vibration Analysis & Workshop</h2>
-            <p>หลักสูตรการวิเคราะห์การสั่นสะเทือนแบบเจาะลึก พร้อม Workshop ภาคปฏิบัติจริง</p>
-            
-            <h3>สิ่งที่จะได้เรียนรู้:</h3>
-            <ul>
-                <li>ทฤษฎีพื้นฐานการสั่นสะเทือนและการประยุกต์ใช้</li>
-                <li>เทคนิคการตรวจวัดและวิเคราะห์ Vibration</li>
-                <li>การวินิจฉัยปัญหาเครื่องจักรจากสัญญาณสั่นสะเทือน</li>
-                <li>Workshop ภาคปฏิบัติกับเครื่องจักรจริง</li>
-            </ul>
-            <h3>ค่าใช้จ่าย:</h3>
-            <p>ราคา: 18,000 บาท/ท่าน</p>
-            
-            <h3>ติดต่อสอบถาม:</h3>
-            <p>Tel: 096-1879595, 081-3927447</p>
-            <p>Email: patineer@outlook.com</p>
-        ');
-SET @news_id = LAST_INSERT_ID();
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_27-30Jan2026/VB_Session_1(jan19-22)_1.jpg', 0);
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_27-30Jan2026/VB_Session_1(jan19-22)_2.jpg', 1);
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_27-30Jan2026/VB_Session_1(jan19-22)_3.jpg', 2);
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_27-30Jan2026/VB_Session_1(jan19-22)_4.jpg', 3);
-INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'อบรม');
-INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'Vibration');
 
 INSERT INTO news (title, short_desc, cover_image, event_date_text, location, full_description) VALUES ('อบรม CATEGORY II VIBRATION ANALYST', 'อบรม Basic Machinery Vibration (BMV) & Certification Exam พร้อมรับ Certificate ISO 18436-2 จาก Vibration Institute, USA วันที่ 30 มีนาคม - 4 เมษายน 2569 ณ Holiday Inn & Suites ศรีราชา แหลมฉบัง', '/images/training/Training_MRchoi_Mar2026/Brochur1.png', '30 มีนาคม - 4 เมษายน 2569', 'Holiday Inn & Suites ศรีราชา แหลมฉบัง จังหวัดชลบุรี', '
             <h2>รายละเอียดหลักสูตร CATEGORY II VIBRATION ANALYST</h2>
@@ -2681,6 +2562,32 @@ INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/ima
 INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'อบรม');
 INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'Category II');
 
+INSERT INTO news (title, short_desc, cover_image, event_date_text, location, full_description) VALUES ('อบรม Vibration Analysis & Workshop', 'อบรม Vibration Analysis & Workshop หลักสูตรการวิเคราะห์การสั่นสะเทือนเพื่อการบำรุงรักษาเชิงพยากรณ์ พร้อม Workshop ภาคปฏิบัติจริง วันที่ 13-14 สิงหาคม 2569 ณ ฮอลิเดย์ อินน์ แอนด์ สวีท ศรีราชา แหลมฉบัง', '/images/training/PVP_13-14aug2026/PVP_brochure.png', '13-14 สิงหาคม 2569', 'Holiday Inn & Suites ศรีราชา แหลมฉบัง จังหวัดชลบุรี', '
+            <h2>รายละเอียดหลักสูตร Vibration Analysis & Workshop</h2>
+            <p>หลักสูตรการวิเคราะห์การสั่นสะเทือน เพื่อการบำรุงรักษาเชิงพยากรณ์ พร้อม Workshop ภาคปฏิบัติจริง</p>
+
+            <h3>สิ่งที่จะได้เรียนรู้:</h3>
+            <ul>
+                <li>เข้าใจหลักการของ Condition-based maintenance (CBM)</li>
+                <li>เรียนรู้พื้นฐานการวิเคราะห์การสั่นสะเทือนของเครื่องจักรหมุน</li>
+                <li>สามารถวิเคราะห์สาเหตุของปัญหาพื้นฐานและแนวโน้มการสั่นสะเทือนเพื่อเฝ้าระวังสภาพเครื่องจักรได้</li>
+                <li>Workshop ภาคปฏิบัติกับเครื่องจักรจริง</li>
+            </ul>
+
+            <h3>ค่าใช้จ่าย:</h3>
+            <p>ราคา: 8,000 บาท/ท่าน</p>
+            <p>พิเศษโปรโมชั่น: สมัครพร้อมกัน 2 ท่าน เหลือ 14,400 บาท</p>
+
+            <h3>ติดต่อสอบถาม:</h3>
+            <p>Tel: 096-1879595, 081-3927447</p>
+            <p>Email: patineer@outlook.com</p>
+        ');
+SET @news_id = LAST_INSERT_ID();
+INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/PVP_13-14aug2026/PVP_brochure.png', 0);
+INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'อบรม');
+INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'Vibration');
+INSERT INTO news_tags (news_id, tag) VALUES (@news_id, 'CBM');
+
 -- members
 INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (1, 'SiraCATt', 'Amphaisri', 'patineer.co.th', 'Pat_eng2@patineer.com', 'ยังมีรายชื่ออยู่ใน CAT | CATII', '103655');
 INSERT INTO member_certifications (member_id, cert_code) VALUES (1, 'CATII');
@@ -2714,3 +2621,21 @@ INSERT INTO members (id, first_name, last_name, company, email, level_text, memb
 INSERT INTO member_certifications (member_id, cert_code) VALUES (57, 'CATII');
 INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (58, 'Karn', 'Deeying', 'Rayong Engineering & Plant SerCATce Co., Ltd. (REPCO)', 'repconex@scg.com', 'ยังมีรายชื่ออยู่ใน CAT | CATII', '103653');
 INSERT INTO member_certifications (member_id, cert_code) VALUES (58, 'CATII');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (59, 'Sirawat', 'Channam', 'SOTUS Corporation Co., Ltd.', '', 'Currently listed in CAT | BMV', 'PAT-BMV-25001');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (59, 'BMV');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (60, 'Jaroensak', 'Pachdsood', 'SOTUS Corporation Co., Ltd.', '', 'Currently listed in CAT | BMV', 'PAT-BMV-25002');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (60, 'BMV');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (61, 'Pongsakon', 'Budmanee', 'U-Services Thailand Co.,Ltd. (Surat Thani)', 'b.pongsakon1999@gmail.com', 'Currently listed in CAT | BMV', 'PAT-BMV-25003');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (61, 'BMV');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (62, 'Khajorn', 'Mitaowan', 'U-Services Thailand Co.,Ltd. (Khon Kaen)', 'khajorn@uservices-thailand.com', 'Currently listed in CAT | BMV', 'PAT-BMV-25004');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (62, 'BMV');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (63, 'Thanaphat', 'Inchan', 'U-Services Thailand Co.,Ltd. (Rayong)', 'phatkung810@gmail.com', 'Currently listed in CAT | BMV', 'PAT-BMV-25005');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (63, 'BMV');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (64, 'Wanchai', 'Sripun', 'U-Services Thailand Co.,Ltd. (Rayong)', 'wchwanchai@gmail.com', 'Currently listed in CAT | BMV', 'PAT-BMV-25006');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (64, 'BMV');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (65, 'Benjapol', 'Diswath', 'FASTEN OIL CO., LTD.', '1ggxdggoorr.258@gmail.com', 'Currently listed in CAT | BMV', 'PAT-BMV-26001');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (65, 'BMV');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (66, 'Akkarapol', 'Areepom', 'ADS SALES AND SERVICE CO., LTD.', 'akkarapol.a@ads-service.co.th', 'Currently listed in CAT | BMV', 'PAT-BMV-26002');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (66, 'BMV');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (67, 'Panuwat', 'Adunyasak', 'Individual', 'Panuwat_072@hotmail.com', 'Currently listed in CAT | BMV', 'PAT-BMV-26003');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (67, 'BMV');

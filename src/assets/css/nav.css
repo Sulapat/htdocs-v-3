@@ -27,6 +27,8 @@
     display: flex;
     list-style: none;
     gap: 2rem;
+    margin: 0;
+    padding: 0;
     /* ตรึงให้อยู่กึ่งกลางจอเสมอ ไม่ว่าความยาวข้อความจะเปลี่ยนตามภาษา
        และไม่แย่งพื้นที่กับ logo หรือ nav-right เพราะหลุดออกจาก flex flow แล้ว */
     position: absolute;
@@ -157,6 +159,79 @@
 .nav-links .router-link-exact-active {
     color: #000000;
     font-weight: 600;
+}
+
+/* =============================================
+   COMPACT NAV — เหมือนโหมดมือถือทุกอย่าง แต่ทำงานตอนที่ JS (nav.vue) วัดแล้วเจอว่า
+   ช่องว่างจริงระหว่างโลโก้กับปุ่มเปลี่ยนภาษาแคบกว่าความกว้างเมนู .nav-links (ดู checkNavFit
+   ใน nav.vue) ไม่ได้ยึดความกว้างจอ (768px) อย่างเดียวเหมือน @media ด้านบน เพราะความกว้าง
+   ที่ต้องใช้จริงของเมนูเปลี่ยนตามภาษา/จำนวนเมนู ไม่ใช่ค่าคงที่
+   ============================================= */
+#navbar.nav-compact {
+    padding: 0.8rem 0.8rem;
+}
+
+#navbar.nav-compact .nav-right {
+    gap: 1.3rem;
+}
+
+#navbar.nav-compact .nav-links {
+    display: none;
+    flex-direction: column;
+
+    position: fixed;
+    top: 70px;
+    right: 10px;
+    left: auto;
+    transform: none;
+
+    width: 220px;
+    max-width: calc(100vw - 20px);
+
+    background: white;
+    padding: 0.5rem 1rem;
+
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    border-radius: 10px;
+
+    z-index: 1000;
+    box-sizing: border-box;
+    white-space: normal;
+}
+
+#navbar.nav-compact .nav-links.show,
+#navbar.nav-compact .nav-links.active {
+    display: flex;
+}
+
+#navbar.nav-compact .social-links {
+    display: none;
+}
+
+#navbar.nav-compact .hamburger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 1.2rem;
+    cursor: pointer;
+
+    z-index: 1200;
+
+    padding: 4px 6px;
+    margin-left: 0.3rem;
+    flex-shrink: 0;
+}
+
+#navbar.nav-compact .hamburger i {
+    font-size: 1.2rem;
+    color: #333;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+#navbar.nav-compact .hamburger i:hover {
+    color: #007BFF;
+    transform: scale(1.1);
 }
 
 /* =============================================
@@ -350,4 +425,28 @@
         font-size: 0.875rem;
         white-space: normal;
     }
+}
+
+/* Compact-mode (จอกว้างแต่ถูกบังคับเป็น hamburger เพราะเมนูจะทับโลโก้/ปุ่มเปลี่ยนภาษา):
+   ใช้ dropdown แบบ inline เหมือนโหมดมือถือ ไม่ใช่ popup ลอย เพราะพื้นที่แคบเท่ากัน */
+#navbar.nav-compact .nav-dropdown-menu {
+    position: static;
+    transform: none;
+    box-shadow: none;
+    border: none;
+    border-left: 2px solid #e2e8f0;
+    border-radius: 0;
+    padding: 0 0 0 1rem;
+    margin: 4px 0 4px 8px;
+    min-width: unset;
+    background: transparent;
+}
+#navbar.nav-compact .nav-dropdown-menu::before { display: none; }
+#navbar.nav-compact .nav-dropdown-menu.open {
+    transform: none;
+}
+#navbar.nav-compact .nav-dropdown-menu li a {
+    padding: 8px 8px;
+    font-size: 0.875rem;
+    white-space: normal;
 }

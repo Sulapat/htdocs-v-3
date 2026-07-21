@@ -1,22 +1,7 @@
 @import "@/assets/css/styles.css";
 
-* {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-
-    }
-
-    html {
-        overflow-x: hidden;
-    }
-
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: hsl(210, 17%, 98%);
-    }
     /* Hero Section */
-    .home .hero {
+    .svc-hero {
         padding: 4rem;
         padding-top: calc(80px + 2rem);
         min-height: 0vh;
@@ -25,7 +10,7 @@
         position: relative;
         overflow: hidden;
     }
-    .home .hero::before {
+    .svc-hero::before {
         content: '';
         position: absolute;
         top: -50%;
@@ -35,7 +20,7 @@
         background: radial-gradient(circle, rgba(22, 117, 108, 0.3) 0%, transparent 70%);
         border-radius: 50%;
     }
-    .home .hero-text h1 {
+    .svc-hero-text h1 {
         opacity: 0;
         animation: fadeInText 2s ease-in forwards;
     }
@@ -46,7 +31,7 @@
     }
 
             /* ===== MORPHING BACKGROUND ANIMATIONS ===== */
-    .morphing-bg {
+    .svc-morphing-bg {
         position: absolute;
         right: -10%;
         top: 50%;
@@ -54,10 +39,10 @@
         height: 1000px;
         pointer-events: none;
         z-index: 0;
-        animation: gradient 8s ease infinite, morph 5s ease-in-out infinite, float 8s ease-in-out infinite;
+        animation: svcGradient 8s ease infinite, svcMorph 5s ease-in-out infinite, svcFloat 8s ease-in-out infinite;
     }
 
-    @keyframes gradient {
+    @keyframes svcGradient {
         0%, 100% {
             background: radial-gradient(circle,
                 rgba(24, 7, 109, 0.26) 0%,   
@@ -74,7 +59,7 @@
         }
     }
 
-    @keyframes morph {
+    @keyframes svcMorph {
         0%, 100% { 
             border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
         }
@@ -89,7 +74,7 @@
         }
     }
 
-    .morphing-bg-2 {
+    .svc-morphing-bg-2 {
         position: absolute;
         left: -8%;
         bottom: 10%;
@@ -97,10 +82,10 @@
         height: 650px;
         pointer-events: none;
         z-index: 0;
-        animation: gradient2 17s ease infinite, morph2 15s ease-in-out infinite, float-alt 8s ease-in-out infinite;
+        animation: svcGradient2 17s ease infinite, svcMorph2 15s ease-in-out infinite, svcFloatAlt 8s ease-in-out infinite;
     }
 
-    @keyframes gradient2 {
+    @keyframes svcGradient2 {
         0%, 100% {
             background: radial-gradient(circle,
                 rgba(97, 112, 227, 0.23) 0%,   
@@ -117,7 +102,7 @@
         }            
     }
 
-    @keyframes morph2 {
+    @keyframes svcMorph2 {
         0%, 100% { 
             border-radius: 40% 60% 50% 50% / 60% 40% 60% 50%;
             transform: rotate(0deg) scale(1);
@@ -132,7 +117,7 @@
         }
     }
 
-    @keyframes float {
+    @keyframes svcFloat {
         0% {
             transform: translate(0, -50%) rotate(0deg) scale(1);
         }
@@ -150,7 +135,7 @@
         }
     }
 
-    @keyframes float-alt {
+    @keyframes svcFloatAlt {
         0% {
             transform: translate(0, 0) rotate(0deg) scale(1);
         }
@@ -169,7 +154,7 @@
     }
 
     /* ===== Hero layout (desktop) =====
-       ต้นตอที่แท้จริง: .home .hero (parent) ตั้ง display:flex ไว้ ทำให้
+       ต้นตอที่แท้จริง: .svc-hero (parent) ตั้ง display:flex ไว้ ทำให้
        .hero-content กลายเป็น flex item ที่ไม่ได้กำหนด width ชัดเจน จึง
        "หดตามเนื้อหา" (shrink-to-fit) เอง — ข้อความอังกฤษสั้นกว่าไทย กล่องเลย
        แคบกว่าไปด้วย (เห็นชัดจาก dev inspector highlight ที่กว้างไม่เท่ากัน)
@@ -179,7 +164,7 @@
        กล่องใหญ่จะเท่ากันทุกภาษา (ยึดตามกล่องใหญ่สุด = 1400px) ตัวหนังสือชิดซ้าย
        รูปชิดขวาด้วย justify-content: space-between และรูปกว้างคงที่ 500px
        (flex: 0 0 500px) จึงอยู่ตำแหน่ง/ขนาดเดิมเป๊ะทุกครั้ง */
-    .home .hero-content {
+    .svc-hero-content {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -192,12 +177,12 @@
         color: #140c81;
     }
 
-    .home .hero-text {
+    .svc-hero-text {
         flex: 1 1 auto;
         min-width: 0; /* หัวใจของการกันไม่ให้ข้อความดันรูปให้ขยับ */
     }
 
-    .home .hero-text h1 {
+    .svc-hero-text h1 {
         font-size: 3.5rem;
         margin-bottom: 1rem;
         line-height: 1.2;
@@ -205,23 +190,23 @@
         overflow-wrap: break-word;
     }
 
-    .home .hero-text h1 span {
+    .svc-hero-text h1 span {
         color: #38da6b;
     }
 
-    .home .hero-text p {
+    .svc-hero-text p {
         font-size: 1.2rem;
         margin-bottom: 2rem;
         opacity: 0.9;
     }
 
-    .home .hero-stats {
+    .svc-hero-stats {
         display: flex;
         gap: 2rem;
         margin-top: 2rem;
     }
 
-    .stat-box {
+    .svc-stat-box {
         background: rgba(255, 255, 255, 0.514);
         backdrop-filter: blur(10px);
         padding: 1.5rem;
@@ -229,19 +214,19 @@
         border: 1px solid rgba(255, 255, 255, 0.388);
     }
 
-    .stat-box h3 {
+    .svc-stat-box h3 {
         font-size: 2.5rem;
         color: #38da6b;
         margin-bottom: 0.5rem;
     }
 
-    .home .hero-image {
+    .svc-hero-image {
         flex: 0 0 500px; /* ห้ามยืด ห้ามหด ตายตัวที่ 500px เสมอ */
         width: 500px;
         position: relative;
     }
 
-    .home .hero-image img {
+    .svc-hero-image img {
         width: 100%;
         height: 600px;
         object-fit: cover;
@@ -249,18 +234,18 @@
         box-shadow: 0 20px 60px rgba(0, 122, 17, 0.411);
     }
 
-    .home .hero-badge {
+    .svc-hero-badge {
         position: absolute;
         top: -20px;
         right: -20px;
-        background: linear-gradient(135deg, #058a8699 0%, #0d3799a1 100%);
+        background: linear-svcGradient(135deg, #058a8699 0%, #0d3799a1 100%);
         color: rgb(246, 246, 246);
         padding: 1.5rem;
         border-radius: 15px;
-        animation: float 3s ease-in-out infinite;
+        animation: svcBadgeFloat 3s ease-in-out infinite;
     }
 
-    @keyframes float {
+    @keyframes svcBadgeFloat {
         0%, 100% { transform: translateY(0); }
         50% { transform: translateY(-10px); }
     }
@@ -293,7 +278,7 @@
         position: absolute;
         bottom: -20px;
         left: -20px;
-        background: linear-gradient(135deg, #2cad9cdd, #15ae4076);
+        background: linear-svcGradient(135deg, #2cad9cdd, #15ae4076);
         color: white;
         padding: 1.5rem 2rem;
         border-radius: 15px;
@@ -345,7 +330,7 @@
     .feature-icon {
         width: 50px;
         height: 50px;
-        background: linear-gradient(135deg,  #0a917ff4, #1baf45e6);
+        background: linear-svcGradient(135deg,  #0a917ff4, #1baf45e6);
         color: white;
         border-radius: 10px;
         display: flex;
@@ -356,7 +341,7 @@
     .stats-section {
         padding: 4rem 5%;
         background: 
-            linear-gradient(135deg, rgba(12, 37, 106, 0.516), rgba(15, 23, 42, 0.9)),
+            linear-svcGradient(135deg, rgba(12, 37, 106, 0.516), rgba(15, 23, 42, 0.9)),
             url("../images/data/imagestate.png");
         background-size: cover;
         background-position: center;
@@ -377,7 +362,7 @@
 
     .stat-item h2 {
         font-size: 3.5rem;
-        color: #58ff25;
+        color: #87ea69;
         margin-bottom: 0.5rem;
     }
     .stat-item p {
@@ -518,60 +503,60 @@
     /* Mobile Responsive */
     @media (max-width: 768px) {
         /* Hero Section Mobile */
-        .home .hero {
+        .svc-hero {
             padding: 2rem 5%;
         }
 
-        .home .hero-content {
+        .svc-hero-content {
             grid-template-columns: 1fr;
             gap: 2rem;
         }
 
-        .home .hero-text h1 {
+        .svc-hero-text h1 {
             font-size: 2rem;
             text-align: center;
         }
 
-        .home .hero-text p {
+        .svc-hero-text p {
             font-size: 1rem;
             text-align: center;
         }
 
-        .home .hero-stats {
+        .svc-hero-stats {
             justify-content: center;
             gap: 1rem;
         }
 
-        .stat-box {
+        .svc-stat-box {
             padding: 1rem;
         }
 
-        .stat-box h3 {
+        .svc-stat-box h3 {
             font-size: 1.8rem;
         }
 
-        .stat-box p {
+        .svc-stat-box p {
             font-size: 0.9rem;
         }
 
-        .home .hero-image {
+        .svc-hero-image {
             order: -1;
             justify-content: center;
             display: flex;
         }
 
-        .home .hero-image img {
+        .svc-hero-image img {
             height: 300px;
 
         }
 
-        .home .hero-badge {
+        .svc-hero-badge {
             position: static;
             margin-top: 1rem;
             padding: 1rem;
         }
 
-        .home .hero-badge h4 {
+        .svc-hero-badge h4 {
             font-size: 0.95rem;
         }
         /* About Section Mobile */
@@ -706,11 +691,11 @@
     }
 
     @media (max-width: 480px) {
-        .home .hero-text h1 {
+        .svc-hero-text h1 {
             font-size: 1.5rem;
         }
 
-        .home .hero-stats {
+        .svc-hero-stats {
             display: flex;
             flex-direction: row; 
             flex-wrap: wrap;  
@@ -719,7 +704,7 @@
             width: 100%;
         }
 
-        .stat-box {
+        .svc-stat-box {
             width: 45%;       
         }
 
@@ -823,12 +808,12 @@
 
     .partners-section::before {
     left: 0;
-    background: linear-gradient(to right, #f5f5f0 40%, transparent);
+    background: linear-svcGradient(to right, #f5f5f0 40%, transparent);
     }
 
     .partners-section::after {
     right: 0;
-    background: linear-gradient(to left, #f5f5f0 40%, transparent);
+    background: linear-svcGradient(to left, #f5f5f0 40%, transparent);
     }
 
     @keyframes scrollPartners {
@@ -838,11 +823,11 @@
     /* Mobile Responsive */
     @media (max-width: 768px) {
         /* Hero Section Mobile */
-        .home .hero {
+        .svc-hero {
             padding: 2rem 5%;
         }
 
-        .home .hero-content {
+        .svc-hero-content {
             /* บนมือถือยกเลิกการปักหมุด absolute กลับมาเป็น flow ปกติ
                แบบเรียงต่อกัน (รูปอยู่บนสุด ตามด้วยข้อความ)
                ใส่ width:100% ด้วยเหตุผลเดียวกับเดสก์ท็อป กัน shrink-to-fit */
@@ -852,55 +837,55 @@
             gap: 2rem;
         }
 
-        .home .hero-text {
+        .svc-hero-text {
             max-width: 100%;
         }
 
-        .home .hero-text h1 {
+        .svc-hero-text h1 {
             font-size: 2rem;
             text-align: center;
         }
 
-        .home .hero-text p {
+        .svc-hero-text p {
             font-size: 1rem;
             text-align: center;
         }
 
-        .home .hero-stats {
+        .svc-hero-stats {
             justify-content: center;
             gap: 1rem;
         }
 
-        .stat-box {
+        .svc-stat-box {
             padding: 1rem;
         }
 
-        .stat-box h3 {
+        .svc-stat-box h3 {
             font-size: 1.8rem;
         }
 
-        .stat-box p {
+        .svc-stat-box p {
             font-size: 0.9rem;
         }
 
-        .home .hero-image {
+        .svc-hero-image {
             flex: 0 0 auto;
             width: 100%;
             order: -1;
         }
 
-        .home .hero-image img {
+        .svc-hero-image img {
             height: 300px;
             width: 300px;
         }
 
-        .home .hero-badge {
+        .svc-hero-badge {
             position: static;
             margin-top: 1rem;
             padding: 1rem;
         }
 
-        .home .hero-badge h4 {
+        .svc-hero-badge h4 {
             font-size: 0.95rem;
         }
 
@@ -1012,20 +997,20 @@
    ภาษาไทย (TH) ไม่แตะ ใช้สีเดิมของหน้าตามที่ออกแบบไว้แต่แรกทุกอย่าง
    ตั้งค่าตอน currentLang === 'en' → <html data-theme="en"> (ดู nav.vue)
    ============================================================= */
-[data-theme="en"] .home .hero-content {
+[data-theme="en"] .svc-hero-content {
     color: var(--color-secondary);
 }
 
-[data-theme="en"] .home .hero-text h1 span {
+[data-theme="en"] .svc-hero-text h1 span {
     color: var(--color-primary);
 }
 
-[data-theme="en"] .stat-box h3 {
+[data-theme="en"] .svc-stat-box h3 {
     color: var(--color-primary);
 }
 
-[data-theme="en"] .home .hero-badge {
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+[data-theme="en"] .svc-hero-badge {
+    background: linear-svcGradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
 }
 
 [data-theme="en"] .about-content h2 {
@@ -1033,15 +1018,15 @@
 }
 
 [data-theme="en"] .about-image::before {
-    background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
+    background: linear-svcGradient(135deg, var(--color-primary-dark), var(--color-primary));
 }
 
 [data-theme="en"] .feature-icon {
-    background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary-light));
-}   
+    background: linear-svcGradient(135deg, var(--color-primary-dark), var(--color-primary-light));
+}
 
 [data-theme="en"] .stat-item h2 {
-    color: #ffffff;
+    color: #fbfcff;
 }
 
 [data-theme="en"] .featured-cta {
@@ -1060,6 +1045,6 @@
     background: var(--color-primary);
 }
 
-[data-theme="en"] .home .hero::before {
+[data-theme="en"] .svc-hero::before {
     background: radial-gradient(circle, rgba(21, 41, 94, 0.3) 0%, transparent 70%);
 }

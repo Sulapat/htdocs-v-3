@@ -8729,144 +8729,6 @@ INSERT INTO course_note_translations (note_id, lang, note) VALUES (@note_id, 'en
 -- ─────────────────────────────────────────────────────
 -- news
 -- ─────────────────────────────────────────────────────
-INSERT INTO news (cover_image) VALUES ('/images/training/Semina_Lumphun/image1.jpg');
-SET @news_id = LAST_INSERT_ID();
-INSERT INTO news_translations (news_id, lang, title, short_desc, event_date_text, location, full_description) VALUES (@news_id, 'th', 'สัมมนาฟรี: พัฒนาแรงงาน พัฒนาระบบ สู่การบำรุงรักษาแบบยั่งยืน', 'สัมมนาฟรี! "พัฒนาแรงงาน พัฒนาระบบ สู่การบำรุงรักษาแบบยั่งยืน" วันที่ 13 มิถุนายน 2568 โรงแรมแกรนด์ ปา แอนด์ รีสอร์ท ลำพูน', '13 มิถุนายน 2568', 'โรงแรมแกรนด์ ปา แอนด์ รีสอร์ท ลำพูน', '
-            <h2>สัมมนาฟรี! พัฒนาแรงงาน พัฒนาระบบ สู่การบำรุงรักษาแบบยั่งยืน</h2>
-            <p><strong>ไม่เสียค่าใช้จ่าย!</strong> สัมมนาพิเศษสำหรับผู้บริหารและวิศวกรซ่อมบำรุง</p>
-            <p>พร้อมเปิดมุมมองใหม่ผ่านเทคโนโลยีและการวิเคราะห์ข้อมูลเชิงลึก</p>
-            <h3>วันที่:</h3>
-            <p>13 มิถุนายน 2568</p>
-            
-            <h3>สถานที่:</h3>
-            <p>โรงแรมแกรนด์ ปา แอนด์ รีสอร์ท จ.ลำพูน</p>
-            
-            <h3>หัวข้อสัมมนา:</h3>
-            <ul>
-                <li>การตั้งเป้า Zero Breakdown อย่างเป็นรูปธรรม</li>
-                <li>บทบาทของ “คน” กับการเปลี่ยนผ่านองค์กร</li>
-                <li> การวัดแรงสั่นสะเทือนในงานบำรุงรักษา </li>
-                <li>การวิเคราะห์น้ำมันเพื่องานซ่อมบำรุงเชิงกลยุทธ์</li>
-            </ul>
-            
-            <h3>วิทยากร:</h3>
-            <p>ผู้เชี่ยวชาญด้านซ่อมบำรุงจากอุตสาหกรรมชั้นนำ</p>
-
-            <h3>เหมาะสำหรับ:</h3>
-            <p>ผู้จัดการโรงงาน, วิศวกรซ่อมบำรุง, HRD, TPM/PM Engineer</p>
-
-            <h3>ลงทะเบียน (ฟรี!):</h3>
-            <p>Tel: 096-1879595, 081-3927447</p>
-            <p>Email: patineer@outlook.com</p>
-            <p>Line: @530ddhwa</p>
-            
-            <p><strong>*จำนวนที่นั่งจำกัด! ลงทะเบียนด่วน</strong></p>
-        ');
-INSERT INTO news_translations (news_id, lang, title, short_desc, event_date_text, location, full_description) VALUES (@news_id, 'en', 'สัมมนาฟรี: พัฒนาแรงงาน พัฒนาระบบ สู่การบำรุงรักษาแบบยั่งยืน', 'สัมมนาฟรี! "พัฒนาแรงงาน พัฒนาระบบ สู่การบำรุงรักษาแบบยั่งยืน" วันที่ 13 มิถุนายน 2568 โรงแรมแกรนด์ ปา แอนด์ รีสอร์ท ลำพูน', '13 มิถุนายน 2568', 'โรงแรมแกรนด์ ปา แอนด์ รีสอร์ท ลำพูน', '
-            <h2>สัมมนาฟรี! พัฒนาแรงงาน พัฒนาระบบ สู่การบำรุงรักษาแบบยั่งยืน</h2>
-            <p><strong>ไม่เสียค่าใช้จ่าย!</strong> สัมมนาพิเศษสำหรับผู้บริหารและวิศวกรซ่อมบำรุง</p>
-            <p>พร้อมเปิดมุมมองใหม่ผ่านเทคโนโลยีและการวิเคราะห์ข้อมูลเชิงลึก</p>
-            <h3>วันที่:</h3>
-            <p>13 มิถุนายน 2568</p>
-            
-            <h3>สถานที่:</h3>
-            <p>โรงแรมแกรนด์ ปา แอนด์ รีสอร์ท จ.ลำพูน</p>
-            
-            <h3>หัวข้อสัมมนา:</h3>
-            <ul>
-                <li>การตั้งเป้า Zero Breakdown อย่างเป็นรูปธรรม</li>
-                <li>บทบาทของ “คน” กับการเปลี่ยนผ่านองค์กร</li>
-                <li> การวัดแรงสั่นสะเทือนในงานบำรุงรักษา </li>
-                <li>การวิเคราะห์น้ำมันเพื่องานซ่อมบำรุงเชิงกลยุทธ์</li>
-            </ul>
-            
-            <h3>วิทยากร:</h3>
-            <p>ผู้เชี่ยวชาญด้านซ่อมบำรุงจากอุตสาหกรรมชั้นนำ</p>
-
-            <h3>เหมาะสำหรับ:</h3>
-            <p>ผู้จัดการโรงงาน, วิศวกรซ่อมบำรุง, HRD, TPM/PM Engineer</p>
-
-            <h3>ลงทะเบียน (ฟรี!):</h3>
-            <p>Tel: 096-1879595, 081-3927447</p>
-            <p>Email: patineer@outlook.com</p>
-            <p>Line: @530ddhwa</p>
-            
-            <p><strong>*จำนวนที่นั่งจำกัด! ลงทะเบียนด่วน</strong></p>
-        ');  -- TODO: translate
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/Semina_Lumphun/image1.jpg', 0);
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/Semina_Lumphun/image2.jpg', 1);
-INSERT INTO news_tags (news_id) VALUES (@news_id);
-SET @tag_id = LAST_INSERT_ID();
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'th', 'สัมมนา');
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'en', 'สัมมนา');  -- TODO: translate
-INSERT INTO news_tags (news_id) VALUES (@news_id);
-SET @tag_id = LAST_INSERT_ID();
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'th', 'ฟรี');
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'en', 'ฟรี');  -- TODO: translate
-INSERT INTO news_tags (news_id) VALUES (@news_id);
-SET @tag_id = LAST_INSERT_ID();
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'th', 'ลำพูน');
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'en', 'ลำพูน');  -- TODO: translate
-INSERT INTO news_tags (news_id) VALUES (@news_id);
-SET @tag_id = LAST_INSERT_ID();
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'th', 'Sustainable');
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'en', 'Sustainable');  -- TODO: translate
-
-INSERT INTO news (cover_image) VALUES ('/images/training/VB_17-19June2025/VB_brochure1.jpg');
-SET @news_id = LAST_INSERT_ID();
-INSERT INTO news_translations (news_id, lang, title, short_desc, event_date_text, location, full_description) VALUES (@news_id, 'th', 'หัวข้อการฝึกอบรมการประยุกต์ การวิเคราะห์ การสั่นสะเทือน', 'หัวข้อการฝึกอบรมการประยุกต์ การวิเคราะห์ การสั่นสะเทือน ณ ฮอลิเดย์ อินน์ แอนด์ สวีท ศรีราชา แหลมฉบัง', '17-19 มิถุนายน 2568', 'Holiday Inn & Suites ศรีราชา แหลมฉบัง จังหวัดชลบุรี', '
-            <h2>การประยุกต์ใช้งาน Vibration Analysis</h2>
-            <p>หลักสูตรเน้นการนำไปใช้จริงในโรงงานอุตสาหกรรม</p>
-            
-            <h3>หัวข้อที่สำคัญ:</h3>
-            <ul>
-                <li>การเลือกใช้อุปกรณ์วัด Vibration ให้เหมาะสม</li>
-                <li>การวางแผน Vibration Monitoring Program</li>
-                <li>Case Study การแก้ปัญหาเครื่องจักร</li>
-                <li>ROI ของการใช้ Vibration Analysis</li>
-            </ul>
-            
-            <h3>สถานที่:</h3>
-            <p>ฮอลิเดย์ อินน์ แอนด์ สวีท ศรีราชา แหลมฉบัง</p>
-            
-            <h3>ติดต่อลงทะเบียน:</h3>
-            <p>Line: @530ddhwa</p>
-            <p>Tel: 081-3927447</p>
-        ');
-INSERT INTO news_translations (news_id, lang, title, short_desc, event_date_text, location, full_description) VALUES (@news_id, 'en', 'หัวข้อการฝึกอบรมการประยุกต์ การวิเคราะห์ การสั่นสะเทือน', 'หัวข้อการฝึกอบรมการประยุกต์ การวิเคราะห์ การสั่นสะเทือน ณ ฮอลิเดย์ อินน์ แอนด์ สวีท ศรีราชา แหลมฉบัง', '17-19 มิถุนายน 2568', 'Holiday Inn & Suites ศรีราชา แหลมฉบัง จังหวัดชลบุรี', '
-            <h2>การประยุกต์ใช้งาน Vibration Analysis</h2>
-            <p>หลักสูตรเน้นการนำไปใช้จริงในโรงงานอุตสาหกรรม</p>
-            
-            <h3>หัวข้อที่สำคัญ:</h3>
-            <ul>
-                <li>การเลือกใช้อุปกรณ์วัด Vibration ให้เหมาะสม</li>
-                <li>การวางแผน Vibration Monitoring Program</li>
-                <li>Case Study การแก้ปัญหาเครื่องจักร</li>
-                <li>ROI ของการใช้ Vibration Analysis</li>
-            </ul>
-            
-            <h3>สถานที่:</h3>
-            <p>ฮอลิเดย์ อินน์ แอนด์ สวีท ศรีราชา แหลมฉบัง</p>
-            
-            <h3>ติดต่อลงทะเบียน:</h3>
-            <p>Line: @530ddhwa</p>
-            <p>Tel: 081-3927447</p>
-        ');  -- TODO: translate
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_17-19June2025/VB_brochure1.jpg', 0);
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_17-19June2025/VB_brochure2.jpg', 1);
-INSERT INTO news_tags (news_id) VALUES (@news_id);
-SET @tag_id = LAST_INSERT_ID();
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'th', 'อบรม');
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'en', 'อบรม');  -- TODO: translate
-INSERT INTO news_tags (news_id) VALUES (@news_id);
-SET @tag_id = LAST_INSERT_ID();
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'th', 'Vibration');
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'en', 'Vibration');  -- TODO: translate
-INSERT INTO news_tags (news_id) VALUES (@news_id);
-SET @tag_id = LAST_INSERT_ID();
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'th', 'ศรีราชา');
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'en', 'ศรีราชา');  -- TODO: translate
-
 INSERT INTO news (cover_image) VALUES ('/images/training/Training_MRchoi_July2025/Brochur1.jpg');
 SET @news_id = LAST_INSERT_ID();
 INSERT INTO news_translations (news_id, lang, title, short_desc, event_date_text, location, full_description) VALUES (@news_id, 'th', 'CATEGORY II VIBRATION ANALYST', 'อบรม CATEGORY II VIBRATION ANALYST เรียนรู้การตรวจวัดและวิเคราะห์การสั่นสะเทือน พร้อมสอบรับ Certificate มาตรฐาน ISO 18436-2 จาก Vibration Institute, USA', '21-26 กรกฎาคม 2025', 'Holiday Inn & Suites ศรีราชา แหลมฉบัง จังหวัดชลบุรี', '
@@ -8931,61 +8793,6 @@ INSERT INTO news_tags (news_id) VALUES (@news_id);
 SET @tag_id = LAST_INSERT_ID();
 INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'th', 'International');
 INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'en', 'International');  -- TODO: translate
-
-INSERT INTO news (cover_image) VALUES ('/images/training/VB_19-22Aug2025/VB_Session_2_(Aug 19-22)_11.png');
-SET @news_id = LAST_INSERT_ID();
-INSERT INTO news_translations (news_id, lang, title, short_desc, event_date_text, location, full_description) VALUES (@news_id, 'th', 'อบรม Vibration Analysis & Workshop', 'อบรม Vibration Analysis & Workshop พร้อมรับ Certificate ISO 18436-2 (Level 2) พิเศษ! มา 3 จ่าย 2 เท่านั้น!!!', '19-22 สิงหาคม 2568', 'Holiday Inn & Suites ศรีราชา แหลมฉบัง จังหวัดชลบุรี', '
-            <h2>รายละเอียดหลักสูตร Vibration Analysis & Workshop</h2>
-            <p>หลักสูตรการวิเคราะห์การสั่นสะเทือนแบบเจาะลึก พร้อม Workshop ภาคปฏิบัติจริง</p>
-            
-            <h3>สิ่งที่จะได้เรียนรู้:</h3>
-            <ul>
-                <li>ทฤษฎีพื้นฐานการสั่นสะเทือนและการประยุกต์ใช้</li>
-                <li>เทคนิคการตรวจวัดและวิเคราะห์ Vibration</li>
-                <li>การวินิจฉัยปัญหาเครื่องจักรจากสัญญาณสั่นสะเทือน</li>
-                <li>Workshop ภาคปฏิบัติกับเครื่องจักรจริง</li>
-            </ul>
-            
-            <h3>ค่าใช้จ่าย:</h3>
-            <p>โปรโมชั่นพิเศษ! <strong>มา 3 ท่าน จ่าย 2 ท่าน</strong></p>
-            <p>ราคาปกติ: 18,000 บาท/ท่าน</p>
-            
-            <h3>ติดต่อสอบถาม:</h3>
-            <p>Tel: 096-1879595, 081-3927447</p>
-            <p>Email: patineer@outlook.com</p>
-        ');
-INSERT INTO news_translations (news_id, lang, title, short_desc, event_date_text, location, full_description) VALUES (@news_id, 'en', 'อบรม Vibration Analysis & Workshop', 'อบรม Vibration Analysis & Workshop พร้อมรับ Certificate ISO 18436-2 (Level 2) พิเศษ! มา 3 จ่าย 2 เท่านั้น!!!', '19-22 สิงหาคม 2568', 'Holiday Inn & Suites ศรีราชา แหลมฉบัง จังหวัดชลบุรี', '
-            <h2>รายละเอียดหลักสูตร Vibration Analysis & Workshop</h2>
-            <p>หลักสูตรการวิเคราะห์การสั่นสะเทือนแบบเจาะลึก พร้อม Workshop ภาคปฏิบัติจริง</p>
-            
-            <h3>สิ่งที่จะได้เรียนรู้:</h3>
-            <ul>
-                <li>ทฤษฎีพื้นฐานการสั่นสะเทือนและการประยุกต์ใช้</li>
-                <li>เทคนิคการตรวจวัดและวิเคราะห์ Vibration</li>
-                <li>การวินิจฉัยปัญหาเครื่องจักรจากสัญญาณสั่นสะเทือน</li>
-                <li>Workshop ภาคปฏิบัติกับเครื่องจักรจริง</li>
-            </ul>
-            
-            <h3>ค่าใช้จ่าย:</h3>
-            <p>โปรโมชั่นพิเศษ! <strong>มา 3 ท่าน จ่าย 2 ท่าน</strong></p>
-            <p>ราคาปกติ: 18,000 บาท/ท่าน</p>
-            
-            <h3>ติดต่อสอบถาม:</h3>
-            <p>Tel: 096-1879595, 081-3927447</p>
-            <p>Email: patineer@outlook.com</p>
-        ');  -- TODO: translate
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_19-22Aug2025/VB_Session_2_(Aug 19-22)_11.png', 0);
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_19-22Aug2025/VB_Session_2_(Aug 19-22)_12.png', 1);
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_19-22Aug2025/VB_Session_2_(Aug 19-22)_9.png', 2);
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_19-22Aug2025/VB_Session_2_(Aug 19-22)_10.png', 3);
-INSERT INTO news_tags (news_id) VALUES (@news_id);
-SET @tag_id = LAST_INSERT_ID();
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'th', 'อบรม');
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'en', 'อบรม');  -- TODO: translate
-INSERT INTO news_tags (news_id) VALUES (@news_id);
-SET @tag_id = LAST_INSERT_ID();
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'th', 'Vibration');
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'en', 'Vibration');  -- TODO: translate
 
 INSERT INTO news (cover_image) VALUES ('/images/training/Training_MRchoi_Dec2025/Brochur1.jpg');
 SET @news_id = LAST_INSERT_ID();
@@ -9052,57 +8859,6 @@ INSERT INTO news_tags (news_id) VALUES (@news_id);
 SET @tag_id = LAST_INSERT_ID();
 INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'th', 'Category II');
 INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'en', 'Category II');  -- TODO: translate
-
-INSERT INTO news (cover_image) VALUES ('/images/training/VB_27-30Jan2026/VB_Session_1(jan19-22)_3.jpg');
-SET @news_id = LAST_INSERT_ID();
-INSERT INTO news_translations (news_id, lang, title, short_desc, event_date_text, location, full_description) VALUES (@news_id, 'th', 'อบรม Vibration Analysis & Workshop', 'อบรม Vibration Analysis & Workshop พร้อมรับ Certificate ISO 18436-2 (Level 2)', '27-30 มกราคม 2569', 'Holiday Inn & Suites ศรีราชา แหลมฉบัง จังหวัดชลบุรี', '
-            <h2>รายละเอียดหลักสูตร Vibration Analysis & Workshop</h2>
-            <p>หลักสูตรการวิเคราะห์การสั่นสะเทือนแบบเจาะลึก พร้อม Workshop ภาคปฏิบัติจริง</p>
-            
-            <h3>สิ่งที่จะได้เรียนรู้:</h3>
-            <ul>
-                <li>ทฤษฎีพื้นฐานการสั่นสะเทือนและการประยุกต์ใช้</li>
-                <li>เทคนิคการตรวจวัดและวิเคราะห์ Vibration</li>
-                <li>การวินิจฉัยปัญหาเครื่องจักรจากสัญญาณสั่นสะเทือน</li>
-                <li>Workshop ภาคปฏิบัติกับเครื่องจักรจริง</li>
-            </ul>
-            <h3>ค่าใช้จ่าย:</h3>
-            <p>ราคา: 18,000 บาท/ท่าน</p>
-            
-            <h3>ติดต่อสอบถาม:</h3>
-            <p>Tel: 096-1879595, 081-3927447</p>
-            <p>Email: patineer@outlook.com</p>
-        ');
-INSERT INTO news_translations (news_id, lang, title, short_desc, event_date_text, location, full_description) VALUES (@news_id, 'en', 'อบรม Vibration Analysis & Workshop', 'อบรม Vibration Analysis & Workshop พร้อมรับ Certificate ISO 18436-2 (Level 2)', '27-30 มกราคม 2569', 'Holiday Inn & Suites ศรีราชา แหลมฉบัง จังหวัดชลบุรี', '
-            <h2>รายละเอียดหลักสูตร Vibration Analysis & Workshop</h2>
-            <p>หลักสูตรการวิเคราะห์การสั่นสะเทือนแบบเจาะลึก พร้อม Workshop ภาคปฏิบัติจริง</p>
-            
-            <h3>สิ่งที่จะได้เรียนรู้:</h3>
-            <ul>
-                <li>ทฤษฎีพื้นฐานการสั่นสะเทือนและการประยุกต์ใช้</li>
-                <li>เทคนิคการตรวจวัดและวิเคราะห์ Vibration</li>
-                <li>การวินิจฉัยปัญหาเครื่องจักรจากสัญญาณสั่นสะเทือน</li>
-                <li>Workshop ภาคปฏิบัติกับเครื่องจักรจริง</li>
-            </ul>
-            <h3>ค่าใช้จ่าย:</h3>
-            <p>ราคา: 18,000 บาท/ท่าน</p>
-            
-            <h3>ติดต่อสอบถาม:</h3>
-            <p>Tel: 096-1879595, 081-3927447</p>
-            <p>Email: patineer@outlook.com</p>
-        ');  -- TODO: translate
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_27-30Jan2026/VB_Session_1(jan19-22)_1.jpg', 0);
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_27-30Jan2026/VB_Session_1(jan19-22)_2.jpg', 1);
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_27-30Jan2026/VB_Session_1(jan19-22)_3.jpg', 2);
-INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/VB_27-30Jan2026/VB_Session_1(jan19-22)_4.jpg', 3);
-INSERT INTO news_tags (news_id) VALUES (@news_id);
-SET @tag_id = LAST_INSERT_ID();
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'th', 'อบรม');
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'en', 'อบรม');  -- TODO: translate
-INSERT INTO news_tags (news_id) VALUES (@news_id);
-SET @tag_id = LAST_INSERT_ID();
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'th', 'Vibration');
-INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'en', 'Vibration');  -- TODO: translate
 
 INSERT INTO news (cover_image) VALUES ('/images/training/Training_MRchoi_Mar2026/Brochur1.png');
 SET @news_id = LAST_INSERT_ID();
@@ -9222,6 +8978,62 @@ SET @tag_id = LAST_INSERT_ID();
 INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'th', 'Category II');
 INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'en', 'Category II');  -- TODO: translate
 
+INSERT INTO news (cover_image) VALUES ('/images/training/PVP_13-14aug2026/PVP_brochure.png');
+SET @news_id = LAST_INSERT_ID();
+INSERT INTO news_translations (news_id, lang, title, short_desc, event_date_text, location, full_description) VALUES (@news_id, 'th', 'อบรม Vibration Analysis & Workshop', 'อบรม Vibration Analysis & Workshop หลักสูตรการวิเคราะห์การสั่นสะเทือนเพื่อการบำรุงรักษาเชิงพยากรณ์ พร้อม Workshop ภาคปฏิบัติจริง วันที่ 13-14 สิงหาคม 2569 ณ ฮอลิเดย์ อินน์ แอนด์ สวีท ศรีราชา แหลมฉบัง', '13-14 สิงหาคม 2569', 'Holiday Inn & Suites ศรีราชา แหลมฉบัง จังหวัดชลบุรี', '
+            <h2>รายละเอียดหลักสูตร Vibration Analysis & Workshop</h2>
+            <p>หลักสูตรการวิเคราะห์การสั่นสะเทือน เพื่อการบำรุงรักษาเชิงพยากรณ์ พร้อม Workshop ภาคปฏิบัติจริง</p>
+
+            <h3>สิ่งที่จะได้เรียนรู้:</h3>
+            <ul>
+                <li>เข้าใจหลักการของ Condition-based maintenance (CBM)</li>
+                <li>เรียนรู้พื้นฐานการวิเคราะห์การสั่นสะเทือนของเครื่องจักรหมุน</li>
+                <li>สามารถวิเคราะห์สาเหตุของปัญหาพื้นฐานและแนวโน้มการสั่นสะเทือนเพื่อเฝ้าระวังสภาพเครื่องจักรได้</li>
+                <li>Workshop ภาคปฏิบัติกับเครื่องจักรจริง</li>
+            </ul>
+
+            <h3>ค่าใช้จ่าย:</h3>
+            <p>ราคา: 8,000 บาท/ท่าน</p>
+            <p>พิเศษโปรโมชั่น: สมัครพร้อมกัน 2 ท่าน เหลือ 14,400 บาท</p>
+
+            <h3>ติดต่อสอบถาม:</h3>
+            <p>Tel: 096-1879595, 081-3927447</p>
+            <p>Email: patineer@outlook.com</p>
+        ');
+INSERT INTO news_translations (news_id, lang, title, short_desc, event_date_text, location, full_description) VALUES (@news_id, 'en', 'Practical Vibration Analysis for Predictive Maintenance', 'Practical Vibration Analysis for Predictive Maintenance - a hands-on workshop on vibration analysis for predictive maintenance, August 13-14, 2026 at Holiday Inn & Suites Siracha Laemchabang, Chonburi', 'August 13-14, 2026', 'Holiday Inn & Suites Siracha Laemchabang, Chonburi', '
+            <h2>Course Details: Practical Vibration Analysis for Predictive Maintenance</h2>
+            <p>A vibration analysis course for predictive maintenance, including a hands-on workshop.</p>
+
+            <h3>What You Will Learn:</h3>
+            <ul>
+                <li>Understand the principles of Condition-Based Maintenance (CBM)</li>
+                <li>Learn the fundamentals of vibration analysis for rotating machinery</li>
+                <li>Analyze the root causes of basic problems and vibration trends to monitor machine condition</li>
+                <li>Hands-on workshop with real machinery</li>
+            </ul>
+
+            <h3>Fee:</h3>
+            <p>Price: 8,000 THB/person</p>
+            <p>Special promotion: Register 2 people together for 14,400 THB</p>
+
+            <h3>Contact:</h3>
+            <p>Tel: 096-1879595, 081-3927447</p>
+            <p>Email: patineer@outlook.com</p>
+        ');
+INSERT INTO news_images (news_id, image_url, sort_order) VALUES (@news_id, '/images/training/PVP_13-14aug2026/PVP_brochure.png', 0);
+INSERT INTO news_tags (news_id) VALUES (@news_id);
+SET @tag_id = LAST_INSERT_ID();
+INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'th', 'อบรม');
+INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'en', 'Training');
+INSERT INTO news_tags (news_id) VALUES (@news_id);
+SET @tag_id = LAST_INSERT_ID();
+INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'th', 'Vibration');
+INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'en', 'Vibration');
+INSERT INTO news_tags (news_id) VALUES (@news_id);
+SET @tag_id = LAST_INSERT_ID();
+INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'th', 'CBM');
+INSERT INTO news_tag_translations (tag_id, lang, tag) VALUES (@tag_id, 'en', 'CBM');
+
 -- ─────────────────────────────────────────────────────
 -- members (not translatable)
 -- ─────────────────────────────────────────────────────
@@ -9257,3 +9069,21 @@ INSERT INTO members (id, first_name, last_name, company, email, level_text, memb
 INSERT INTO member_certifications (member_id, cert_code) VALUES (57, 'CATII');
 INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (58, 'Karn', 'Deeying', 'Rayong Engineering & Plant SerCATce Co., Ltd. (REPCO)', 'repconex@scg.com', 'ยังมีรายชื่ออยู่ใน CAT | CATII', '103653');
 INSERT INTO member_certifications (member_id, cert_code) VALUES (58, 'CATII');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (59, 'Sirawat', 'Channam', 'SOTUS Corporation Co., Ltd.', '', 'Currently listed in CAT | BMV', 'PAT-BMV-25001');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (59, 'BMV');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (60, 'Jaroensak', 'Pachdsood', 'SOTUS Corporation Co., Ltd.', '', 'Currently listed in CAT | BMV', 'PAT-BMV-25002');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (60, 'BMV');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (61, 'Pongsakon', 'Budmanee', 'U-Services Thailand Co.,Ltd. (Surat Thani)', 'b.pongsakon1999@gmail.com', 'Currently listed in CAT | BMV', 'PAT-BMV-25003');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (61, 'BMV');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (62, 'Khajorn', 'Mitaowan', 'U-Services Thailand Co.,Ltd. (Khon Kaen)', 'khajorn@uservices-thailand.com', 'Currently listed in CAT | BMV', 'PAT-BMV-25004');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (62, 'BMV');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (63, 'Thanaphat', 'Inchan', 'U-Services Thailand Co.,Ltd. (Rayong)', 'phatkung810@gmail.com', 'Currently listed in CAT | BMV', 'PAT-BMV-25005');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (63, 'BMV');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (64, 'Wanchai', 'Sripun', 'U-Services Thailand Co.,Ltd. (Rayong)', 'wchwanchai@gmail.com', 'Currently listed in CAT | BMV', 'PAT-BMV-25006');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (64, 'BMV');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (65, 'Benjapol', 'Diswath', 'FASTEN OIL CO., LTD.', '1ggxdggoorr.258@gmail.com', 'Currently listed in CAT | BMV', 'PAT-BMV-26001');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (65, 'BMV');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (66, 'Akkarapol', 'Areepom', 'ADS SALES AND SERVICE CO., LTD.', 'akkarapol.a@ads-service.co.th', 'Currently listed in CAT | BMV', 'PAT-BMV-26002');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (66, 'BMV');
+INSERT INTO members (id, first_name, last_name, company, email, level_text, member_no) VALUES (67, 'Panuwat', 'Adunyasak', 'Individual', 'Panuwat_072@hotmail.com', 'Currently listed in CAT | BMV', 'PAT-BMV-26003');
+INSERT INTO member_certifications (member_id, cert_code) VALUES (67, 'BMV');

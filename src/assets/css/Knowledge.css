@@ -20,7 +20,7 @@ body {
     overflow: hidden;
     background: linear-gradient(135deg, #060a3d 0%, #0a1172 45%, #123f9e 75%, #1e59ac 100%);
     color: white;
-    padding: 4rem 1rem 3.5rem;
+    padding: 2.5rem 2rem;
     text-align: center;
     margin-bottom: 3rem;
 }
@@ -78,6 +78,165 @@ body {
     margin: 0 auto;
 }
 
+/* ===== HERO: การ์ดข่าวเลื่อนอัตโนมัติ (ซ้าย) + ข้อความประชาสัมพันธ์ (ขวา) อัตราส่วน 3:1 ===== */
+.knowledge-hero {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    max-width: 1600px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.hero-left {
+    flex: 3;
+    min-width: 0;
+}
+
+.hero-right {
+    flex: 1;
+    min-width: 260px;
+    text-align: right;
+}
+
+.hero-right h1 {
+    font-size: 2.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    letter-spacing: 0.01em;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    text-wrap: balance;
+}
+
+.hero-right p {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 0 0 auto;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    text-wrap: balance;
+}
+
+.hero-carousel {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.hero-nav-btn {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.95);
+    color: #0a1172;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+}
+
+.hero-nav-btn:hover {
+    background: #067b06;
+    color: #fff;
+    transform: scale(1.08);
+}
+
+.hero-card {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    border-radius: 15px;
+    background: linear-gradient(to right, #ffffff 0%, #ffffff 88%, rgba(255, 255, 255, 0) 100%);
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    text-decoration: none;
+    color: inherit;
+    height: 190px;
+}
+
+.hero-card-image {
+    width: 200px;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+.hero-card-content {
+    padding: 1rem 3.5rem 1rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+}
+
+.hero-card-content h3 {
+    font-size: 1.15rem;
+    color: #1a1a1a;
+    margin: 0.35rem 0 0.5rem;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.hero-card-content p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ── Animation ตอนเลื่อนการ์ด (ทั้ง autoplay และกดปุ่มเอง) ── */
+.hero-slide-enter-active,
+.hero-slide-leave-active {
+    transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.hero-slide-enter-from {
+    opacity: 0;
+    transform: translateX(30px);
+}
+
+.hero-slide-leave-to {
+    opacity: 0;
+    transform: translateX(-30px);
+}
+
+@media (max-width: 900px) {
+    .knowledge-hero {
+        flex-direction: column;
+        gap: 1.75rem;
+    }
+    .hero-right {
+        order: -1;
+        text-align: center;
+        min-width: 0;
+    }
+    .hero-right p {
+        margin: 0 auto;
+    }
+    .hero-card {
+        flex-direction: column;
+        height: 340px;
+    }
+    .hero-card-image {
+        width: 100%;
+        height: 150px;
+    }
+}
+
 @media (max-width: 600px) {
     .knowledge-header {
         padding: 3rem 1rem 2.5rem;
@@ -88,6 +247,11 @@ body {
     .knowledge-header::after {
         width: 260px;
         height: 260px;
+    }
+    .hero-nav-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 0.85rem;
     }
 }
 
@@ -148,48 +312,66 @@ body {
     border-color: #667eea;
 }
 
-/* ===== ARTICLES GRID ===== */
+/* ===== ARTICLES GRID (ประชาสัมพันธ์) =====
+   หมายเหตุ: ใส่ prefix "kn-" ให้ .articles-grid / .article-card / .article-meta
+   เพราะตอนนี้หน้านี้ต่อท้ายด้วย <Article /> (บทความ) ซึ่งมี Articles.css ประกาศคลาส
+   ชื่อเดียวกันไว้อยู่แล้ว (เป็น global style ไม่ scoped) ถ้าใช้ชื่อซ้ำกัน สไตล์จะชนกัน
+   เมื่อทั้งสองส่วนอยู่บนหน้าเดียวกัน */
 .articles-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 2rem 3rem;
 }
 
-.articles-grid {
+.kn-articles-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
     margin-bottom: 2rem;
 }
 
-.article-card {
+.kn-article-card {
     background: white;
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     transition: all 0.3s;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    /* ความสูงของการ์ดจะถูกตั้งค่าแบบ dynamic ด้วย JS (ดู syncCardHeights ใน Knowledge.vue)
+       ให้เท่ากับการ์ดที่มีเนื้อหายาวที่สุดในหน้านั้นเสมอ แทนการ fix ตัวเลขตายตัว
+       เพื่อไม่ให้เนื้อหาถูกตัดขาดเมื่อข้อความ (โดยเฉพาะตอนเปลี่ยนภาษา) ยาวกว่าที่คาดไว้ */
+    height: 100%;
 }
 
-.article-card:hover {
+.kn-article-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 
-.article-card img {
+.kn-article-card img {
     width: 100%;
     height: 200px;
     object-fit: cover;
+    flex-shrink: 0;
 }
 
 .article-info {
     padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
 }
 
 /* ===== CATEGORY BADGE ===== */
 .article-category {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center; 
     padding: 0.4rem 0.8rem;
+    width: 100px;
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 600;
@@ -210,14 +392,24 @@ body {
     background: #28a745;
 }
 
-.article-card h3 {
+.article-info h3 {
     font-size: 1.2rem;
     margin-bottom: 0.8rem;
     line-height: 1.4;
     color: #1a1a1a;
+    /* จำกัดหัวข้อไว้ 2 บรรทัดเสมอ ไม่ว่าภาษาจะแปลยาวแค่ไหน
+       (เดิม selector คือ .article-card h3 ซึ่งไม่มี element ไหนใน kn-article-card ตรงเลย
+       เลยไม่เคยถูกตัดบรรทัด ทำให้ขนาดการ์ดยืด/หดมากตอนสลับภาษา) */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    /* จองพื้นที่ไว้เท่ากับ 2 บรรทัดเสมอ แม้ข้อความภาษานั้นจะสั้นแค่บรรทัดเดียว
+       ป้องกันการ์ดยุบเล็กกว่าอันที่มี 2 บรรทัดจริง */
+    min-height: calc(1.4em * 2);
 }
 
-.article-card p {
+.article-info p {
     color: #666;
     font-size: 0.95rem;
     margin-bottom: 1rem;
@@ -225,20 +417,23 @@ body {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    line-clamp: 2; 
+    line-clamp: 2;
+    /* จองพื้นที่ไว้เท่ากับ 2 บรรทัดเสมอเช่นกัน (line-height ปกติของ body คือ 1.6) */
+    min-height: calc(1.6em * 2);
 }
 
-.article-meta {
+.kn-article-meta {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: auto;
     padding-top: 1rem;
     border-top: 1px solid #eee;
     font-size: 0.85rem;
     color: #999;
 }
 
-.article-meta span {
+.kn-article-meta span {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -284,8 +479,10 @@ body {
     border-color: #667eea;
 }
 
-a.article-card {
-    display: block;
+a.kn-article-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     text-decoration: none;
     color: inherit;
 }

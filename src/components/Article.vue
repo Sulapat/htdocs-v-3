@@ -1,11 +1,43 @@
 <template>
-  <!-- Hero Section -->
+  <!-- Hero Section: การ์ดบทความเลื่อนอัตโนมัติ (ซ้าย) + ข้อความประชาสัมพันธ์ (ขวา)
+       โครงเดียวกับ hero ของ Knowledge.vue แต่ดึงเนื้อหาจากบทความ (Article) เอง -->
   <section class="articles-hero">
     <div class="hero-image" :style="{ backgroundImage: `url(${heroImage})` }"></div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <h1>{{ $t('articles.hero.title') }}</h1>
-      <p v-html="$t('articles.hero.subtitle')"></p>
+      <div class="al-hero-left">
+        <h1>{{ $t('articles.hero.title') }}</h1>
+        <p v-html="$t('articles.hero.subtitle')"></p>
+      </div>
+
+      <div class="al-hero-right">
+        <div class="al-hero-carousel" @mouseenter="stopHeroAutoplay" @mouseleave="startHeroAutoplay">
+          <button class="al-hero-nav-btn" @click="goPrevHero" aria-label="Previous">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+
+          <transition name="al-hero-slide" mode="out-in">
+            <div
+              v-if="currentHeroArticle"
+              :key="currentHeroArticle.id"
+              class="al-hero-card"
+              @click="goToDetail(currentHeroArticle.slug)"
+            >
+              <img :src="currentHeroArticle.image" :alt="currentHeroArticle.title" class="al-hero-card-image">
+              <div class="al-hero-card-content">
+                <span class="al-hero-tag">{{ currentHeroArticle.tag }}</span>
+                <h3>{{ currentHeroArticle.title }}</h3>
+                <p>{{ currentHeroArticle.desc }}</p>
+                <span class="al-hero-readmore">{{ heroReadMoreLabel }} <i class="fas fa-arrow-right"></i></span>
+              </div>
+            </div>
+          </transition>
+
+          <button class="al-hero-nav-btn" @click="goNextHero" aria-label="Next">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -127,7 +159,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { getArticles } from '@/services/api.js'
@@ -176,7 +208,14 @@ async function loadData() {
   }
 }
 
-onMounted(loadData)
+onMounted(() => {
+  loadData()
+  startHeroAutoplay()
+})
+
+onBeforeUnmount(() => {
+  stopHeroAutoplay()
+})
 
 // ✅ เมื่อสลับภาษา (locale ของ vue-i18n เปลี่ยน) ให้ fetch ข้อมูลบทความใหม่ตามภาษานั้น
 watch(locale, () => {
@@ -225,6 +264,46 @@ const _articles = computed(() =>
     image: getArticleImage(a)
   }))
 )
+
+// ── Hero carousel (ฝั่งขวา): การ์ดบทความเลื่อนอัตโนมัติ ──
+// ใช้บทความทั้งหมดเรียงล่าสุดก่อน ไม่ผูกกับตัวกรอง/ค้นหา (เหมือน hero ของ Knowledge.vue)
+const heroIndex = ref(0)
+const heroTimer = ref(null)
+
+const heroArticles = computed(() =>
+  [..._articles.value].sort((a, b) => new Date(b.date) - new Date(a.date))
+)
+const currentHeroArticle = computed(() => heroArticles.value[heroIndex.value] || null)
+
+// ป้ายกำกับ "อ่านเพิ่มเติม / Read More" ผูกกับ locale โดยตรง กันเคส key แปลยังไม่มีใน articles.hero.*
+const heroReadMoreLabel = computed(() => (locale.value === 'th' ? 'อ่านเพิ่มเติม' : 'Read More'))
+
+function nextHero() {
+  if (!heroArticles.value.length) return
+  heroIndex.value = (heroIndex.value + 1) % heroArticles.value.length
+}
+function prevHero() {
+  if (!heroArticles.value.length) return
+  heroIndex.value = (heroIndex.value - 1 + heroArticles.value.length) % heroArticles.value.length
+}
+function goNextHero() {
+  nextHero()
+  startHeroAutoplay() // รีเซ็ตนับถอยหลังเมื่อผู้ใช้กดเอง
+}
+function goPrevHero() {
+  prevHero()
+  startHeroAutoplay()
+}
+function startHeroAutoplay() {
+  stopHeroAutoplay()
+  heroTimer.value = setInterval(nextHero, 5000) // เลื่อนอัตโนมัติทุก 5 วิ
+}
+function stopHeroAutoplay() {
+  if (heroTimer.value) {
+    clearInterval(heroTimer.value)
+    heroTimer.value = null
+  }
+}
 
 // ── Sidebar: ค้นหาบทความ (filter ฝั่ง frontend จาก title + desc) ──
 const searchQuery = ref('')

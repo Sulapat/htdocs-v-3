@@ -269,17 +269,18 @@
 }
 
 .ar-step-num {
-    width: 34px;
-    height: 34px;
+    width: 40px;
+    height: 40px;
     border-radius: 10px;
     background: #e7f4ea;
     color: #085a22;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
+    font-size: 1.6rem;
     font-weight: 700;
     flex-shrink: 0;
+    padding: 1px;
 }
 
 .ar-step-block p {

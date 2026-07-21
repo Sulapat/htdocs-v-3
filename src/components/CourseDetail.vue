@@ -26,6 +26,9 @@
 
       <!-- ── HERO ── -->
       <section class="cd-hero">
+        <div class="cd-hero-bg">
+          <img :src="courseImage" :alt="course.title">
+        </div>
         <div class="cd-hero-inner">
           <button class="cd-back" @click="router.push('/courses')">
             <i class="fas fa-arrow-left"></i> {{ $t('courseDetail.hero.back') }}
@@ -35,6 +38,7 @@
               <span class="cd-code">{{ course.courseCode }}</span>
               <h1 class="cd-title">{{ course.title }}</h1>
               <p class="cd-en">{{ course.englishTitle }}</p>
+              <p class="cd-desc">{{ course.desc }}</p>
               <div class="cd-meta">
                 <span><i class="far fa-clock"></i> {{ course.duration }}</span>
                 <span><i class="fas fa-users"></i> {{ course.capacity }}</span>
@@ -343,6 +347,17 @@ const hasPrice = computed(() => {
   return p && p !== 'N/A' && p !== '' && p !== '-'
 })
 
+// ── Course image (Vite glob) — logic เดียวกับ Courses.vue ──
+const courseImages = import.meta.glob('@/assets/images/courses/*.png', { eager: true })
+
+function getCourseImage(c) {
+  const mod = courseImages[`/src/assets/images/courses/${c.courseCode}.png`]
+  if (mod) return mod.default
+  return new URL('@/assets/images/data/imagestate.png', import.meta.url).href
+}
+
+const courseImage = computed(() => course.value ? getCourseImage(course.value) : '')
+
 // ── Tabs — computed เพื่อให้ label เปลี่ยนตาม locale ────
 const tabs = computed(() => [
   { id: 'detail',     label: t('courseDetail.tabs.detail') },
@@ -418,4 +433,4 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
 
 <style>
 @import "@/assets/css/courseDetail.css";
-</style>
+</style>  

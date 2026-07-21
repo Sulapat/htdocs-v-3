@@ -36,6 +36,12 @@
                     <!-- Title -->
                     <h1 class="detail-title">{{ news.title }}</h1>
 
+                    <!-- Lead summary: ข้อความเดียวกับที่การ์ดใน Knowledge.vue ตัดไว้แค่ 2 บรรทัด (line-clamp)
+                         ที่นี่แสดงแบบเต็ม ไม่ตัดบรรทัด เพื่อไม่ให้เนื้อหาส่วนนี้หายไปสำหรับคนที่กดเข้ามาดู -->
+                    <p class="detail-lead" v-if="news.shortDesc || news.description">
+                        {{ news.shortDesc || news.description }}
+                    </p>
+
                     <div class="detail-content" v-html="news.fullDescription"></div>
 
                     <!-- Tags -->

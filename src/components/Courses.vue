@@ -292,7 +292,20 @@ async function loadData() {
   }
 }
 
-onMounted(loadData)
+onMounted(async () => {
+  await loadData()
+
+  // ✅ ถ้ามีตำแหน่ง scroll ที่เก็บไว้ (มาจากการกดเข้าไปดู course detail) ให้เลื่อนกลับไปตรงนั้น
+  //    แทนที่จะรีเซ็ตขึ้นบนสุดเหมือน navigation ปกติ
+  const savedY = sessionStorage.getItem('coursesScrollY')
+  if (savedY !== null) {
+    sessionStorage.removeItem('coursesScrollY')
+    await nextTick()
+    requestAnimationFrame(() => {
+      window.scrollTo(0, parseInt(savedY, 10))
+    })
+  }
+})
 
 // ✅ เมื่อสลับภาษา (locale ของ vue-i18n เปลี่ยน) ให้ fetch ข้อมูลคอร์ส/หมวดหมู่ใหม่ตามภาษานั้น
 // (ไม่ต้องพึ่ง custom event 'lang-changed' จาก nav.vue เพราะ locale เป็น reactive ref อยู่แล้ว)
@@ -384,6 +397,8 @@ const form = ref({ fullName: '', phone: '', email: '' })
 
 // ── Navigation ────────────────────────────
 function goToDetail(slug) {
+  // เก็บตำแหน่ง scroll ปัจจุบันไว้ ก่อนออกจากหน้า courses ไปหน้า detail
+  sessionStorage.setItem('coursesScrollY', String(window.scrollY))
   router.push({ path: '/courses/' + slug })
 }
 

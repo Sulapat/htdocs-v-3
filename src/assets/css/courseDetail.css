@@ -30,10 +30,47 @@
    HERO
 ═══════════════════════════════════════════════════════════ */
 .cd-hero {
+  position: relative;
+  overflow: hidden;
   background: #0f172a;
-  padding: 36px 24px 40px;
+  min-height: 520px;
+  display: flex;
+  align-items: center;
+  padding: 40px 24px 40px;
 }
-.cd-hero-inner { max-width: 960px; margin: 0 auto; }
+
+/* พื้นหลังเป็นภาพปกคอร์สเต็มความกว้าง + gradient เข้มทับให้ตัวหนังสือฝั่งซ้ายอ่านง่าย */
+.cd-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.cd-hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.cd-hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(9, 13, 30, 0.97) 0%,
+    rgba(9, 13, 30, 0.9) 28%,
+    rgba(9, 13, 30, 0.55) 52%,
+    rgba(9, 13, 30, 0.15) 75%,
+    rgba(9, 13, 30, 0.05) 100%
+  );
+}
+
+.cd-hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
 
 .cd-back {
   background: rgba(255,255,255,0.08);
@@ -48,17 +85,30 @@
   margin-bottom: 28px;
   font-family: 'Kanit', sans-serif;
   transition: all 0.2s;
+  backdrop-filter: blur(4px);
 }
 .cd-back:hover { background: rgba(255,255,255,0.14); color: #fff; }
 
 .cd-hero-body {
-  display: flex;
-  gap: 40px;
-  align-items: flex-start;
-  flex-wrap: wrap;
+  position: relative;
+  min-height: 260px;
 }
-.cd-hero-left  { flex: 1; min-width: 280px; }
-.cd-hero-right { flex-shrink: 0; width: 260px; }
+
+.cd-hero-left  { max-width: 640px; }
+
+/* Price card ลอยทับภาพอยู่มุมขวาล่างของ hero เหมือนต้นแบบ */
+.cd-hero-right {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  backdrop-filter: blur(6px);
+}
 
 /* Left */
 .cd-code {
@@ -73,12 +123,19 @@
   margin-bottom: 8px;
 }
 .cd-en {
-  font-size: 1rem; color: #64748b;
+  font-size: 1rem; color: #cbd5e1;
+  margin-bottom: 20px;
+}
+.cd-desc {
+  font-size: 0.98rem;
+  color: #cbd5e1;
+  line-height: 1.7;
+  max-width: 560px;
   margin-bottom: 20px;
 }
 .cd-meta {
   display: flex; flex-wrap: wrap; gap: 20px;
-  color: #64748b; font-size: 0.9rem; font-weight: 500;
+  color: #cbd5e1; font-size: 0.9rem; font-weight: 500;
 }
 .cd-meta i { color: #818cf8; margin-right: 6px; }
 
@@ -92,15 +149,25 @@
 }
 .cd-price-label {
   font-size: 0.78rem; color: #64748b;
-  margin-bottom: 6px; font-weight: 500;
+  margin-bottom: 12px; font-weight: 500;
 }
 .cd-price-value {
   font-size: 2rem; font-weight: 700;
   color: #f1f5f9; line-height: 1.1;
 }
 .cd-price-inquiry {
-  font-size: 1.3rem !important;
-  color: #818cf8 !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 1.08rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  padding: 10px 18px;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.45), inset 0 1px 0 rgba(255,255,255,0.15);
+  letter-spacing: 0.01em;
+  line-height: 1;
 }
 .cd-price-note {
   font-size: 0.75rem; color: #475569;
@@ -479,9 +546,18 @@
    RESPONSIVE
 ═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  .cd-hero { padding: 28px 16px 32px; }
+  .cd-hero { padding: 24px 16px 28px; min-height: 0; }
   .cd-title { font-size: 1.45rem; }
-  .cd-hero-right { width: 100%; }
+  .cd-hero-body { min-height: 0; }
+  .cd-hero-left { max-width: 100%; }
+  .cd-hero-right {
+    position: static;
+    width: 100%;
+    margin-top: 24px;
+  }
+  .cd-hero-bg::after {
+    background: linear-gradient(180deg, rgba(9,13,30,0.75) 0%, rgba(9,13,30,0.92) 55%, rgba(9,13,30,0.97) 100%);
+  }
   .cd-content {
     grid-template-columns: 1fr;
     padding: 24px 16px 60px;

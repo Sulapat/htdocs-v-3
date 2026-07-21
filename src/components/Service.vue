@@ -74,7 +74,7 @@
     <!-- Featured Section -->
     <section class="featured-section">
       <h1 class="section-title">{{ $t('service.featured.sectionTitle') }}</h1>
-      <div class="featured-container">
+      <div class="featured-container" @mouseenter="stopFeaturedAutoplay" @mouseleave="startFeaturedAutoplay">
         <div class="featured-track" ref="featuredTrack">
           <div v-for="news in sortedNews" :key="news.id" class="featured-card">
             <div class="featured-image">
@@ -90,8 +90,8 @@
           </div>
         </div>
         <div class="nav-buttons">
-          <button class="nav-btn" @click="prevFeatured">&lt;</button>
-          <button class="nav-btn" @click="nextFeatured">&gt;</button>
+          <button class="nav-btn" @click="goPrevFeatured">&lt;</button>
+          <button class="nav-btn" @click="goNextFeatured">&gt;</button>
         </div>
       </div>
     </section>
@@ -163,25 +163,99 @@ export default {
   data() {
     return {
       newsData: [],
-      currentFeaturedIndex: 0
+      currentFeaturedIndex: 0,
+      featuredTimer: null
     }
   },
   computed: {
+    // แสดงเฉพาะประชาสัมพันธ์ที่ "ยังไม่ผ่านไป" เท่านั้น (ดู isUpcoming ใน methods)
     sortedNews() {
-      return [...this.newsData].sort((a, b) => b.id - a.id)
+      const now = new Date()
+      return [...this.newsData]
+        .filter(n => this.isUpcoming(n.date, now))
+        .sort((a, b) => b.id - a.id)
     }
   },
   methods: {
-    prevFeatured() {
-      if (this.currentFeaturedIndex > 0) {
-        this.currentFeaturedIndex--
-        this.updateCarousel()
+    // แปลงวันที่ "วันสุดท้ายของกิจกรรม" จากฟิลด์ date ของข่าว เพื่อใช้เทียบว่ายังไม่ผ่านไปหรือไม่
+    // รองรับ format ที่ backend ส่งจริง คือวันที่ไทย + พ.ศ. เช่น:
+    //   "15-20 ธันวาคม 2568"        (วันเดียวกัน เดือนเดียวกัน)
+    //   "21-26 กรกฎาคม 2025"        (เจอทั้ง พ.ศ. และ ค.ศ. ปนกันในข้อมูลจริง เลยต้องเช็คทั้งคู่)
+    //   "30 มีนาคม - 4 เมษายน 2569" (คาบเกี่ยวข้ามเดือน)
+    // และยัง fallback ไป native Date parse เผื่อวันไหน backend เปลี่ยนไปส่งเป็น ISO ("2025-07-26")
+    // logic เดียวกับใน Knowledge.vue เพื่อให้พฤติกรรมตรงกันทั้งสองหน้า
+    parseEventEndDate(dateValue) {
+      if (!dateValue) return null
+      const str = String(dateValue).trim()
+      const THAI_MONTHS = {
+        'มกราคม': 1, 'กุมภาพันธ์': 2, 'มีนาคม': 3, 'เมษายน': 4,
+        'พฤษภาคม': 5, 'มิถุนายน': 6, 'กรกฎาคม': 7, 'สิงหาคม': 8,
+        'กันยายน': 9, 'ตุลาคม': 10, 'พฤศจิกายน': 11, 'ธันวาคม': 12
       }
+      // ปี > 2400 ถือว่าเป็น พ.ศ. (ปีปัจจุบันของ ค.ศ. ไม่มีทางเกิน 2400) แปลงเป็น ค.ศ. โดยลบ 543
+      const toGregorianYear = y => (y > 2400 ? y - 543 : y)
+
+      // ช่วงคาบเกี่ยวข้ามเดือน เช่น "30 มีนาคม - 4 เมษายน 2569"
+      const crossMonth = str.match(/\d{1,2}\s+([ก-๙]+)\s*-\s*(\d{1,2})\s+([ก-๙]+)\s+(\d{4})/)
+      if (crossMonth) {
+        const [, , endDay, endMonthName, yearStr] = crossMonth
+        const month = THAI_MONTHS[endMonthName]
+        if (month) return new Date(toGregorianYear(Number(yearStr)), month - 1, Number(endDay))
+      }
+
+      // ช่วงในเดือนเดียวกัน เช่น "15-20 ธันวาคม 2568" หรือวันเดียว เช่น "20 ธันวาคม 2568"
+      const sameMonth = str.match(/(\d{1,2})(?:\s*-\s*(\d{1,2}))?\s+([ก-๙]+)\s+(\d{4})/)
+      if (sameMonth) {
+        const [, startDay, endDay, monthName, yearStr] = sameMonth
+        const month = THAI_MONTHS[monthName]
+        if (month) return new Date(toGregorianYear(Number(yearStr)), month - 1, Number(endDay || startDay))
+      }
+
+      // fallback: ลอง native Date parse เผื่อเป็น ISO string
+      const native = new Date(str)
+      if (!isNaN(native.getTime())) return native
+
+      return null
+    },
+    // เช็คว่าประชาสัมพันธ์ "ยังมาไม่ถึง/ยังไม่ผ่านไป" หรือไม่ จากวันสุดท้ายของกิจกรรม
+    // ถ้าไม่มีวันที่ หรือ parse ไม่ได้ (รูปแบบไม่ตรงที่คาดไว้เลย) จะให้ "แสดงไว้ก่อน" (fail-open)
+    // เพื่อไม่ให้ข่าวหายไปทั้งหมดเงียบๆ เพราะ format วันที่ไม่ตรงที่คาด
+    isUpcoming(dateValue, now = new Date()) {
+      const eventEnd = this.parseEventEndDate(dateValue)
+      if (!eventEnd) return true
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+      const eventDay = new Date(eventEnd.getFullYear(), eventEnd.getMonth(), eventEnd.getDate())
+      return eventDay >= today
+    },
+    // ── Featured carousel: หมุนวนอัตโนมัติเหมือนหน้าประชาสัมพันธ์ (Knowledge.vue) ──
+    prevFeatured() {
+      if (!this.sortedNews.length) return
+      this.currentFeaturedIndex =
+        (this.currentFeaturedIndex - 1 + this.sortedNews.length) % this.sortedNews.length
+      this.updateCarousel()
     },
     nextFeatured() {
-      if (this.currentFeaturedIndex < this.sortedNews.length - 1) {
-        this.currentFeaturedIndex++
-        this.updateCarousel()
+      if (!this.sortedNews.length) return
+      this.currentFeaturedIndex = (this.currentFeaturedIndex + 1) % this.sortedNews.length
+      this.updateCarousel()
+    },
+    goPrevFeatured() {
+      this.prevFeatured()
+      this.startFeaturedAutoplay() // รีเซ็ตนับถอยหลังเมื่อผู้ใช้กดเอง
+    },
+    goNextFeatured() {
+      this.nextFeatured()
+      this.startFeaturedAutoplay()
+    },
+    startFeaturedAutoplay() {
+      this.stopFeaturedAutoplay()
+      if (this.sortedNews.length <= 1) return // การ์ดเดียวหรือไม่มีการ์ด ไม่ต้องเลื่อน
+      this.featuredTimer = setInterval(this.nextFeatured, 5000) // เลื่อนอัตโนมัติทุก 5 วิ
+    },
+    stopFeaturedAutoplay() {
+      if (this.featuredTimer) {
+        clearInterval(this.featuredTimer)
+        this.featuredTimer = null
       }
     },
     updateCarousel() {
@@ -243,15 +317,23 @@ export default {
     // เมื่อกดปุ่มสลับภาษา → fetch news ใหม่ตาม locale ปัจจุบัน
     '$i18n.locale'() {
       this.loadNews()
+    },
+    // รายการเปลี่ยน (เช่น loadNews ใหม่) → รีเซ็ต index กันชี้เกินขอบเขต แล้วรีเซ็ต autoplay
+    sortedNews() {
+      this.currentFeaturedIndex = 0
+      this.$nextTick(() => this.updateCarousel())
+      this.startFeaturedAutoplay()
     }
   },
   async mounted() {
     await this.loadNews()
     this.initPartnersScroll()
     this.initScrollAnimations()
+    this.startFeaturedAutoplay()
     window.addEventListener('resize', this.updateCarousel)
   },
   beforeUnmount() {
+    this.stopFeaturedAutoplay()
     window.removeEventListener('resize', this.updateCarousel)
   }
 }

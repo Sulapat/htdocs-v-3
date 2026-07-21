@@ -68,6 +68,56 @@ function fail(string $msg, int $code = 404): void {
 }
 
 /**
+ * getClientIp — ดึง IP ผู้เข้าชมจริง (รองรับกรณีอยู่หลัง proxy/load balancer)
+ * หมายเหตุ: X-Forwarded-For ปลอมได้ ถ้าต้องการความแม่นยำสูงควรตั้งค่าที่ nginx/proxy
+ * ให้ trust เฉพาะ proxy ที่รู้จักเท่านั้น สำหรับ anti-spam view counter แบบนี้ถือว่าเพียงพอ
+ */
+function getClientIp(): string {
+    foreach (['HTTP_X_FORWARDED_FOR', 'HTTP_CLIENT_IP', 'REMOTE_ADDR'] as $key) {
+        if (!empty($_SERVER[$key])) {
+            $ip = explode(',', $_SERVER[$key])[0];
+            return trim($ip);
+        }
+    }
+    return '0.0.0.0';
+}
+
+/**
+ * registerArticleView — เพิ่มยอดวิว +1 แบบกันนับซ้ำ
+ * กันซ้ำด้วย (article_id + ip_hash) ภายในช่วงเวลา COOLDOWN นาที
+ * ใช้ตาราง article_view_logs เก็บ log การเข้าชม (ดู SQL migration ท้ายไฟล์คำอธิบาย)
+ */
+function registerArticleView(PDO $pdo, int $articleId): void {
+    $COOLDOWN_MINUTES = 30; // เข้าซ้ำภายใน 30 นาที ไม่นับเพิ่ม
+    $ipHash = hash('sha256', getClientIp() . '|patineer-view-salt');
+
+    // เช็คว่ามี log ของ ip นี้ + article นี้ ภายในช่วง cooldown หรือยัง
+    $recent = dbOne($pdo, "
+        SELECT id FROM article_view_logs
+        WHERE article_id = ? AND ip_hash = ?
+          AND viewed_at >= (NOW() - INTERVAL $COOLDOWN_MINUTES MINUTE)
+        LIMIT 1
+    ", [$articleId, $ipHash]);
+
+    if ($recent) {
+        return; // เข้าซ้ำในช่วงเวลาสั้นๆ → ไม่นับเพิ่ม
+    }
+
+    // บันทึก log + เพิ่มยอดวิว (ใช้ transaction กันข้อมูลเพี้ยนถ้ามี error กลางทาง)
+    $pdo->beginTransaction();
+    try {
+        $pdo->prepare("INSERT INTO article_view_logs (article_id, ip_hash, viewed_at) VALUES (?, ?, NOW())")
+            ->execute([$articleId, $ipHash]);
+        $pdo->prepare("UPDATE articles SET views = views + 1 WHERE id = ?")
+            ->execute([$articleId]);
+        $pdo->commit();
+    } catch (\Throwable $e) {
+        $pdo->rollBack();
+        // ไม่ throw ต่อ เพราะการนับวิวพลาดไม่ควรทำให้ทั้ง request ล่ม
+    }
+}
+
+/**
  * tcol — สร้าง SQL fragment สำหรับคอลัมน์ที่ผันตามภาษา
  *
  * lang=th → "$main.$col AS `$as`"
@@ -389,6 +439,11 @@ if ($action === 'article') {
 
     if (!$articleRow) fail('Article not found');
     $id = $articleRow['id'];
+
+    // ✅ เพิ่มยอดวิว +1 (กันนับซ้ำจาก IP เดียวกันภายใน 30 นาที) แล้วดึงค่าล่าสุดจริงจาก DB กลับมาแสดง
+    registerArticleView($pdo, $id);
+    $freshViews = dbOne($pdo, "SELECT views FROM articles WHERE id = ?", [$id]);
+    $articleRow['views'] = (int)($freshViews['views'] ?? $articleRow['views']);
 
     // ผู้เขียนถ้าไม่ระบุ ให้ frontend fallback เอง (article.author || 'PATINEER Team')
     if (empty($articleRow['author'])) $articleRow['author'] = null;
