@@ -147,7 +147,6 @@
                 <span><i class="far fa-user"></i> {{ lf(course.capacity) }}</span>
               </div>
               <div class="course-price">
-                <span class="price">{{ course.price }}</span>
                 <span class="per-person">{{ $t('courses.card.perPerson') }}</span>
               </div>
               <div class="card-actions">
@@ -257,6 +256,37 @@ const loadError      = ref(null)
 const coursesRaw     = ref([])
 const categoryConfig = ref({})
 
+// ✅ แคชข้อมูลไว้ใน sessionStorage (แนวเดียวกับ coursesScrollY / coursesCategory ที่มีอยู่แล้ว)
+// เหตุผล: Courses.vue เป็น route component พอออกไปดู course detail แล้วกดกลับมา
+// Vue Router จะ "สร้าง component ใหม่" ทุกครั้ง (unmount/remount) ทำให้ coursesRaw กลับไปเป็น []
+// และ loading กลับไปเป็น true เหมือนเข้าเว็บครั้งแรก → เห็นหน้า loading กระพริบ + fetch API ซ้ำ
+// ทั้งที่จริงมีข้อมูลอยู่แล้วเมื่อครู่นี้เอง ถ้ามี cache ที่ตรงภาษาปัจจุบัน ใช้ก่อนได้เลยไม่ต้องรอ fetch
+const COURSES_CACHE_KEY = 'coursesDataCache'
+
+function readCoursesCache() {
+  try {
+    const raw = sessionStorage.getItem(COURSES_CACHE_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw)
+    if (parsed.locale !== locale.value) return null // สลับภาษาไปแล้ว cache เดิมใช้ไม่ได้ ต้อง fetch ใหม่
+    return parsed
+  } catch {
+    return null
+  }
+}
+
+function writeCoursesCache() {
+  try {
+    sessionStorage.setItem(COURSES_CACHE_KEY, JSON.stringify({
+      locale: locale.value,
+      courses: coursesRaw.value,
+      categories: categoryConfig.value
+    }))
+  } catch {
+    // เผื่อ sessionStorage เต็ม/ถูกปิด (private mode) — ไม่ให้พังทั้งหน้าเพราะแคชไม่สำคัญขนาดนั้น
+  }
+}
+
 // ── Load data (รับ lang ปัจจุบันจาก locale) ──
 async function loadData() {
   // ถ้ามีข้อมูลเดิมอยู่แล้ว (กรณีสลับภาษา) ใช้ flag เบา ๆ
@@ -277,6 +307,7 @@ async function loadData() {
     categoryConfig.value = Object.fromEntries(
       categoriesData.map(c => [c.code, c])
     )
+    writeCoursesCache()
   } catch (e) {
     loadError.value = t('courses.alerts.loadError') + e.message
   } finally {
@@ -293,6 +324,17 @@ async function loadData() {
 }
 
 onMounted(async () => {
+  // ✅ ถ้ามีข้อมูลแคชของภาษาปัจจุบันอยู่แล้ว (มาจากรอบก่อนในเซสชันนี้) ให้ใช้ก่อนเลย
+  // วิธีนี้ทำให้ loadData() ด้านล่างเห็นว่า "มีข้อมูลเดิมอยู่แล้ว" (hasData = true)
+  // จึงเดินเข้าทาง switchingLang (dim เบา ๆ) แทนทาง loading (จอโหลดเต็ม/กระพริบขาว)
+  // และ wasFirstLoad จะกลายเป็น false ไปด้วย ทำให้ initCardAnimations() ไม่เล่นซ้ำ
+  const cached = readCoursesCache()
+  if (cached) {
+    coursesRaw.value     = cached.courses
+    categoryConfig.value = cached.categories
+    loading.value        = false
+  }
+
   await loadData()
 
   // ✅ ถ้ามีตำแหน่ง scroll ที่เก็บไว้ (มาจากการกดเข้าไปดู course detail) ให้เลื่อนกลับไปตรงนั้น

@@ -45,9 +45,9 @@ if ($slug) {
                 cat.icon                AS categoryIcon,
                 cat.color               AS categoryColor
             FROM courses c
-            LEFT JOIN courses_en        ce   ON ce.course_id  = c.id
+            LEFT JOIN courses_en ce ON ce.course_code = c.course_code
             LEFT JOIN categories        cat  ON cat.code       = c.category_code
-            LEFT JOIN categories_en     cate ON cate.category_id = cat.id
+            LEFT JOIN categories_en cate ON cate.code = cat.code
             WHERE c.slug = ?
         ");
     } else {

@@ -317,8 +317,9 @@
     .about-content p {
         color: #64748b;
         line-height: 1.8;
-        margin-bottom: 2rem;
         margin: 0;
+        /* จองพื้นที่ไว้เสมอ กันเนื้อหา TH/EN ตัดบรรทัดไม่เท่ากันแล้วดัน .about-features ขยับ */
+        min-height: calc(1rem * 1.8 * 5);
     }
 
     .about-features {
@@ -604,6 +605,8 @@
         .about-content p {
             text-align: center;
             font-size: 0.95rem;
+            min-height: calc(0.95rem * 1.8 * 6);
+            /* จองพื้นที่ไว้เสมอ กันเนื้อหา TH/EN ตัดบรรทัดไม่เท่ากันแล้วดัน .about-features ขยับ */
         }
 
         .feature-item {
@@ -934,6 +937,8 @@
         .about-content p {
             text-align: center;
             font-size: 0.95rem;
+            min-height: calc(0.95rem * 1.8 * 6);
+            /* จองพื้นที่ไว้เสมอ กันเนื้อหา TH/EN ตัดบรรทัดไม่เท่ากันแล้วดัน .about-features ขยับ */
         }
 
         .feature-item {
@@ -1033,7 +1038,9 @@
 }
 
 [data-theme="en"] .about-image::before {
-    background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
+    background: linear-gradient(135deg,
+        color-mix(in srgb, var(--color-primary-dark) 87%, transparent),
+        color-mix(in srgb, var(--color-primary) 46%, transparent));
 }
 
 [data-theme="en"] .feature-icon {

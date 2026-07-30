@@ -240,36 +240,67 @@ export default {
     },
     // ── Hero carousel ──
     // แปลงวันที่ "วันสุดท้ายของกิจกรรม" จากฟิลด์ date ของข่าว เพื่อใช้เทียบว่ายังไม่ผ่านไปหรือไม่
-    // รองรับ format ที่ backend ส่งจริง คือวันที่ไทย + พ.ศ. เช่น:
-    //   "15-20 ธันวาคม 2568"        (วันเดียวกัน เดือนเดียวกัน)
-    //   "21-26 กรกฎาคม 2025"        (เจอทั้ง พ.ศ. และ ค.ศ. ปนกันในข้อมูลจริง เลยต้องเช็คทั้งคู่)
-    //   "30 มีนาคม - 4 เมษายน 2569" (คาบเกี่ยวข้ามเดือน)
+    // รองรับ format ที่ backend ส่งจริง ทั้งไทยและอังกฤษ (ขึ้นกับ locale ที่ i18n ส่งวันที่มาแปลด้วย) เช่น:
+    //   "15-20 ธันวาคม 2568"          (ไทย, วันเดียวกัน เดือนเดียวกัน)
+    //   "21-26 กรกฎาคม 2025"          (เจอทั้ง พ.ศ. และ ค.ศ. ปนกันในข้อมูลจริง เลยต้องเช็คทั้งคู่)
+    //   "30 มีนาคม - 4 เมษายน 2569"   (ไทย, คาบเกี่ยวข้ามเดือน)
+    //   "13-14 August 2026"           (อังกฤษ, เดือนอยู่หลังวัน)
+    //   "March 30 - April 4, 2026"    (อังกฤษ, เดือนอยู่หน้าวัน แบบที่ i18n มักแปลมา)
+    // ✅ FIX: เดิม regex/dictionary รองรับแค่ชื่อเดือนภาษาไทย พอสลับเป็น EN แล้ว backend/i18n
+    // ส่งชื่อเดือนเป็นภาษาอังกฤษมาแทน parse ไม่ผ่านเลยทุกใบ -> isUpcoming fail-open (return true)
+    // ทุกใบพร้อมกัน ทำให้ผลลัพธ์ตอนสลับภาษาไม่ตรงกับตอนภาษาไทย (เดือน/การกรองดูเพี้ยน)
+    // ตอนนี้รองรับทั้งไทย+อังกฤษ และทั้ง 2 ลำดับ "วันนำหน้าเดือน" กับ "เดือนนำหน้าวัน"
     // และยัง fallback ไป native Date parse เผื่อวันไหน backend เปลี่ยนไปส่งเป็น ISO ("2025-07-26")
     parseEventEndDate(dateValue) {
       if (!dateValue) return null
       const str = String(dateValue).trim()
-      const THAI_MONTHS = {
+      const MONTHS = {
+        // ไทยเต็ม
         'มกราคม': 1, 'กุมภาพันธ์': 2, 'มีนาคม': 3, 'เมษายน': 4,
         'พฤษภาคม': 5, 'มิถุนายน': 6, 'กรกฎาคม': 7, 'สิงหาคม': 8,
-        'กันยายน': 9, 'ตุลาคม': 10, 'พฤศจิกายน': 11, 'ธันวาคม': 12
+        'กันยายน': 9, 'ตุลาคม': 10, 'พฤศจิกายน': 11, 'ธันวาคม': 12,
+        // ไทยย่อ (รูปแบบเดียวกับ MONTHS_TH ใน Article.vue)
+        'ม.ค.': 1, 'ก.พ.': 2, 'มี.ค.': 3, 'เม.ย.': 4,
+        'พ.ค.': 5, 'มิ.ย.': 6, 'ก.ค.': 7, 'ส.ค.': 8,
+        'ก.ย.': 9, 'ต.ค.': 10, 'พ.ย.': 11, 'ธ.ค.': 12,
+        // อังกฤษเต็ม/ย่อ (เก็บเป็น lower-case ไว้ค้นแบบ case-insensitive)
+        'january': 1, 'february': 2, 'march': 3, 'april': 4, 'may': 5, 'june': 6,
+        'july': 7, 'august': 8, 'september': 9, 'october': 10, 'november': 11, 'december': 12,
+        'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4, 'jun': 6, 'jul': 7, 'aug': 8,
+        'sep': 9, 'sept': 9, 'oct': 10, 'nov': 11, 'dec': 12
       }
       // ปี > 2400 ถือว่าเป็น พ.ศ. (ปีปัจจุบันของ ค.ศ. ไม่มีทางเกิน 2400) แปลงเป็น ค.ศ. โดยลบ 543
       const toGregorianYear = y => (y > 2400 ? y - 543 : y)
+      // ชื่อเดือน = ตัวอักษรไทยหรืออังกฤษ + จุด (สำหรับคำย่อ เช่น "ม.ค." / "Aug.")
+      const MONTH_WORD = '[A-Za-zก-๙.]+'
+      const lookupMonth = (name) => MONTHS[name] ?? MONTHS[name.toLowerCase()]
 
-      // ช่วงคาบเกี่ยวข้ามเดือน เช่น "30 มีนาคม - 4 เมษายน 2569"
-      const crossMonth = str.match(/\d{1,2}\s+([ก-๙]+)\s*-\s*(\d{1,2})\s+([ก-๙]+)\s+(\d{4})/)
-      if (crossMonth) {
-        const [, , endDay, endMonthName, yearStr] = crossMonth
-        const month = THAI_MONTHS[endMonthName]
-        if (month) return new Date(toGregorianYear(Number(yearStr)), month - 1, Number(endDay))
+      // แบบ "วัน เดือน - วัน เดือน ปี" (เดือนอยู่หลังวัน) เช่น "30 มีนาคม - 4 เมษายน 2569" / "13-14 August 2026"
+      let m = str.match(new RegExp(`\\d{1,2}\\s+(${MONTH_WORD})\\s*-\\s*(\\d{1,2})\\s+(${MONTH_WORD})\\s+(\\d{4})`))
+      if (m) {
+        const month = lookupMonth(m[3])
+        if (month) return new Date(toGregorianYear(Number(m[4])), month - 1, Number(m[2]))
       }
 
-      // ช่วงในเดือนเดียวกัน เช่น "15-20 ธันวาคม 2568" หรือวันเดียว เช่น "20 ธันวาคม 2568"
-      const sameMonth = str.match(/(\d{1,2})(?:\s*-\s*(\d{1,2}))?\s+([ก-๙]+)\s+(\d{4})/)
-      if (sameMonth) {
-        const [, startDay, endDay, monthName, yearStr] = sameMonth
-        const month = THAI_MONTHS[monthName]
-        if (month) return new Date(toGregorianYear(Number(yearStr)), month - 1, Number(endDay || startDay))
+      // แบบ "เดือน วัน - เดือน วัน, ปี" (เดือนอยู่หน้าวัน แบบอังกฤษ) เช่น "March 30 - April 4, 2026"
+      m = str.match(new RegExp(`(${MONTH_WORD})\\s+\\d{1,2}\\s*-\\s*(${MONTH_WORD})\\s+(\\d{1,2}),?\\s+(\\d{4})`))
+      if (m) {
+        const month = lookupMonth(m[2])
+        if (month) return new Date(toGregorianYear(Number(m[4])), month - 1, Number(m[3]))
+      }
+
+      // แบบวันเดียว/ช่วงในเดือนเดียวกัน เดือนอยู่หลังวัน เช่น "15-20 ธันวาคม 2568" / "13-14 August 2026"
+      m = str.match(new RegExp(`(\\d{1,2})(?:\\s*-\\s*(\\d{1,2}))?\\s+(${MONTH_WORD})\\s+(\\d{4})`))
+      if (m) {
+        const month = lookupMonth(m[3])
+        if (month) return new Date(toGregorianYear(Number(m[4])), month - 1, Number(m[2] || m[1]))
+      }
+
+      // แบบวันเดียว/ช่วงในเดือนเดียวกัน เดือนอยู่หน้าวัน เช่น "August 13 - 14, 2026" / "August 13, 2026"
+      m = str.match(new RegExp(`(${MONTH_WORD})\\s+(\\d{1,2})(?:\\s*-\\s*(\\d{1,2}))?,?\\s+(\\d{4})`))
+      if (m) {
+        const month = lookupMonth(m[1])
+        if (month) return new Date(toGregorianYear(Number(m[4])), month - 1, Number(m[3] || m[2]))
       }
 
       // fallback: ลอง native Date parse เผื่อเป็น ISO string

@@ -15,9 +15,9 @@
 // Frontend ไม่ต้อง handle fallback เอง — ทำไว้ฝั่ง PHP แล้ว
 // ────────────────────────────────────────────────────────────
 
-// ปรับ BASE_URL ตาม deploy จริง
-//const BASE_URL = '/backend/api'
-const BASE_URL = 'http://localhost/backend/api'
+// ปรับ BASE_URL ตาม deploy จริง    
+const BASE_URL = '/backend/api'
+//const BASE_URL = 'http://localhost/backend/api'
 const I18N = `${BASE_URL}/api_i18n.php`
 
 // ────── internal helpers ──────────────────────────────────

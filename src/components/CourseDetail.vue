@@ -193,18 +193,6 @@
         <!-- ── SIDEBAR ── -->
         <aside class="cd-sidebar">
 
-          <div class="cd-sidebar-card">
-            <p class="cd-sb-price-label">{{ $t('courseDetail.sidebar.priceLabel') }}</p>
-            <p class="cd-sb-price" :class="{ 'cd-price-inquiry': !hasPrice }">
-              {{ hasPrice ? course.price : $t('courseDetail.hero.priceInquiry') }}
-            </p>
-            <p v-if="hasPrice" class="cd-sb-vat">{{ $t('courseDetail.sidebar.vatNote') }}</p>
-            <button class="cd-btn-primary cd-btn-full" @click="showBookingModal = true">
-              <i class="fas fa-calendar-check"></i>
-              {{ hasPrice ? $t('courseDetail.hero.bookButton') : $t('courseDetail.hero.quoteButton') }}
-            </button>
-          </div>
-
           <div class="cd-sidebar-info">
             <div class="cd-info-row">
               <i class="far fa-clock"></i>
@@ -235,6 +223,18 @@
                 <p class="cd-info-val">{{ course.equipments?.join(', ') || '–' }}</p>
               </div>
             </div>
+          </div>
+
+          <div class="cd-sidebar-card">
+            <p class="cd-sb-price-label">{{ $t('courseDetail.sidebar.priceLabel') }}</p>
+            <p class="cd-sb-price" :class="{ 'cd-price-inquiry': !hasPrice }">
+              {{ hasPrice ? course.price : $t('courseDetail.hero.priceInquiry') }}
+            </p>
+            <p v-if="hasPrice" class="cd-sb-vat">{{ $t('courseDetail.sidebar.vatNote') }}</p>
+            <button class="cd-btn-primary cd-btn-full" @click="showBookingModal = true">
+              <i class="fas fa-calendar-check"></i>
+              {{ hasPrice ? $t('courseDetail.hero.bookButton') : $t('courseDetail.hero.quoteButton') }}
+            </button>
           </div>
 
         </aside>
