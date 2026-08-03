@@ -4,8 +4,6 @@
          1) HERO SECTION — การ์ดสไลด์โชว์ผลงาน (เดิมจาก index.vue)
          ============================================ -->
     <section class="hero">
-      <div class="morphing-bg"></div>
-      <div class="morphing-bg-2"></div>
       <div class="hero-container">
         <div class="hero-left">
           <h1 v-html="$t('home.hero.title')"></h1>
@@ -84,8 +82,6 @@
          4) INNOVATION / STATS HERO (เดิมเป็น hero ของหน้า Service)
          ============================================ -->
     <section id="service" class="svc-hero">
-      <div class="svc-morphing-bg"></div>
-      <div class="svc-morphing-bg-2"></div>
       <div class="svc-hero-content">
         <div class="svc-hero-text">
           <h1 v-html="$t('service.hero.title')"></h1>
@@ -131,6 +127,40 @@
             <div class="feature-item">
               <div class="feature-icon"><i class="fas fa-check-circle"></i></div>
               <p>{{ $t('service.about.feature3') }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         5.5) GALLERY SECTION — ผลงาน/กิจกรรม
+         โครงสร้าง: หัวข้อใหญ่ > หัวข้อย่อย > รูปภาพ (แสดงตรงในหน้า ไม่ต้องกดเข้าไปดูอีกชั้น)
+         ============================================ -->
+    <section id="gallery" class="gallery-section">
+      <h2 class="gallery-heading">{{ galleryHeading }}</h2>
+      <p class="gallery-subheading">{{ gallerySubheading }}</p>
+
+      <div v-for="category in galleryCategories" :key="category.slug" class="gallery-category">
+        <h2 class="gallery-category-title">{{ category.title }}</h2>
+
+        <div v-for="item in category.items" :key="item.slug" class="gallery-subcategory">
+          <h3 class="gallery-subcategory-title">{{ item.title }}</h3>
+
+          <div v-if="item.images.length" class="gallery-photo-grid">
+            <div
+              v-for="(column, colIdx) in masonryColumnsMap[`${category.slug}__${item.slug}`]"
+              :key="colIdx"
+              class="gallery-column"
+            >
+              <div v-for="(img, idx) in column" :key="idx" class="gallery-photo">
+                <img :src="img" :alt="`${item.title} ${idx + 1}`" loading="lazy">
+              </div>
+            </div>
+          </div>
+          <div v-else class="gallery-photo-grid gallery-photo-grid--empty">
+            <div class="gallery-photo-placeholder">
+              <i class="fas fa-image"></i>
             </div>
           </div>
         </div>
@@ -231,6 +261,19 @@
           <img src="@/assets/images/data/Logo_partners/Transitions.jpg" alt="Transitions">
           <img src="@/assets/images/data/Logo_partners/TTM.jpg" alt="TTM">
           <img src="@/assets/images/data/Logo_partners/WHA.jpg" alt="WHA">
+          <img src="@/assets/images/data/Logo_partners/ADS.jpg" alt="ADS">
+          <img src="@/assets/images/data/Logo_partners/NPS.jpg" alt="NPS">
+          <img src="@/assets/images/data/Logo_partners/SES.jpg" alt="SES">
+          <img src="@/assets/images/data/Logo_partners/Murata.jpg" alt="MURATA">
+          <img src="@/assets/images/data/Logo_partners/Proterial.png" alt="PROTERIAL">
+          <img src="@/assets/images/data/Logo_partners/TT.png" alt="TT">
+          <img src="@/assets/images/data/Logo_partners/U-Services.jpg" alt="U-Services">
+          <img src="@/assets/images/data/Logo_partners/ming.png" alt="MING">
+          <img src="@/assets/images/data/Logo_partners/ASKO.jpg" alt="ASKO">
+          <img src="@/assets/images/data/Logo_partners/BGC.jpg" alt="BGC">
+          <img src="@/assets/images/data/Logo_partners/EWater.jpg" alt="EW">
+          <img src="@/assets/images/data/Logo_partners/OTANI.jpg" alt="OTANI">
+          <img src="@/assets/images/data/Logo_partners/MCL.png" alt="MICHELIN">
         </div>
       </div>
     </section>
@@ -240,12 +283,38 @@
 <script>
 import { getNewsList } from '@/services/api.js'
 
+// ⚠️ ย้าย CSS มา import ผ่าน JS แทนการใช้ @import ใน <style scoped>
+// สาเหตุ: @import ใน <style scoped> บางกรณี Vite/vue-loader ไม่ apply scope attribute
+// ให้ไฟล์ที่ import เข้ามาอย่างถูกต้อง ทำให้หลุดออกไปเป็น native @import ของ browser
+// (fetch ไฟล์ตรงๆ แยกอีกชุด ไม่ผ่านการ scope) → เกิด CSS 2 ชุดโหลดซ้อนกัน
+// ชุดที่ scope แล้ว (มี animation ที่แก้แล้ว) กับชุดดิบที่ยังมี animation เก่าอยู่
+// import ผ่าน JS แบบนี้ Vite จะ bundle รวมเป็นก้อนเดียวถูกต้อง ไม่มีทางหลุดซ้ำ
+import '@/assets/css/index.css'
+import '@/assets/css/service-embed.css'
+
 const trainingImages = import.meta.glob('@/assets/images/training/**/*.{jpg,png}', { eager: true })
 
 function resolveImage(path) {
   const assetPath = path.replace('/images/training/', '/src/assets/images/training/')
   const mod = trainingImages[assetPath]
   return mod ? mod.default : ''
+}
+
+// ── Service Gallery: โหลดรูปทั้งหมดจาก src/assets/images/gallery/<หมวดใหญ่>/<หมวดย่อย>/*
+// วางไฟล์รูปตามโครงสร้างจริงบนดิสก์ได้เลย เช่น
+//   src/assets/images/gallery/training_academic_seminar/CBM/cbm_01.jpg
+//   src/assets/images/gallery/vibration_analysis/railway_locomotive/1.jpg
+// ไม่ต้องแก้โค้ด ระบบจะดึงมาแสดงอัตโนมัติ (เรียงตามชื่อไฟล์) รองรับจำนวนรูปเท่าไหร่ก็ได้ต่อหัวข้อย่อย
+const galleryCategoryImages = import.meta.glob(
+  '@/assets/images/gallery/**/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}',
+  { eager: true }
+)
+
+function getGalleryImages(categorySlug, itemSlug) {
+  return Object.keys(galleryCategoryImages)
+    .filter(path => path.includes(`/images/gallery/${categorySlug}/${itemSlug}/`))
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+    .map(path => galleryCategoryImages[path].default)
 }
 
 export default {
@@ -263,12 +332,68 @@ export default {
       }),
       // --- Featured news carousel (เดิมจาก Service.vue) ---
       newsData: [],
-      currentFeaturedIndex: 0
+      currentFeaturedIndex: 0,
+      // --- Masonry gallery: อัตราส่วนสูง/กว้างจริงของแต่ละรูป และจำนวนคอลัมน์ปัจจุบัน ---
+      imageAspectRatios: {},
+      galleryColumnCount: 3
     }
   },
   computed: {
     sortedNews() {
       return [...this.newsData].sort((a, b) => b.id - a.id)
+    },
+    galleryHeading() {
+      return this.$t('service.gallery.heading')
+    },
+    gallerySubheading() {
+      return this.$t('service.gallery.subheading')
+    },
+    // 2 หัวข้อใหญ่ / 6 หัวข้อย่อย — ข้อความ (title) มาจาก th.json / en.json
+    // ที่ key service.gallery.categories.<categoryKey>.items.<itemKey>.title
+    // ส่วนรูปภาพจะถูกดึงอัตโนมัติจาก src/assets/images/gallery/<categorySlug>/<itemSlug>/
+    // slug ต้องตรงกับชื่อโฟลเดอร์จริงบนดิสก์เป๊ะๆ (รวมตัวพิมพ์เล็ก/ใหญ่)
+    galleryCategories() {
+      const structure = [
+        {
+          categoryKey: 'vibrationAnalysis',
+          slug: 'vibration_analysis',
+          items: [
+            { itemKey: 'railwayLocomotive', slug: 'railway_locomotive' },
+            { itemKey: 'industrialMachinery', slug: 'Industrial_machinery' }
+          ]
+        },
+        {
+          categoryKey: 'trainingSeminar',
+          slug: 'training_academic_seminar',
+          items: [
+            { itemKey: 'cbm', slug: 'CBM' },
+            { itemKey: 'mtc', slug: 'MTC' },
+            { itemKey: 'inHouseTraining', slug: 'in_house_training' },
+            { itemKey: 'publicTraining', slug: 'public_training' }
+          ]
+        }
+      ]
+
+      return structure.map(category => ({
+        slug: category.slug,
+        title: this.$t(`service.gallery.categories.${category.categoryKey}.title`),
+        items: category.items.map(item => ({
+          slug: item.slug,
+          title: this.$t(`service.gallery.categories.${category.categoryKey}.items.${item.itemKey}.title`),
+          images: getGalleryImages(category.slug, item.slug)
+        }))
+      }))
+    },
+    // ── จัดรูปแต่ละหัวข้อย่อยลงคอลัมน์แบบ Masonry จริง (ไหลขึ้นเติมที่ว่าง) ──
+    masonryColumnsMap() {
+      const map = {}
+      this.galleryCategories.forEach(category => {
+        category.items.forEach(item => {
+          map[`${category.slug}__${item.slug}`] =
+            this.buildMasonryColumns(item.images, this.galleryColumnCount)
+        })
+      })
+      return map
     }
   },
   watch: {
@@ -278,6 +403,48 @@ export default {
     }
   },
   methods: {
+    // ── Masonry gallery ──────────────────────────────────────────────
+    buildMasonryColumns(images, colCount) {
+      const count = Math.max(1, colCount)
+      const heights = new Array(count).fill(0)
+      const columns = Array.from({ length: count }, () => [])
+      images.forEach(src => {
+        let shortestIdx = 0
+        for (let i = 1; i < count; i++) {
+          if (heights[i] < heights[shortestIdx]) shortestIdx = i
+        }
+        columns[shortestIdx].push(src)
+        const ratio = this.imageAspectRatios[src] || 0.75
+        heights[shortestIdx] += ratio
+      })
+      return columns
+    },
+    initImageAspectRatios() {
+      const ratios = {}
+      this.galleryCategories.forEach(category => {
+        category.items.forEach(item => {
+          item.images.forEach(src => {
+            if (!(src in ratios)) ratios[src] = null
+          })
+        })
+      })
+      this.imageAspectRatios = ratios
+      Object.keys(ratios).forEach(src => this.loadImageAspect(src))
+    },
+    loadImageAspect(src) {
+      const img = new Image()
+      img.onload = () => {
+        if (img.naturalWidth > 0) {
+          this.imageAspectRatios[src] = img.naturalHeight / img.naturalWidth
+        }
+      }
+      img.src = src
+    },
+    updateGalleryColumnCount() {
+      const w = window.innerWidth
+      this.galleryColumnCount = w <= 480 ? 1 : (w <= 768 ? 2 : 3)
+    },
+
     // ============ Hero Card Slider ============
     // ── คำนวณตำแหน่ง/scale/opacity ของแต่ละการ์ด ตามระยะห่างจริงจากภาพปัจจุบัน (วนรอบ) ──
     getCardStyle(n) {
@@ -342,26 +509,17 @@ export default {
     initPartnersScroll() {
       const galleryTrack = this.$el.querySelector('.partners-gallery')
       if (!galleryTrack) return
+      // ⚠️ เดิมใช้ requestAnimationFrame วนตลอดไปตั้งแต่ mounted() (รันทุกเฟรม
+      // ไม่มีวันหยุด ไม่ว่าจะ scroll ไปเห็น section นี้หรือไม่) แถม clone รูปไว้ 4 ชุด
+      // (~200 รูปที่มี filter: grayscale ค้างอยู่) แล้วสั่ง style.transform ทาง JS
+      // ทุกเฟรม → main thread ทำงานหนักต่อเนื่องตลอดเวลา นี่คือสาเหตุที่แล็คตลอด
+      // แม้ไม่ได้ scroll/ขยับอะไรเลย เปลี่ยนมาใช้ CSS animation (@keyframes
+      // scrollPartners ที่มีอยู่แล้วในไฟล์ CSS แต่ไม่เคยถูกเรียกใช้) แทน ให้ browser
+      // คอมโพสิตเองบนการ์ดจอ ไม่แตะ main thread ต่อเนื่องอีกต่อไป
+      // duplicate ครั้งเดียว (รวมเป็น 2 ชุด) ให้ตรงกับ translateX(-50%) ใน keyframe พอดี
       const images = Array.from(galleryTrack.children)
-      for (let i = 0; i < 3; i++) {
-        images.forEach(img => {
-          galleryTrack.appendChild(img.cloneNode(true))
-        })
-      }
-      let scrollPosition = 0
-      let isPaused = false
-      const autoScroll = () => {
-        if (!isPaused) {
-          scrollPosition += 0.5
-          const setWidth = (150 * 40) + (64 * 40)
-          if (scrollPosition >= setWidth) scrollPosition = 0
-          galleryTrack.style.transform = `translateX(-${scrollPosition}px)`
-        }
-        requestAnimationFrame(autoScroll)
-      }
-      autoScroll()
-      galleryTrack.addEventListener('mouseenter', () => isPaused = true)
-      galleryTrack.addEventListener('mouseleave', () => isPaused = false)
+      images.forEach(img => galleryTrack.appendChild(img.cloneNode(true)))
+      galleryTrack.classList.add('partners-gallery--animated')
     },
     initScrollAnimations() {
       const observer = new IntersectionObserver((entries) => {
@@ -384,6 +542,10 @@ export default {
       if (!data) return
       this.newsData = data.map(n => ({ ...n, image: resolveImage(n.image) }))
     }
+  },
+  created() {
+    this.updateGalleryColumnCount()
+    this.initImageAspectRatios()
   },
   async mounted() {
     // Hero slider
@@ -408,14 +570,15 @@ export default {
     this.initPartnersScroll()
     this.initScrollAnimations()
     window.addEventListener('resize', this.updateCarousel)
+    window.addEventListener('resize', this.updateGalleryColumnCount)
   },
   beforeUnmount() {
     clearInterval(this.autoSlideInterval)
     window.removeEventListener('resize', this.updateCarousel)
+    window.removeEventListener('resize', this.updateGalleryColumnCount)
   }
 }
 </script>
-<style>
-@import "@/assets/css/index.css";
-@import "@/assets/css/service-embed.css";
+
+<style scoped>
 </style>

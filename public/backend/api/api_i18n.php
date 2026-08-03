@@ -1,4 +1,5 @@
 <?php
+# die('MARKER_TEST_12345');
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 /**
@@ -36,6 +37,7 @@ error_reporting(E_ALL);
 
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
+header('X-Debug-Api-Version: viewfix-v2'); // ⚠️ TEMP — เช็คว่าเซิร์ฟเวอร์รันไฟล์เวอร์ชันนี้จริง ลบทิ้งได้หลังยืนยันแล้ว
 
 require_once __DIR__ . '/../config/db.php';
 $pdo = getPDO();
@@ -84,37 +86,53 @@ function getClientIp(): string {
 
 /**
  * registerArticleView — เพิ่มยอดวิว +1 แบบกันนับซ้ำ
- * กันซ้ำด้วย (article_id + ip_hash) ภายในช่วงเวลา COOLDOWN นาที
+ * กันซ้ำด้วย (article_id + ip_hash) แบบ "1 ครั้งต่อวัน" (นับใหม่ทุกเที่ยงคืน)
  * ใช้ตาราง article_view_logs เก็บ log การเข้าชม (ดู SQL migration ท้ายไฟล์คำอธิบาย)
+ *
+ * ⚠️ TEMP DEBUG: return ค่า debug array กลับไป แสดงผ่าน field _viewDebug ใน response
+ *    (ดูใน Network tab ของเบราว์เซอร์) เพื่อหา root cause ว่าทำไมยอดวิวไม่ขยับ
+ *    ลบทิ้งได้เมื่อแก้เสร็จแล้ว (ดูจุดที่ต้องลบใน action=article ด้านล่าง)
  */
-function registerArticleView(PDO $pdo, int $articleId): void {
-    $COOLDOWN_MINUTES = 30; // เข้าซ้ำภายใน 30 นาที ไม่นับเพิ่ม
+function registerArticleView(PDO $pdo, int $articleId): array {
+    $debug = [];
     $ipHash = hash('sha256', getClientIp() . '|patineer-view-salt');
+    $debug['articleId'] = $articleId;
 
-    // เช็คว่ามี log ของ ip นี้ + article นี้ ภายในช่วง cooldown หรือยัง
+    // เช็คว่ามี log ของ ip นี้ + article นี้ ภายใน "วันเดียวกัน" (นับจากเที่ยงคืนของวันนี้) หรือยัง
     $recent = dbOne($pdo, "
         SELECT id FROM article_view_logs
         WHERE article_id = ? AND ip_hash = ?
-          AND viewed_at >= (NOW() - INTERVAL $COOLDOWN_MINUTES MINUTE)
+          AND viewed_at >= CURDATE()
         LIMIT 1
     ", [$articleId, $ipHash]);
 
     if ($recent) {
-        return; // เข้าซ้ำในช่วงเวลาสั้นๆ → ไม่นับเพิ่ม
+        $debug['result'] = 'skipped_already_viewed_today';
+        return $debug; // วันนี้เข้ามาแล้ว → ไม่นับเพิ่ม (นับใหม่ได้พรุ่งนี้)
     }
 
     // บันทึก log + เพิ่มยอดวิว (ใช้ transaction กันข้อมูลเพี้ยนถ้ามี error กลางทาง)
     $pdo->beginTransaction();
     try {
-        $pdo->prepare("INSERT INTO article_view_logs (article_id, ip_hash, viewed_at) VALUES (?, ?, NOW())")
-            ->execute([$articleId, $ipHash]);
-        $pdo->prepare("UPDATE articles SET views = views + 1 WHERE id = ?")
-            ->execute([$articleId]);
+        $insertStmt = $pdo->prepare("INSERT INTO article_view_logs (article_id, ip_hash, viewed_at) VALUES (?, ?, NOW())");
+        $insertOk   = $insertStmt->execute([$articleId, $ipHash]);
+        $debug['insertOk']    = $insertOk;
+        $debug['insertError'] = $insertStmt->errorInfo();
+
+        $updateStmt = $pdo->prepare("UPDATE articles SET views = views + 1 WHERE id = ?");
+        $updateOk   = $updateStmt->execute([$articleId]);
+        $debug['updateOk']    = $updateOk;
+        $debug['updateError'] = $updateStmt->errorInfo();
+        $debug['rowsAffected'] = $updateStmt->rowCount();
+
         $pdo->commit();
+        $debug['result'] = 'committed';
     } catch (\Throwable $e) {
         $pdo->rollBack();
-        // ไม่ throw ต่อ เพราะการนับวิวพลาดไม่ควรทำให้ทั้ง request ล่ม
+        $debug['result']    = 'exception';
+        $debug['exception'] = $e->getMessage();
     }
+    return $debug;
 }
 
 /**
@@ -408,6 +426,63 @@ if ($action === 'articles') {
     ok($rows);
 }
 
+// ── GET ?action=popular_articles[&period=week|all][&limit=5][&exclude=slug] ──
+// DB: articles + articles_en, article_view_logs (สำหรับนับยอด view ช่วงเวลา)
+// period=week → เรียงตามยอด view ใน 7 วันล่าสุด (จาก log จริง ไม่ใช่ยอดสะสม)
+//               ป้องกันบทความเก่าที่มียอดสะสมเยอะติดอันดับตลอดไปทั้งที่ตอนนี้ไม่มีคนอ่านแล้ว
+// period=all  → เรียงตามยอด view สะสมทั้งหมด (a.views) เหมือนเดิม
+// exclude     → ตัด slug ปัจจุบันออก (ใช้ตอนแสดงในหน้า ArticleDetail ไม่ให้บทความตัวเองโผล่ใน list ตัวเอง)
+
+if ($action === 'popular_articles') {
+    $period = in_array($_GET['period'] ?? 'week', ['week', 'all'], true) ? ($_GET['period'] ?? 'week') : 'week';
+    $limit  = max(1, min(20, (int)($_GET['limit'] ?? 5)));
+    $exclude = trim($_GET['exclude'] ?? '');
+
+    $join = tjoin($lang, 'articles_en', 'a_en', 'a');
+
+    if ($period === 'week') {
+        // นับ view จาก log จริงเฉพาะ 7 วันล่าสุด ต่างจาก a.views ที่เป็นยอดสะสมตลอดกาล
+        $rows = db($pdo, "
+            SELECT a.id,
+                   a.slug,
+                   " . tcol($lang, 'a', 'a_en', 'title') . ",
+                   a.cover_image AS image,
+                   a.views,
+                   a.published_at AS date,
+                   COALESCE(wv.period_views, 0) AS periodViews
+            FROM articles a
+            $join
+            LEFT JOIN (
+                SELECT article_id, COUNT(*) AS period_views
+                FROM article_view_logs
+                WHERE viewed_at >= NOW() - INTERVAL 7 DAY
+                GROUP BY article_id
+            ) wv ON wv.article_id = a.id
+            ORDER BY periodViews DESC, a.views DESC
+            LIMIT $limit
+        ");
+    } else {
+        $rows = db($pdo, "
+            SELECT a.id,
+                   a.slug,
+                   " . tcol($lang, 'a', 'a_en', 'title') . ",
+                   a.cover_image AS image,
+                   a.views,
+                   a.published_at AS date,
+                   a.views AS periodViews
+            FROM articles a $join
+            ORDER BY a.views DESC
+            LIMIT $limit
+        ");
+    }
+
+    if ($exclude !== '') {
+        $rows = array_values(array_filter($rows, fn($r) => $r['slug'] !== $exclude));
+    }
+
+    ok($rows);
+}
+
 // ── GET ?action=article&slug=xxx ──────────────────────────────────────────────
 // DB: articles + articles_en + article_sections/_items/_tags + _en คู่กัน
 // Knowledge Center detail — ใช้โดย ArticleDetail.vue
@@ -440,10 +515,11 @@ if ($action === 'article') {
     if (!$articleRow) fail('Article not found');
     $id = $articleRow['id'];
 
-    // ✅ เพิ่มยอดวิว +1 (กันนับซ้ำจาก IP เดียวกันภายใน 30 นาที) แล้วดึงค่าล่าสุดจริงจาก DB กลับมาแสดง
-    registerArticleView($pdo, $id);
+    // ✅ เพิ่มยอดวิว +1 (กันนับซ้ำจาก IP เดียวกันภายในวันเดียวกัน) แล้วดึงค่าล่าสุดจริงจาก DB กลับมาแสดง
+    $viewDebug = registerArticleView($pdo, $id);
     $freshViews = dbOne($pdo, "SELECT views FROM articles WHERE id = ?", [$id]);
     $articleRow['views'] = (int)($freshViews['views'] ?? $articleRow['views']);
+    $articleRow['_viewDebug'] = $viewDebug; // ⚠️ TEMP DEBUG — ลบบรรทัดนี้ทิ้งหลังแก้ปัญหาเสร็จ
 
     // ผู้เขียนถ้าไม่ระบุ ให้ frontend fallback เอง (article.author || 'PATINEER Team')
     if (empty($articleRow['author'])) $articleRow['author'] = null;

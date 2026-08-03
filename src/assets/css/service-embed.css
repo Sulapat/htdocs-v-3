@@ -30,130 +30,8 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
-            /* ===== MORPHING BACKGROUND ANIMATIONS ===== */
-    .svc-morphing-bg {
-        position: absolute;
-        right: -10%;
-        top: 50%;
-        width: 900px;
-        height: 1000px;
-        pointer-events: none;
-        z-index: 0;
-        filter: blur(80px);
-        animation: svcGradient 8s ease infinite, svcMorph 5s ease-in-out infinite, svcFloat 8s ease-in-out infinite;
-    }
+            /* ===== MORPHING BACKGROUND — ลบออกแล้วตามคำขอ (static blur ก็ยังหนักพอทำให้แล็ค) ===== */
 
-    @keyframes svcGradient {
-        0%, 100% {
-            background: radial-gradient(circle,
-                rgba(24, 7, 109, 0.26) 0%,   
-                rgba(101, 90, 220, 0.275) 40%,    
-                transparent 70%);
-            filter: blur(55px);
-        }
-        50% {
-            background: radial-gradient(circle,
-                rgba(16, 58, 149, 0.34) 0%,   
-                rgba(47, 35, 144, 0.35) 40%,  
-                transparent 65%);
-            filter: blur(65px);
-        }
-    }
-
-    @keyframes svcMorph {
-        0%, 100% { 
-            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-        }
-        25% { 
-            border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
-        }
-        50% { 
-            border-radius: 70% 30% 50% 50% / 30% 70% 50% 50%;
-        }
-        75% { 
-            border-radius: 40% 70% 60% 30% / 70% 40% 60% 50%;
-        }
-    }
-
-    .svc-morphing-bg-2 {
-        position: absolute;
-        left: -8%;
-        bottom: 10%;
-        width: 650px;
-        height: 650px;
-        pointer-events: none;
-        z-index: 0;
-        filter: blur(80px);
-        animation: svcGradient2 17s ease infinite, svcMorph2 15s ease-in-out infinite, svcFloatAlt 8s ease-in-out infinite;
-    }
-
-    @keyframes svcGradient2 {
-        0%, 100% {
-            background: radial-gradient(circle,
-                rgba(97, 112, 227, 0.23) 0%,   
-                rgba(156, 209, 225, 0.367) 40%,   
-                transparent 70%);
-            filter: blur(55px);
-        }
-        50% {
-            background: radial-gradient(circle,
-                rgba(210, 120, 255, 0.189) 0%,     
-                rgba(149, 193, 230, 0.3) 40%,   
-                transparent 65%);
-            filter: blur(65px);
-        }            
-    }
-
-    @keyframes svcMorph2 {
-        0%, 100% { 
-            border-radius: 40% 60% 50% 50% / 60% 40% 60% 50%;
-            transform: rotate(0deg) scale(1);
-        }
-        33% { 
-            border-radius: 60% 40% 40% 60% / 50% 70% 40% 60%;
-            transform: rotate(120deg) scale(1.1);
-        }
-        66% { 
-            border-radius: 50% 50% 60% 40% / 40% 60% 50% 60%;
-            transform: rotate(240deg) scale(0.9);
-        }
-    }
-
-    @keyframes svcFloat {
-        0% {
-            transform: translate(0, -50%) rotate(0deg) scale(1);
-        }
-        25% {
-            transform: translate(-200px, -30%) rotate(90deg) scale(1.1);
-        }
-        50% {
-            transform: translate(-300px, -50%) rotate(180deg) scale(1.15);
-        }
-        75% {
-            transform: translate(-200px, -70%) rotate(270deg) scale(1.1);
-        }
-        100% {
-            transform: translate(0, -50%) rotate(360deg) scale(1);
-        }
-    }
-
-    @keyframes svcFloatAlt {
-        0% {
-            transform: translate(0, 0) rotate(0deg) scale(1);
-        }
-        25% {
-            transform: translate(200px, -80px) rotate(-90deg) scale(1.15);
-        }
-        50% {
-            transform: translate(300px, 0) rotate(-180deg) scale(1.2);
-        }
-        75% {
-            transform: translate(200px, 80px) rotate(-270deg) scale(1.15);
-        }
-        100% {
-            transform: translate(0, 0) rotate(-360deg) scale(1);
-        }
-    }
 
     /* ===== Hero layout (desktop) =====
        ต้นตอที่แท้จริง: .svc-hero (parent) ตั้ง display:flex ไว้ ทำให้
@@ -821,6 +699,15 @@
     @keyframes scrollPartners {
         0% { transform: translateX(0); }
         100% { transform: translateX(-50%); }
+    }
+
+    /* เปิดใช้งาน animation จริง (เดิมนิยาม keyframe ไว้เฉยๆ ไม่เคยเรียกใช้)
+       ใช้ class ที่ JS เติมให้หลัง duplicate DOM เสร็จ (กัน jump ก่อนมีรูปครบ) */
+    .partners-gallery--animated {
+        animation: scrollPartners 40s linear infinite;
+    }
+    .partners-gallery-wrapper:hover .partners-gallery--animated {
+        animation-play-state: paused;
     }
     /* Mobile Responsive */
     @media (max-width: 768px) {

@@ -1,8 +1,6 @@
 <template>
   <!-- Hero Section -->
   <section class="courses-hero">
-    <div class="morphing-bg"></div>
-    <div class="morphing-bg-2"></div>
     <div class="hero-content">
       <h1><span>{{ $t('courses.hero.title') }}</span><span>{{ $t('courses.hero.titleHighlight') }}</span></h1>
       <p v-html="$t('courses.hero.subtitle')"></p>
@@ -11,7 +9,6 @@
 
   <!-- Courses Section -->
   <section class="courses-section">
-    <h2 class="section-title">{{ $t('courses.section.title') }}</h2>
 
     <!-- Loading (ครั้งแรกเท่านั้น — ยังไม่มีข้อมูลเลย) -->
     <div v-if="loading" class="loading-state">

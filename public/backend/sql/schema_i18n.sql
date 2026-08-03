@@ -307,3 +307,18 @@ CREATE TABLE member_certifications (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+CREATE TABLE article_view_logs (
+    id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    article_id  INT UNSIGNED NOT NULL,
+    ip_hash     CHAR(64)     NOT NULL,   -- sha256 ของ IP (ไม่เก็บ IP ดิบ เพื่อความเป็นส่วนตัว)
+    viewed_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+
+    -- index รองรับ query เช็คนับซ้ำ: WHERE article_id = ? AND ip_hash = ? AND viewed_at >= CURDATE()
+    KEY idx_article_ip_time (article_id, ip_hash, viewed_at),
+
+    CONSTRAINT fk_article_view_logs_article
+        FOREIGN KEY (article_id) REFERENCES articles(id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

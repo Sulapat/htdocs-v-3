@@ -17,6 +17,7 @@ export default defineConfig({
     proxy: {
       '/backend': {
         target: 'https://patineer.co.th',
+        //target: 'http://localhost',
         changeOrigin: true,
       }
     }

@@ -36,93 +36,9 @@ body {
     text-align: left;  /* ← เพิ่มบรรทัดนี้ */
 }
 /* ========================================
-   HERO SECTION - Morphing Background Animations
+   HERO SECTION - Morphing Background — ลบออกแล้วตามคำขอ (ยังแล็คแม้เป็น static
+   เพราะ blur() ขนาดใหญ่มี paint cost สูงอยู่ดี) ไม่ได้ใช้ element นี้ใน template แล้ว
    ======================================== */
-/* Morphing Background 1 (Right side - Soft Blue/Purple) */
-    .morphing-bg {
-        position: absolute;
-        right: -10%;
-        top: 50%;
-        width: 900px;
-        height: 1000px;
-        pointer-events: none;
-        z-index: 0;
-        filter: blur(80px);
-        will-change: transform;
-        background: radial-gradient(circle,
-            rgba(99, 102, 241, 0.15) 0%,   
-            rgba(139, 92, 246, 0.12) 40%,    
-            transparent 70%);
-        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-        animation: float 20s ease-in-out infinite, morph 15s ease-in-out infinite;
-    }
-
-@keyframes morph {
-    0%, 100% { 
-        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-    }
-    33% { 
-        border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
-    }
-    66% { 
-        border-radius: 70% 30% 50% 50% / 30% 70% 50% 50%;
-    }
-}
-
-@keyframes float {
-    0%, 100% {
-        transform: translate(0, -50%) scale(1);
-    }
-    33% {
-        transform: translate(-150px, -40%) scale(1.05);
-    }
-    66% {
-        transform: translate(-200px, -60%) scale(1.08);
-    }
-}
-
-/* Morphing Background 2 (Left side - Soft Teal/Blue) */
-.morphing-bg-2 {
-    position: absolute;
-    left: -8%;
-    bottom: 10%;
-    width: 650px;
-    height: 650px;
-    pointer-events: none;
-    z-index: 0;
-    filter: blur(80px);
-    will-change: transform;
-    background: radial-gradient(circle,
-        rgba(56, 189, 248, 0.12) 0%,   
-        rgba(14, 165, 233, 0.10) 40%,   
-        transparent 70%);
-    border-radius: 40% 60% 50% 50% / 60% 40% 60% 50%;
-    animation: float-alt 18s ease-in-out infinite, morph2 12s ease-in-out infinite;
-}
-
-@keyframes morph2 {
-    0%, 100% { 
-        border-radius: 40% 60% 50% 50% / 60% 40% 60% 50%;
-    }
-    33% { 
-        border-radius: 60% 40% 40% 60% / 50% 70% 40% 60%;
-    }
-    66% { 
-        border-radius: 50% 50% 60% 40% / 40% 60% 50% 60%;
-    }
-}
-
-@keyframes float-alt {
-    0%, 100% {
-        transform: translate(0, 0) scale(1);
-    }
-    33% {
-        transform: translate(120px, -50px) scale(1.08);
-    }
-    66% {
-        transform: translate(180px, 30px) scale(1.05);
-    }
-}
 
 /* ========================================
    HERO SECTION - Content Layout
@@ -164,6 +80,11 @@ body {
     max-width: 500px;
     margin-left: 0;    /* ← เพิ่ม */
     margin-right: 0;   /* ← เพิ่ม */
+    /* จองพื้นที่ไว้เท่ากับ 8 บรรทัดเสมอ (EN ยาวสุดใช้ 8 บรรทัด, TH ใช้ 7 บรรทัด)
+       กันไม่ให้ปุ่ม CTA และการ์ด slider ฝั่งขวาขยับขึ้น-ลงตอนสลับภาษา */
+    min-height: calc(1.05rem * 1.7 * 8);
+    /* กันคำสุดท้ายไปโดดเดี่ยวบรรทัดเดียว (orphan) */
+    text-wrap: pretty;
 }
 
 /* CTA Button */
@@ -366,6 +287,10 @@ body {
     font-size: 0.95rem;
     transform: translateY(0);
     transition: all 0.5s ease 0.2s;
+    /* จองพื้นที่ไว้เท่ากับ 5 บรรทัดเสมอ กันการ์ดสูงไม่เท่ากันตอนสลับภาษา TH/EN */
+    min-height: calc(0.95rem * 1.7 * 5);
+    /* กันคำสุดท้ายไปโดดเดี่ยวบรรทัดเดียว (orphan) */
+    text-wrap: pretty;
 }
 
 .service-card.animate p {
@@ -478,16 +403,6 @@ body {
         margin-left: auto;
         margin-right: auto;
     }
-
-    .morphing-bg {
-        width: 700px;
-        height: 700px;
-    }
-
-    .morphing-bg-2 {
-        width: 500px;
-        height: 500px;
-    }
 }
 
 /* Mobile & Small Screens (max-width: 768px) */
@@ -502,6 +417,7 @@ body {
 
     .hero-left p {
         font-size: 1rem;
+        min-height: calc(1rem * 1.7 * 8);
     }
 
     .hero-right.card-slider {
@@ -515,16 +431,6 @@ body {
     .slider__item {
         width: 240px;
         height: 360px;
-    }
-
-    .morphing-bg {
-        width: 500px;
-        height: 500px;
-    }
-
-    .morphing-bg-2 {
-        width: 400px;
-        height: 400px;
     }
 
     .section-title {
@@ -587,16 +493,6 @@ body {
         height: 300px;
     }
 
-    .morphing-bg {
-        width: 400px;
-        height: 400px;
-    }
-
-    .morphing-bg-2 {
-        width: 300px;
-        height: 300px;
-    }
-
     .logo-box {
         max-width: 180px;
     }
@@ -604,4 +500,160 @@ body {
     .about-vi h1 {
         font-size: 1.3rem;
     }
+}
+
+/* ========================================
+   GALLERY SECTION
+   โครงสร้าง: หัวข้อใหญ่ > หัวข้อย่อย > กริดรูปภาพ (แสดงตรงในหน้า ไม่มี modal/คลิกดูอีกชั้น)
+   ======================================== */
+.gallery-section {
+    padding: 5rem 5%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.gallery-heading {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1e3a8a;
+    text-align: center;
+    margin-bottom: 0.75rem;
+}
+
+.gallery-subheading {
+    text-align: center;
+    color: #64748b;
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    line-height: 1.8;
+}
+
+/* หัวข้อใหญ่ */
+.gallery-category {
+    margin-bottom: 4rem;
+}
+
+.gallery-category:last-child {
+    margin-bottom: 0;
+}
+
+.gallery-category-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-bottom: 1.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 3px solid #1baf45e6;
+}
+
+/* หัวข้อย่อย */
+.gallery-subcategory {
+    margin-bottom: 2.5rem;
+}
+
+.gallery-subcategory:last-child {
+    margin-bottom: 0;
+}
+
+.gallery-subcategory-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+    border-left: 4px solid #6366f1;
+}
+
+/* กริดรูปภาพแบบ Masonry จริง — จัดคอลัมน์ด้วย JS (ดู buildMasonryColumns ใน index.vue)
+   โดยส่งรูปแต่ละใบไปคอลัมน์ที่เตี้ยที่สุดเสมอ ภาพจึง "ไหลขึ้น" เติมช่องว่างจริง
+   ต่างจาก grid แบบเดิมที่บังคับเรียงเป็นแถวตายตัว ทำให้เกิดที่ว่างใต้รูปเตี้ยก่อนขึ้นแถวใหม่
+   (width:100%; height:auto) ไม่บังคับ aspect-ratio และไม่ใช้ object-fit ครอปใดๆ ทั้งสิ้น
+   จึงไม่มีทางที่ภาพจะโดนยืดหรือโดนตัดขอบ */
+.gallery-photo-grid {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.gallery-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.gallery-photo {
+    position: relative;
+    width: 100%;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #12121a;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.gallery-photo img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.gallery-photo:hover img {
+    transform: scale(1.06);
+}
+
+.gallery-photo-grid--empty {
+    grid-template-columns: 1fr;
+}
+
+.gallery-photo-placeholder {
+    aspect-ratio: 4 / 3;
+    max-width: 320px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1f2733;
+    color: #4b5563;
+    font-size: 2rem;
+}
+
+/* Gallery Section Mobile — คงขั้นต่ำ 3 คอลัมน์ไว้จนถึงจอมือถือ กันไม่ให้ฝั่งขวาดูโล่ง
+   ลดเหลือ 2 คอลัมน์เฉพาะจอแคบมากๆ (≤480px) เท่านั้น ไม่ลดลงไปเหลือ 1 คอลัมน์อีกต่อไป */
+@media (max-width: 768px) {
+    .gallery-section {
+        padding: 3rem 5%;
+    }
+
+    .gallery-heading {
+        font-size: 2rem;
+    }
+
+    .gallery-category-title {
+        font-size: 1.55rem;
+    }
+
+    .gallery-subcategory-title {
+        font-size: 1.15rem;
+    }
+
+    .gallery-photo-grid,
+    .gallery-column {
+        gap: 0.6rem;
+    }
+}
+
+/* Gallery theme (EN) overrides — ใช้ var เดียวกับที่ styles.css ประกาศไว้ */
+[data-theme="en"] .gallery-heading {
+    color: var(--color-secondary);
+}
+
+[data-theme="en"] .gallery-category-title {
+    color: var(--color-secondary);
+    border-bottom-color: var(--color-primary);
+}
+
+[data-theme="en"] .gallery-subcategory-title {
+    border-left-color: var(--color-primary);
 }

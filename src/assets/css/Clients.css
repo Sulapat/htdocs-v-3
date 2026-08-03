@@ -15,6 +15,47 @@ body {
     padding-top: 80px;
 }
 
+/* ========================================
+   HERO SECTION (theme เดียวกับ Courses)
+   ======================================== */
+.clients-hero {
+    padding: 2rem 2rem;
+    padding-top: calc(80px + 2rem);
+    min-height: 28vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #eef1fa 0%, transparent 100%);
+    text-align: center;
+}
+
+.clients-hero .hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.clients-hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.clients-hero h1 span {
+    color: #1a60ec;
+}
+
+.clients-hero p {
+    font-size: 1.2rem;
+    color: #64748b;
+    line-height: 1.8;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
 /* Portfolio Section */
 .portfolio-container {
   background: #fff;
@@ -23,26 +64,6 @@ body {
   border-radius: 20px;
   max-width: 1100px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-}
-
-.portfolio-header {
-  text-align: center;
-  margin-bottom: 40px;
-  color: #03030d;
-}
-
-.portfolio-header h1 {
-  font-size: 2rem;
-  margin-bottom: 15px;
-  letter-spacing: 1px;
-}
-
-.portfolio-header p {
-  color: #6c6c6c;
-  font-size: 1rem;
-  max-width: 750px;
-  margin: 0 auto;
-  line-height: 1.6;
 }
 
 .clients-grid {
@@ -222,20 +243,26 @@ body {
         font-size: 1.2rem;
     }
 
+    /* Hero Mobile Styles */
+    .clients-hero {
+        padding-top: calc(80px + 1rem);
+        min-height: 24vh;
+    }
+
+    .clients-hero h1 {
+        font-size: 2rem;
+    }
+
+    .clients-hero p {
+        font-size: 0.95rem;
+        padding: 0 10px;
+    }
+
     /* Portfolio Mobile Styles */
     .portfolio-container {
         padding: 30px 15px;
         margin: 30px 15px;
         border-radius: 15px;
-    }
-
-    .portfolio-header h1 {
-        font-size: 1.5rem;
-    }
-
-    .portfolio-header p {
-        font-size: 0.9rem;
-        padding: 0 10px;
     }
 
     .clients-grid {
@@ -267,13 +294,16 @@ body {
 }
 
 @media (max-width: 480px) {
-    .portfolio-container {
-        padding: 10px 10px;
+    .clients-hero h1 {
+        font-size: 1.6rem;
     }
 
-    .portfolio-header h1 {
-        font-size: 1rem;
-        margin-bottom: 2px;
+    .clients-hero p {
+        font-size: 0.85rem;
+    }
+
+    .portfolio-container {
+        padding: 10px 10px;
     }
 
     .clients-grid {

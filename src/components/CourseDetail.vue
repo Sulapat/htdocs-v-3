@@ -300,6 +300,7 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { getCourseBySlug } from '@/services/api.js'   // ← เปลี่ยนมาใช้ api.js เหมือน Courses.vue
+import emailjs from '@emailjs/browser'
 
 const route  = useRoute()
 const router = useRouter()
@@ -375,8 +376,6 @@ const submitting       = ref(false)
 const errorMsg         = ref('')
 const form = ref({ fullName: '', phone: '', email: '' })
 
-const API_URL = 'https://patineer.co.th/api/booking.php'
-
 function closeModal() {
   showBookingModal.value = false
   errorMsg.value = ''
@@ -398,26 +397,26 @@ async function submitBooking() {
   }
   submitting.value = true
   errorMsg.value   = ''
+
+  const templateParams = {
+    fullName: form.value.fullName,
+    phone:    form.value.phone,
+    email:    form.value.email,
+    course:   course.value.title,
+    price:    hasPrice.value ? course.value.price : t('courseDetail.hero.priceInquiry')
+  }
+
   try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        fullName: form.value.fullName,
-        phone:    form.value.phone,
-        email:    form.value.email,
-        course:   course.value.title,
-        price:    hasPrice.value ? course.value.price : t('courseDetail.hero.priceInquiry')
-      })
-    })
-    const data = await res.json()
-    if (data.success) {
-      closeModal()
-      showSuccessModal.value = true
-    } else {
-      errorMsg.value = data.message || t('courseDetail.alerts.submitError')
-    }
-  } catch {
+    await emailjs.send(
+      'service_r1g3hlq',
+      'template_yihwf5c',
+      templateParams,
+      'jFrquSpMoGPiPa_t-'
+    )
+    closeModal()
+    showSuccessModal.value = true
+  } catch (error) {
+    console.error('EmailJS error:', error)
     errorMsg.value = t('courseDetail.alerts.submitError')
   } finally {
     submitting.value = false
@@ -433,4 +432,4 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
 
 <style>
 @import "@/assets/css/courseDetail.css";
-</style>  
+</style>

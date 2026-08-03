@@ -85,8 +85,8 @@ body {
 .footer-links a {
     color: #ccc;
     font-weight: 700;
-    text-decoration: underline;
     font-size: 0.95rem;
+    text-decoration: none;
     transition: color 0.3s, padding-left 0.3s;
     display: inline-block;
 }
@@ -265,4 +265,4 @@ body {
         width: 120px;
         height: 120px;
     }
-}   
+}

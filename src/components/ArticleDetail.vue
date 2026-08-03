@@ -134,7 +134,7 @@
               </div>
             </div>
 
-            <div id="ar-summary" class="ar-step-block ar-summary-block" ref="sectionRefs">
+            <div id="ar-summary" class="ar-step-block ar-summary-block" ref="summaryRef">
               <div class="ar-step-title ar-summary-title">{{ $t('articleDetail.toc.summary') }}</div>
               <p>{{ article.summary }}</p>
             </div>
@@ -328,11 +328,15 @@ function formatDate(dateStr) {
 }
 
 // ── Active section highlight (scroll spy) ──
-const sectionRefs   = ref([])
+const sectionRefs   = ref([])   // มาจาก v-for → Vue รวมเป็น array ให้อัตโนมัติ
+const summaryRef     = ref(null) // element เดี่ยว (บล็อกสรุป) แยกไว้ต่างหาก ไม่ปนกับ array ด้านบน
 const activeSection  = ref('')
 
 function initSectionObserver() {
-  const sections = sectionRefs.value || []
+  // กันไว้อีกชั้น เผื่อกรณีแปลกๆ ที่ sectionRefs.value ไม่ใช่ array (เช่น component ยังไม่ mount เต็มที่)
+  const stepSections = Array.isArray(sectionRefs.value) ? sectionRefs.value : []
+  const sections = [...stepSections, summaryRef.value].filter(Boolean)
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {

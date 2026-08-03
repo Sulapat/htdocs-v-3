@@ -2,13 +2,17 @@
     <div class="Ciients">
         <!-- Navigation -->
         <div id="nav-placeholder"></div>
-        <!-- Portfolio Section -->
-        <div class="portfolio-container" id="Portfolio">
-            <div class="portfolio-header">
-                <h1>{{ $t('clients.title') }}</h1>
+
+        <!-- Hero Section (theme เดียวกับ Courses) -->
+        <section class="clients-hero">
+            <div class="hero-content">
+                <h1><span>{{ $t('clients.title') }}</span></h1>
                 <p>{{ $t('clients.subtitle') }}</p>
             </div>
+        </section>
 
+        <!-- Portfolio Section -->
+        <div class="portfolio-container" id="Portfolio">
             <div class="clients-grid">  
                 <!-- Client Card Template - Repeat for each logo -->
                 <div class="client-card">
