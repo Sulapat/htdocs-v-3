@@ -11,6 +11,7 @@ import courses from '@/components/Courses.vue'
 import CourseDetail from '@/components/CourseDetail.vue'
 import Article from '@/components/Article.vue'
 import ArticleDetail from '@/components/ArticleDetail.vue'
+import GalleryShowcase from '@/components/GalleryShowcase.vue'
 
 
 
@@ -27,6 +28,7 @@ const routes = [
   { path: '/courses/:slug', component: CourseDetail },
   { path: '/article', component: Article },
   { path: '/article/:slug', component: ArticleDetail },
+  { path: '/showcase', component: GalleryShowcase },
 ]
 
 export default createRouter({

@@ -1,4 +1,29 @@
-@import "@/assets/css/styles.css";
+/* =============================================================
+   ตัวแปรสีธีม EN ("ธีมน้ำเงินตามโลโก้ Patineer") — ใช้โดย [data-theme="en"]
+   overrides ด้านล่างของไฟล์นี้ (และใน service.css ที่ import ไฟล์นี้ไปอีกที)
+
+   ⚠️ เพิ่มเข้ามาใหม่: เดิมไม่มี :root ประกาศตัวแปรพวกนี้ไว้ที่ไหนเลยในทั้ง
+   styles.css และ service.css ทำให้ var(--color-primary-dark) ฯลฯ กลายเป็น
+   guaranteed-invalid value → ทั้ง background (gradient ของ .about-image::before
+   และ .feature-icon) พังทั้งบรรทัด เห็นเป็นโปร่งใส/ขาวตอนสลับภาษาเป็น EN แทนที่
+   จะเป็นสีน้ำเงินตามที่ตั้งใจ
+
+   ค่าที่ใช้อิงจากโทนน้ำเงินที่มีอยู่แล้วในโค้ดเดิม (ไม่ได้เดาสุ่ม):
+   - --color-secondary: #140c81 → สีเดียวกับที่ .home .hero-content ใช้เป็นสี
+     ตัวหนังสือ default อยู่แล้ว (indigo/น้ำเงินเข้ม)
+   - --color-primary / -dark: อิงจากโทนที่ .home .hero-badge ใช้อยู่แล้ว
+     (linear-gradient(#058a8699, #0d3799a1))
+   - --color-primary-light: ทำเป็นเฉดอ่อนของ primary สำหรับปลาย gradient
+
+   ถ้ามีค่าสี brand จริงจากไฟล์ variables ต้นฉบับ (ไฟล์ที่ยังไม่ได้ส่งมาให้ดู)
+   แก้ 4 บรรทัดนี้ให้ตรงกับของจริงได้เลย ที่เหลือ (--color-primary ฯลฯ ที่ใช้
+   อ้างอิงอยู่ด้านล่าง) จะเปลี่ยนตามอัตโนมัติ */
+:root {
+    --color-primary: #1a60ec;
+    --color-primary-dark: #0d3799;
+    --color-primary-light: #5b8bf5;
+    --color-secondary: #140c81;
+}
 
 * {
         margin: 0;
@@ -11,9 +36,22 @@
         overflow-x: hidden;
     }
 
-    body {
+    /* ⚠️ เดิมเป็น `body { ... }` ตรงๆ — ในแอปนี้เป็น SPA (Vue Router) ที่ไม่ reload
+       ทั้งหน้า พอ style ของหน้า index/service เคยโหลดเข้ามาก่อน (ค้างอยู่ใน <head>
+       ตลอด session เพราะ Vite ไม่ unload <style> ของ component ที่ unmount ไปแล้ว)
+       body{} จากไฟล์อื่นจะมาแย่งทับ body{} ของหน้านี้ได้เสมอ ขึ้นกับลำดับที่เคย
+       เข้าหน้าไหนมาก่อน — ต้อง scope ใส่ class ของ wrapper หน้าตัวเอง แทน ไม่ให้
+       ไปชนกับหน้าอื่น
+
+       styles.css ไฟล์นี้ถูก import โดย wrapper 2 แบบ: .home (index.vue, Service.vue
+       ผ่าน service-embed.css/service.css) และ .tr-page (TestResult.vue โดยตรง) —
+       ต้อง scope ให้ครอบทั้งสอง class ไม่งั้นหน้า Home/Service จะไม่ได้ font-family/
+       background เลยเพราะ .tr-page เพียงอย่างเดียวไม่ match กับ wrapper ของมัน */
+    .home,
+    .tr-page {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background: hsl(210, 17%, 98%);
+        min-height: 100vh;
     }
     /* Hero Section */
     .home .hero {
@@ -1154,4 +1192,512 @@
 
 [data-theme="en"] .gallery-subcategory-title {
     border-left-color: var(--color-primary);
+}
+/* ============================================================
+   TEST RESULT PAGE (/result) — VI Certified Analysts search
+   ============================================================
+   ⚠️ ก่อนหน้านี้ TestResult.vue import ไฟล์นี้ (styles.css) มาตลอด แต่ไม่เคยมี
+   ใครเขียน CSS ของหน้านี้ลงมาเลยสักบรรทัด (เช็คแล้วทั้งโปรเจกต์ไม่มี .results-section,
+   .result-card, .search-form, .dropdown-*, .pagination ฯลฯ อยู่ที่ไหนเลย) — นี่คือ
+   สาเหตุจริงที่หน้านี้ไม่มีสไตล์มาตลอด ไม่ใช่ปัญหา import/scope/cascade ที่แก้ๆ กันมา
+   ทุก selector ด้านล่าง scope ด้วย .tr-page ครอบไว้เสมอ เพราะมีบาง class ชื่อกลางๆ
+   (.pagination, .page-btn, .no-results, .loading-state) ที่ดันไปซ้ำชื่อกับที่
+   Knowledge.css ประกาศไว้แล้ว — ถ้าไม่ scope จะกลับไปชนข้ามหน้ากันอีกเหมือนที่เจอมา
+   ============================================================ */
+
+/* ---------- Hero ----------
+   ปรับให้ไปในทางเดียวกับ .courses-hero (bg สว่าง เรียบ, จางกลืนกับพื้นหลังหน้า
+   hsl(210,17%,98%) เอง) แทนกล่องไล่สีน้ำเงินเข้มทึบตัดกับพื้นหลังทั้งเว็บแบบเดิม
+   สียังคงอิงโทนของแบรนด์ (ฟ้า/เขียว) แบบเดียวกับที่ใช้ใน .home .hero ไม่ได้ก็อป
+   สีจาก courses ตรงๆ — ใช้ radial-gradient จางๆ 2 จุดแทนก้อน blur หนักๆ เพื่อความ
+   เนียนแบบ organic โดยไม่เปลืองประสิทธิภาพเหมือน filter: blur ของ .morphing-bg */
+.tr-page .tr-hero {
+    background:
+        radial-gradient(650px circle at 88% -12%, rgba(26, 96, 236, 0.10), transparent 60%),
+        radial-gradient(550px circle at -8% 92%, rgba(56, 218, 107, 0.10), transparent 65%),
+        linear-gradient(180deg, #eef3fb 0%, hsl(210, 17%, 98%) 100%);
+    padding: 3rem 2rem;
+    padding-top: calc(80px + 2.5rem);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.tr-page .tr-hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.tr-page .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #eef4ff;
+    border: 1px solid #d7e3fb;
+    color: #1a60ec;
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    margin-bottom: 1.25rem;
+}
+
+.tr-page .badge-icon {
+    flex-shrink: 0;
+}
+
+.tr-page .title {
+    font-size: 2.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+}
+
+.tr-page .title .highlight {
+    color: #0c7a2e;
+}
+
+.tr-page .subtitle {
+    color: #64748b;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 2.25rem;
+}
+
+/* ---------- Search form ---------- */
+.tr-page .search-form-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    background: #fff;
+    padding: 0.6rem;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.tr-page .custom-dropdown {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.tr-page .dropdown-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    height: 100%;
+    min-width: 170px;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 8px;
+    background: #f5f7fb;
+    cursor: pointer;
+    font-size: 0.92rem;
+    color: #1e293b;
+    transition: background 0.2s ease;
+}
+
+.tr-page .dropdown-trigger:hover,
+.tr-page .dropdown-trigger.open {
+    background: #e9edf6;
+}
+
+.tr-page .dropdown-trigger-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tr-page .dropdown-chevron {
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.tr-page .dropdown-trigger.open .dropdown-chevron {
+    transform: rotate(180deg);
+}
+
+.tr-page .dropdown-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: #94a3b8;
+}
+
+.tr-page .dropdown-dot.dot-all  { background: #64748b; }
+.tr-page .dropdown-dot.dot-bmv  { background: #6c63ff; }
+.tr-page .dropdown-dot.dot-va2  { background: #17a2b8; }
+.tr-page .dropdown-dot.dot-va3  { background: #f59e0b; }
+.tr-page .dropdown-dot.dot-va4  { background: #dc2626; }
+
+/* เมนู dropdown ถูก teleport ไปที่ body ตรงๆ เลยไม่อยู่ใต้ .tr-page — ต้องเป็น
+   selector ระดับบนสุด ไม่ scope ใต้ .tr-page (ทำไปก็ไม่ match เพราะ DOM คนละที่) */
+.dropdown-menu-teleport {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+    padding: 0.4rem;
+    border: 1px solid #e2e8f0;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #334155;
+}
+
+.dropdown-item:hover {
+    background: #f1f5f9;
+}
+
+.dropdown-item.selected {
+    background: #e7f4ea;
+    color: #085a22;
+    font-weight: 600;
+}
+
+.dropdown-item-label {
+    flex: 1;
+}
+
+.dropdown-check {
+    flex-shrink: 0;
+    color: #0c7a2e;
+}
+
+.tr-page .search-input-wrapper {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.tr-page .search-icon {
+    position: absolute;
+    left: 14px;
+    color: #94a3b8;
+    pointer-events: none;
+}
+
+.tr-page .search-input {
+    width: 100%;
+    height: 100%;
+    padding: 0.75rem 1rem 0.75rem 42px;
+    border: none;
+    border-radius: 8px;
+    background: #f5f7fb;
+    font-size: 0.95rem;
+    color: #1e293b;
+    outline: none;
+    transition: background 0.2s ease;
+}
+
+.tr-page .search-input:focus {
+    background: #e9edf6;
+}
+
+.tr-page .search-button {
+    flex-shrink: 0;
+    padding: 0.75rem 1.75rem;
+    border: none;
+    border-radius: 8px;
+    background: #0c7a2e;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.tr-page .search-button:hover {
+    background: #085a22;
+}
+
+/* ---------- Results section ---------- */
+.tr-page .results-section {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+}
+
+/* การ์ดแบบ "บัตรสมาชิก" 3 ใบต่อแถวบนเดสก์ท็อป ลดเหลือ 2 ใบบนแท็บเล็ต และ 1 ใบบนมือถือ
+   (มือถือ override อยู่แล้วที่ @media (max-width: 768px) ด้านล่างของไฟล์) */
+.tr-page .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+    .tr-page .results-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.tr-page .result-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.tr-page .result-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 32px rgba(2, 2, 102, 0.12);
+}
+
+/* แถบบนสุดของบัตร โทนฟ้าอ่อนไล่เฉด ครอบ avatar ไว้ตรงกลาง — ให้ความรู้สึกเป็นบัตรสมาชิก */
+.tr-page .result-avatar-area {
+    background: linear-gradient(135deg, #eaf1ff 0%, #dce8fd 100%);
+    padding: 1rem 0 0.85rem;
+    margin-bottom: 0;
+}
+
+.tr-page .result-avatar-placeholder {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background: #fff;
+    color: #4d79f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.18);
+}
+
+.tr-page .result-avatar-placeholder svg {
+    width: 26px;
+    height: 26px;
+}
+
+.tr-page .result-avatar-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tr-page .result-header {
+    padding: 0.65rem 1rem 0.55rem;
+    margin-bottom: 0;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.tr-page .result-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f1f6b;
+}
+
+.tr-page .result-details {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-bottom: 0.6rem;
+    padding: 0.6rem 1.1rem 0;
+    border-top: none;
+}
+
+.tr-page .result-detail-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 0.76rem;
+}
+
+.tr-page .result-detail-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: #94a3b8;
+    flex-shrink: 0;
+}
+
+.tr-page .result-detail-label::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: 0.55;
+}
+
+.tr-page .result-detail-item:nth-child(1) .result-detail-label::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
+}
+
+.tr-page .result-detail-item:nth-child(2) .result-detail-label::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Crect x='2' y='4' width='20' height='16' rx='2'/%3E%3Cpath d='m2 7 10 6 10-6'/%3E%3C/svg%3E");
+}
+
+.tr-page .result-detail-value {
+    color: #334155;
+    font-weight: 500;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tr-page .result-level-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0 1rem 1rem;
+}
+
+/* Badge แบบ outline โทนอ่อน (พื้นจาง + ขอบ/ตัวหนังสือสีเข้ม) ให้ดูเป็นบัตรมากขึ้น
+   สีจริงต่อประเภทคอร์สยังกำหนดผ่าน --tag-color ของแต่ละ .tag-* ด้านล่าง */
+.tr-page .result-course-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    background: color-mix(in srgb, var(--tag-color, #94a3b8) 12%, white);
+    color: var(--tag-color, #64748b);
+    border: 1px solid color-mix(in srgb, var(--tag-color, #94a3b8) 45%, white);
+}
+
+.tr-page .result-course-tag.tag-bmv     { --tag-color: #6c63ff; }
+.tr-page .result-course-tag.tag-va2     { --tag-color: #17a2b8; }
+.tr-page .result-course-tag.tag-va3     { --tag-color: #f59e0b; }
+.tr-page .result-course-tag.tag-va4     { --tag-color: #dc2626; }
+.tr-page .result-course-tag.tag-default { --tag-color: #94a3b8; }
+
+/* ---------- Pagination ---------- */
+.tr-page .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.tr-page .page-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.1rem;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #334155;
+    transition: all 0.2s ease;
+}
+
+.tr-page .page-btn:hover:not(:disabled) {
+    background: #020266;
+    border-color: #020266;
+    color: #fff;
+}
+
+.tr-page .page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.tr-page .page-info {
+    font-size: 0.88rem;
+    color: #64748b;
+}
+
+/* ---------- Empty / no-results / loading ---------- */
+.tr-page .no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 1rem;
+    text-align: center;
+    color: #94a3b8;
+    gap: 0.75rem;
+}
+
+.tr-page .no-results-icon {
+    color: #cbd5e1;
+    margin-bottom: 0.5rem;
+}
+
+.tr-page .no-results h3 {
+    font-size: 1.2rem;
+    color: #475569;
+}
+
+.tr-page .loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 1rem;
+    gap: 1rem;
+    color: #64748b;
+}
+
+.tr-page .spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #e2e8f0;
+    border-top-color: #0c7a2e;
+    border-radius: 50%;
+    animation: tr-spin 0.8s linear infinite;
+}
+
+@keyframes tr-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+    .tr-page .tr-hero {
+        padding: 3rem 1.25rem 2.5rem;
+        padding-top: calc(64px + 2rem);
+    }
+    .tr-page .title {
+        font-size: 2rem;
+    }
+    .tr-page .search-form-row {
+        flex-direction: column;
+    }
+    .tr-page .custom-dropdown,
+    .tr-page .dropdown-trigger {
+        width: 100%;
+        min-width: 0;
+    }
+    .tr-page .results-section {
+        padding: 2rem 1.25rem 3rem;
+    }
+    .tr-page .results-grid {
+        grid-template-columns: 1fr;
+    }
 }

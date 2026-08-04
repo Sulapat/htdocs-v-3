@@ -9,7 +9,7 @@
 
             <ul class="nav-links" ref="navLinksRef" :class="{ 'show': isMenuOpen }">
                 <li><router-link to="/" @click="closeAll">{{ $t('nav.home') }}</router-link></li>
-                <li><a href="#service" @click.prevent="handleServiceClick">{{ $t('nav.service') }}</a></li>
+                <li><router-link to="/showcase" @click="closeAll">{{ $t('nav.portfolio') }}</router-link></li>
                 <li><router-link to="/knowledge" @click="closeAll">{{ $t('nav.knowledge') }}</router-link></li>
                 <li><a href="#article" @click.prevent="handleArticleClick">{{ $t('nav.article') }}</a></li>
                 

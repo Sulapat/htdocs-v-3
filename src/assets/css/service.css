@@ -11,9 +11,13 @@
         overflow-x: hidden;
     }
 
-    body {
+    /* เดิมเป็น body{} ตรงๆ — scope เข้า .home (root wrapper ของหน้านี้ ใช้ร่วมกับ
+       index.vue) แทน กันชนกับ body{} ของหน้าอื่นที่ค้างโหลดอยู่ใน SPA session
+       เดียวกัน (ดูเหตุผลเดียวกับที่แก้ styles.css / index.css) */
+    .home {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background: hsl(210, 17%, 98%);
+        min-height: 100vh;
     }
     /* Hero Section */
     .home .hero {

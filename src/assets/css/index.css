@@ -11,9 +11,12 @@ html {
     overflow-x: hidden;
 }
 
-body {
+/* เดิมเป็น body{} ตรงๆ — scope เข้า .home (root wrapper ของหน้านี้) แทน
+   กันชนกับ body{} ของหน้าอื่นที่ค้างโหลดอยู่ใน SPA session เดียวกัน */
+.home {
     font-family: 'Prompt', 'Sarabun', -apple-system, sans-serif;
     background: #ffffff;
+    min-height: 100vh;
 }
 
 /* ========================================

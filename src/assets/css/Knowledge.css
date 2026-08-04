@@ -172,6 +172,12 @@ body {
     flex-direction: column;
     justify-content: center;
     min-width: 0;
+    /* ✅ FIX: flex item ที่ซ้อนอยู่ใน .hero-card (row flex, height ตายตัว 190px)
+       ค่า default min-height ของ flex item คือ auto ซึ่งหมายถึง "ห้ามเตี้ยกว่า
+       เนื้อหาจริงของตัวเอง" ผลคือถ้าเนื้อหาข้างใน (h3+p) ยาวเกิน 190px เข้าไป
+       .hero-card-content จะไม่ยอมหด ดันโป่งทะลุกรอบการ์ดออกไปแทนที่จะถูก
+       overflow:hidden ของ .hero-card ตัดตามที่ตั้งใจไว้ (flexbug #13) */
+    min-height: 0;
 }
 
 .hero-card-content h3 {
@@ -184,6 +190,10 @@ body {
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    /* ✅ เหตุผลเดียวกับด้านบน: h3 เองก็เป็น flex item (column) ของ
+       .hero-card-content ต้อง min-height:0 ไม่งั้น -webkit-line-clamp
+       จะไม่มีผล เพราะ min-height:auto บังคับให้แสดงเต็มความสูงจริงก่อนเสมอ */
+    min-height: 0;
 }
 
 .hero-card-content p {
@@ -195,6 +205,8 @@ body {
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    /* ✅ เหตุผลเดียวกัน */
+    min-height: 0;
 }
 
 /* ── Animation ตอนเลื่อนการ์ด (ทั้ง autoplay และกดปุ่มเอง) ── */

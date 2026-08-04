@@ -179,14 +179,6 @@
 <script>
 import { getNewsList } from '@/services/api.js'
 
-// ⚠️ ย้าย CSS มา import ผ่าน JS แทนการใช้ @import ใน <style>
-// เหตุผลเดียวกับ index.vue: @import ตรงๆ ใน <style> ของ SFC ทำให้ browser
-// ต้อง fetch service.css แยกต่างหากหลัง component โหลดเสร็จ (native @import
-// ไม่ได้ถูก bundle รวมไฟล์เดียวตอน build เหมือน import ผ่าน JS) และเสี่ยง
-// โหลดซ้อนกัน 2 ชุด (ชุดที่ scope ถูกต้อง + ชุดดิบที่หลุด scope) → เป็นสาเหตุ
-// ที่ทำให้หน้า /service (รวม morphing-bg) แล็คตอนเข้าเพจ
-import '@/assets/css/service.css'
-
 const trainingImages = import.meta.glob('@/assets/images/training/**/*.{jpg,png}', { eager: true })
 
 function resolveImage(path) {
@@ -494,4 +486,7 @@ export default {
 </script>
 
 <style>
+/* ต้อง import แบบนี้ (style block ปกติ ไม่ scoped) ห้ามย้ายไป import ผ่าน JS
+   ใน <script> อีก — ดูเหตุผลเดียวกับ index.vue/TestResult.vue */
+@import "@/assets/css/service.css";
 </style>

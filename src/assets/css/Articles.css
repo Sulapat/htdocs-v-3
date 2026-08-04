@@ -130,6 +130,10 @@
     flex-direction: column;
     justify-content: center;
     min-width: 0;
+    /* ✅ กันบั๊กเดียวกับที่เจอใน Knowledge.css (.hero-card-content):
+       flex item default min-height:auto ทำให้เนื้อหาที่ยาวเกิน 190px
+       ดันโป่งทะลุ .al-hero-card แทนที่จะถูก overflow:hidden ตัด (flexbug #13) */
+    min-height: 0;
 }
 
 .al-hero-tag {
@@ -157,6 +161,7 @@
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    min-height: 0;
 }
 
 .al-hero-card-content p {
@@ -168,6 +173,7 @@
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
+    min-height: 0;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }

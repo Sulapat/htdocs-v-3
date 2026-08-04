@@ -1,0 +1,507 @@
+/* ============================================================
+   GALLERY SHOWCASE — /service#gallery (GalleryShowcase.vue)
+   ============================================================
+   แยกออกมาจาก <style scoped> เดิมในไฟล์ .vue มาไว้ที่นี่แทน
+   ทุก selector ใช้ prefix "gs-" (namespace ผ่านชื่อ class เอง เหมือน
+   .tr-page ใน styles.css และ .courses-* ใน courses.css) จึงไม่ชนกับ
+   class ของหน้าอื่น แม้จะไม่มี Vue scoped attribute (data-v-xxxx) มาช่วยกันแล้วก็ตาม
+   ============================================================ */
+
+/* ============================================
+   โทนสี: อ้างอิงจากภาพ mockup — กรมท่าเข้ม + ส้มอิฐเป็นจุดเน้น
+   ============================================ */
+.gs-page {
+  --gs-navy: #0e2a5e;
+  --gs-navy-deep: #0a1f47;
+  --gs-accent: #d9502e;
+  --gs-bg: #f4f6fa;
+  --gs-ink: #16233f;
+  --gs-muted: #6b7688;
+  --gs-line: #e4e8f0;
+  color: var(--gs-ink);
+  background: #fff;
+}
+
+.gs-eyebrow {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gs-accent);
+  letter-spacing: 0.02em;
+  margin-bottom: 0.75rem;
+}
+
+/* ── Hero ── */
+.gs-hero {
+  background: var(--gs-bg);
+  /* +80px กันพื้นที่ fixed navbar ด้านบน (ตามรูปแบบเดียวกับหน้า service/home ทั้งเว็บ) */
+  padding: calc(80px + 3rem) 6% 2.5rem;
+}
+
+.gs-hero-inner {
+  display: grid;
+  grid-template-columns: minmax(280px, 420px) 1fr;
+  gap: 3rem;
+  align-items: center;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.gs-hero-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--gs-navy);
+  margin: 0 0 1rem;
+}
+
+.gs-hero-desc {
+  color: var(--gs-muted);
+  line-height: 1.75;
+  margin-bottom: 1.75rem;
+}
+
+.gs-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--gs-navy);
+  color: #fff;
+  padding: 0.85rem 1.5rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.92rem;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.gs-btn-primary:hover {
+  background: var(--gs-navy-deep);
+  transform: translateX(2px);
+}
+
+.gs-hero-media {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  box-shadow: 0 24px 48px -20px rgba(14, 42, 94, 0.35);
+}
+
+.gs-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gs-fade-enter-active, .gs-fade-leave-active { transition: opacity 0.5s ease; }
+.gs-fade-enter-from, .gs-fade-leave-to { opacity: 0; }
+
+.gs-hero-badge {
+  position: absolute;
+  left: 1.5rem;
+  bottom: 1.5rem;
+  background: rgba(14, 26, 56, 0.82);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  padding: 1.1rem 1.3rem;
+  border-radius: 14px;
+  max-width: 240px;
+}
+
+.gs-hero-badge-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: var(--gs-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.6rem;
+  font-size: 0.9rem;
+}
+
+.gs-hero-badge p {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0 0 0.6rem;
+}
+
+.gs-hero-badge-tag {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.65);
+  text-transform: uppercase;
+}
+
+.gs-hero-nav {
+  position: absolute;
+  bottom: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: none;
+  background: #fff;
+  color: var(--gs-navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.gs-hero-nav--prev { right: 4.2rem; }
+.gs-hero-nav--next { right: 1.5rem; }
+.gs-hero-nav:hover { background: var(--gs-accent); color: #fff; }
+
+.gs-hero-steps {
+  max-width: 1280px;
+  margin: 2.2rem auto 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-left: calc(280px * 0 + 0px); /* aligns naturally via flex column below */
+}
+
+.gs-hero-step {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #c3c9d6;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid transparent;
+}
+
+.gs-hero-step--active {
+  color: var(--gs-navy);
+  border-color: var(--gs-accent);
+}
+
+/* ── Rows (หมวดตรวจวัด/วิเคราะห์) ── */
+.gs-rows-section {
+  background: var(--gs-bg);
+  padding: 3.5rem 6%;
+}
+
+.gs-row {
+  max-width: 1280px;
+  margin: 0 auto 3.5rem;
+}
+
+.gs-row:last-child { margin-bottom: 0; }
+
+.gs-row-eyebrow {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gs-muted);
+  margin-bottom: 1.25rem;
+}
+
+.gs-row-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.gs-row-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #eef1fb;
+  color: var(--gs-navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+}
+
+.gs-row-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--gs-navy);
+  line-height: 1.4;
+  margin: 0 0 0.6rem;
+}
+
+.gs-row-desc {
+  color: var(--gs-muted);
+  font-size: 0.92rem;
+  line-height: 1.7;
+  margin: 0 0 1rem;
+}
+
+.gs-row-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--gs-accent);
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-decoration: none;
+}
+
+.gs-row-media { position: relative; }
+
+.gs-row-scroll {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding-bottom: 0.25rem;
+}
+
+.gs-row-scroll::-webkit-scrollbar { display: none; }
+
+.gs-row-photo {
+  flex: 0 0 260px;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+  scroll-snap-align: start;
+  background: #dfe4ee;
+}
+
+.gs-row-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gs-row-photo--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #b7bfcf;
+  font-size: 1.5rem;
+}
+
+.gs-row-arrow {
+  position: absolute;
+  top: 50%;
+  right: -0.6rem;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: none;
+  background: #fff;
+  color: var(--gs-navy);
+  box-shadow: 0 8px 20px rgba(14, 42, 94, 0.18);
+  cursor: pointer;
+}
+
+.gs-row-arrow:hover { background: var(--gs-accent); color: #fff; }
+
+.gs-row-dots {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  padding-left: calc(280px + 2.5rem);
+}
+
+.gs-row-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #cfd5e2;
+}
+
+/* ── Cards (หมวดอบรม/สัมมนา) ── */
+.gs-cards-section {
+  padding: 3.5rem 6%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.gs-cards-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gs-navy);
+  margin-bottom: 1.75rem;
+  position: relative;
+  display: inline-block;
+}
+
+.gs-cards-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -0.5rem;
+  width: 46px;
+  height: 3px;
+  background: var(--gs-accent);
+  border-radius: 999px;
+}
+
+.gs-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.gs-card {
+  display: block;
+  background: #fff;
+  border: 1px solid var(--gs-line);
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gs-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 32px -18px rgba(14, 42, 94, 0.25);
+}
+
+.gs-card-media { aspect-ratio: 16 / 10; background: #eef1fb; }
+.gs-card-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gs-card-media--empty { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #b7bfcf; }
+
+.gs-card-body { padding: 1.25rem; }
+
+.gs-card-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #eef1fb;
+  color: var(--gs-navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+
+.gs-card-title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--gs-navy);
+  line-height: 1.45;
+  margin: 0 0 0.5rem;
+}
+
+.gs-card-desc {
+  font-size: 0.82rem;
+  color: var(--gs-muted);
+  line-height: 1.6;
+  margin: 0 0 0.85rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.gs-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--gs-accent);
+}
+
+/* ── CTA banner ── */
+.gs-cta {
+  max-width: 1280px;
+  margin: 1rem 6% 3.5rem;
+  background: #fff;
+  border: 1px solid var(--gs-line);
+  border-radius: 18px;
+  padding: 1.75rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: 0 20px 40px -30px rgba(14, 42, 94, 0.3);
+}
+
+.gs-cta-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 999px;
+  background: #eef1fb;
+  color: var(--gs-navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.gs-cta-text { flex: 1; }
+.gs-cta-eyebrow { font-size: 0.8rem; color: var(--gs-muted); margin: 0 0 0.2rem; }
+.gs-cta-text h3 { font-size: 1.15rem; color: var(--gs-navy); margin: 0 0 0.2rem; }
+.gs-cta-sub { font-size: 0.85rem; color: var(--gs-muted); margin: 0; }
+
+.gs-cta-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--gs-navy);
+  color: #fff;
+  padding: 0.8rem 1.4rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.gs-cta-btn:hover { background: var(--gs-navy-deep); }
+
+/* ── Stats bar ── */
+.gs-stats-bar {
+  background: var(--gs-navy-deep);
+  padding: 1.75rem 6%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  border-radius: 18px 18px 0 0;
+}
+
+.gs-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  color: #fff;
+}
+
+.gs-stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gs-accent);
+  flex-shrink: 0;
+}
+
+.gs-stat-title { font-size: 0.88rem; font-weight: 600; margin: 0; }
+.gs-stat-label { font-size: 0.76rem; color: rgba(255, 255, 255, 0.65); margin: 0; }
+
+/* ── Responsive ── */
+@media (max-width: 960px) {
+  .gs-hero-inner { grid-template-columns: 1fr; }
+  .gs-row-grid { grid-template-columns: 1fr; }
+  .gs-row-dots { padding-left: 0; }
+  .gs-cards-grid { grid-template-columns: repeat(2, 1fr); }
+  .gs-stats-bar { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .gs-hero { padding: calc(80px + 2rem) 5% 2rem; }
+  .gs-hero-title { font-size: 1.9rem; }
+  .gs-cards-grid { grid-template-columns: 1fr; }
+  .gs-stats-bar { grid-template-columns: 1fr; }
+  .gs-cta { flex-direction: column; align-items: flex-start; }
+}

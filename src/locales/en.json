@@ -10,7 +10,8 @@
         "c3va": "Category III Vibration Analyst",
         "c4va": "Category IV Vibration Analyst",
         "courses": "Courses",
-        "article": "Article"
+        "article": "Article",
+        "portfolio": "Portfolio"
     },
     "footer": {
         "contactUs": "Contact Us",
@@ -81,7 +82,8 @@
                             "title": "Industrial Machinery Signal & Vibration Inspection",
                             "description": "Signal measurement and anomaly analysis for production-line machinery, reducing machine downtime risk and enabling precise maintenance planning."
                         }
-                    }
+                    },
+                    "description": "Precision measurement, analysis, and condition assessment of machinery using advanced engineering techniques, spanning both industrial plants and rail transport systems, to enable accurate preventive maintenance planning."
                 },
                 "trainingSeminar": {
                     "title": "Training & Academic Seminars",
@@ -102,7 +104,8 @@
                             "title": "Public Training Programs",
                             "description": "Open enrollment courses for engineers and professionals from various organizations, covering the latest inspection techniques and maintenance technology."
                         }
-                    }
+                    },
+                    "description": "Training courses and academic seminars dedicated to sharing knowledge in maintenance engineering and inspection technology with engineers, practitioners, and partner organizations."
                 }
             }
         }

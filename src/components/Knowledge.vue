@@ -379,6 +379,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+/* ⚠️ ต้อง import แบบนี้ (style block ปกติ ไม่ scoped) เท่านั้น อย่าย้ายไป
+   import ผ่าน JS ใน <script> — bare side-effect import ของไฟล์ .css จาก script
+   ไม่ reliable เท่า <style>@import ที่ Vite/Vue SFC compiler การันตีว่าถูกรวมเข้า
+   bundle เสมอ (ดู pattern เดียวกันใน Article.vue ที่ทำงานถูกต้อง) ถ้าย้ายกลับไป
+   import ผ่าน script อีก .hero-card จะเสี่ยงหลุด flex/background/border-radius/
+   shadow/overflow อีกครั้ง กลายเป็น element ไหลแบบ default (รูปเล็ก + ข้อความ
+   ล้นออกมานอกกรอบการ์ดตรงๆ บนพื้นหลังไล่สี ไม่มีกรอบขาวคลุม) */
 @import "@/assets/css/Knowledge.css";
-</style>
+</style>  
