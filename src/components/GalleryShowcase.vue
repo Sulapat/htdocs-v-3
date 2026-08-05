@@ -1,42 +1,45 @@
 <template>
   <div class="gs-page">
-    <!-- ============================================
-         HERO — ข้อความแนะนำ + ภาพเด่นพร้อมป้าย overlay
-         ภาพจะสลับตามหัวข้อย่อยแรกของแต่ละหมวด (ไม่ใช่สุ่ม)
-         ============================================ -->
+
     <section class="gs-hero">
       <div class="gs-hero-inner">
         <div class="gs-hero-text">
-          <span class="gs-eyebrow">— {{ $t('service.gallery.heading') }}</span>
           <h1 class="gs-hero-title">{{ $t('service.gallery.heading') }}</h1>
           <p class="gs-hero-desc">{{ $t('service.gallery.subheading') }}</p>
           <a href="#gs-gallery-body" class="gs-btn-primary">
-            <span>ดูผลงานทั้งหมด</span>
+            <span>{{ $t('service.gallery.ui.viewAll') }}</span>
             <i class="fas fa-arrow-right"></i>
           </a>
         </div>
 
         <div class="gs-hero-media">
-          <transition name="gs-fade" mode="out-in">
-            <img
-              :key="heroSlide"
-              :src="heroImages[heroSlide]"
-              class="gs-hero-img"
-              :alt="galleryCategories[0] ? galleryCategories[0].title : ''"
-              loading="lazy"
+          <div class="gs-hero-photo">
+            <div
+              v-for="(img, idx) in heroImages"
+              :key="idx"
+              class="gs-hero-imgwrap"
+              :class="{ 'gs-hero-imgwrap--active': idx === heroSlide }"
             >
-          </transition>
-
-          <div class="gs-hero-badge">
-            <div class="gs-hero-badge-icon"><i class="fas fa-shield-alt"></i></div>
-            <p>ตรวจวัดแม่นยำ<br>วิเคราะห์เชิงลึก<br>ลดการหยุดเครื่องจักร</p>
-          
+              <img
+                :src="img"
+                class="gs-hero-img"
+                :alt="galleryCategories[0] ? galleryCategories[0].title : ''"
+                loading="lazy"
+              >
+            </div>
+            <div class="gs-hero-media-overlay"></div>
           </div>
 
-          <button class="gs-hero-nav gs-hero-nav--prev" type="button" aria-label="ภาพก่อนหน้า" @click="prevHero">
+          <div class="gs-hero-badge">
+            <span class="gs-hero-badge-icon"><i class="fas fa-shield-alt"></i></span>
+            <p v-html="$t('service.gallery.ui.badge')"></p>
+            <span class="gs-hero-badge-divider"></span>
+          </div>
+
+          <button class="gs-hero-nav gs-hero-nav--prev" type="button" :aria-label="$t('service.gallery.ui.prevImage')" @click="prevHero">
             <i class="fas fa-chevron-left"></i>
           </button>
-          <button class="gs-hero-nav gs-hero-nav--next" type="button" aria-label="ภาพถัดไป" @click="nextHero">
+          <button class="gs-hero-nav gs-hero-nav--next" type="button" :aria-label="$t('service.gallery.ui.nextImage')" @click="nextHero">
             <i class="fas fa-chevron-right"></i>
           </button>
         </div>
@@ -63,20 +66,22 @@
 
           <div class="gs-row-grid">
             <div class="gs-row-info">
-              <div class="gs-row-icon">
-                <i :class="rowIcon(idx)"></i>
-              </div>
               <h3 class="gs-row-title">{{ item.title }}</h3>
               <p v-if="item.description" class="gs-row-desc">{{ item.description }}</p>
-              <a href="#" class="gs-row-link">
-                <span>ดูผลงานเพิ่มเติม</span>
+              <button type="button" class="gs-row-link" @click="openLightbox(item)">
+                <span>{{ $t('service.gallery.ui.viewMore') }}</span>
                 <i class="fas fa-arrow-right"></i>
-              </a>
+              </button>
             </div>
 
             <div class="gs-row-media">
               <div class="gs-row-scroll" :ref="setRowScrollRef(category.slug, item.slug)">
-                <div v-for="(img, i) in item.images" :key="i" class="gs-row-photo">
+                <div
+                  v-for="(img, i) in item.images"
+                  :key="i"
+                  class="gs-row-photo"
+                  @click="openLightbox(item, i)"
+                >
                   <img :src="img" :alt="`${item.title} ${i + 1}`" loading="lazy">
                 </div>
                 <div v-if="!item.images.length" class="gs-row-photo gs-row-photo--empty">
@@ -88,7 +93,7 @@
                 v-if="item.images.length > 3"
                 class="gs-row-arrow"
                 type="button"
-                aria-label="เลื่อนดูรูปถัดไป"
+                :aria-label="$t('service.gallery.ui.scrollNext')"
                 @click="scrollRow(category.slug, item.slug)"
               >
                 <i class="fas fa-chevron-right"></i>
@@ -114,57 +119,103 @@
       <h2 class="gs-cards-title">{{ cardCategory.title }}</h2>
 
       <div class="gs-cards-grid">
-        <a
-          v-for="(item, idx) in cardCategory.items"
+        <div
+          v-for="item in cardCategory.items"
           :key="item.slug"
-          href="#"
           class="gs-card"
+          role="button"
+          tabindex="0"
+          @click="openLightbox(item)"
+          @keyup.enter="openLightbox(item)"
         >
           <div class="gs-card-media">
             <img v-if="item.images[0]" :src="item.images[0]" :alt="item.title" loading="lazy">
             <div v-else class="gs-card-media--empty"><i class="fas fa-image"></i></div>
           </div>
           <div class="gs-card-body">
-            <div class="gs-card-icon"><i :class="cardIcon(idx)"></i></div>
             <h3 class="gs-card-title">{{ item.title }}</h3>
             <p v-if="item.description" class="gs-card-desc">{{ item.description }}</p>
             <span class="gs-card-link">
-              <span>ดูรูปเพิ่มเติม</span>
+              <span>{{ $t('service.gallery.ui.viewMorePhotos') }}</span>
               <i class="fas fa-arrow-right"></i>
             </span>
           </div>
-        </a>
-      </div>
-    </section>
-
-    <!-- ============================================
-         CTA banner
-         ============================================ -->
-    <section class="gs-cta">
-      <div class="gs-cta-icon"><i class="fas fa-camera"></i></div>
-      <div class="gs-cta-text">
-        <p class="gs-cta-eyebrow">ชมผลงานและภาพบรรยากาศเพิ่มเติม</p>
-        <h3>ดูภาพทั้งหมดในแกลเลอรี</h3>
-        <p class="gs-cta-sub">รวบรวมทุกช่วงเวลาการให้บริการและกิจกรรมของเรา</p>
-      </div>
-      <a href="#gs-gallery-body" class="gs-cta-btn">
-        <span>เข้าสู่แกลเลอรี</span>
-        <i class="fas fa-arrow-right"></i>
-      </a>
-    </section>
-
-    <!-- ============================================
-         Stats bar
-         ============================================ -->
-    <section class="gs-stats-bar">
-      <div v-for="stat in statBar" :key="stat.label" class="gs-stat-item">
-        <div class="gs-stat-icon"><i :class="stat.icon"></i></div>
-        <div>
-          <p class="gs-stat-title">{{ stat.title }}</p>
-          <p class="gs-stat-label">{{ stat.label }}</p>
         </div>
       </div>
     </section>
+
+   
+    <!-- ============================================
+         Lightbox — popup แสดงรูปทั้งหมดของแต่ละหัวข้อ เลื่อนดูได้
+         ============================================ -->
+    <transition name="gs-modal-fade">
+      <div
+        v-if="lightboxOpen"
+        class="gs-lightbox"
+        @click.self="closeLightbox"
+      >
+        <div class="gs-lightbox-panel">
+          <div class="gs-lightbox-header">
+            <h4 class="gs-lightbox-title">{{ lightboxTitle }}</h4>
+            <button type="button" class="gs-lightbox-close" :aria-label="$t('service.gallery.ui.close')" @click="closeLightbox">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <div
+            class="gs-lightbox-stage"
+            @touchstart="onLightboxTouchStart"
+            @touchend="onLightboxTouchEnd"
+          >
+            <button
+              v-if="lightboxImages.length > 1"
+              type="button"
+              class="gs-lightbox-nav gs-lightbox-nav--prev"
+              :aria-label="$t('service.gallery.ui.prev')"
+              @click="lightboxPrev"
+            >
+              <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <transition name="gs-fade" mode="out-in">
+              <img
+                :key="lightboxIndex"
+                :src="lightboxImages[lightboxIndex]"
+                class="gs-lightbox-img"
+                :alt="`${lightboxTitle} ${lightboxIndex + 1}`"
+              >
+            </transition>
+
+            <button
+              v-if="lightboxImages.length > 1"
+              type="button"
+              class="gs-lightbox-nav gs-lightbox-nav--next"
+              :aria-label="$t('service.gallery.ui.next')"
+              @click="lightboxNext"
+            >
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+
+          <p v-if="lightboxImages.length" class="gs-lightbox-count">
+            {{ lightboxIndex + 1 }} / {{ lightboxImages.length }}
+          </p>
+
+          <div v-if="lightboxImages.length > 1" class="gs-lightbox-thumbs">
+            <button
+              v-for="(img, i) in lightboxImages"
+              :key="i"
+              type="button"
+              class="gs-lightbox-thumb"
+              :class="{ 'gs-lightbox-thumb--active': i === lightboxIndex }"
+              @click="lightboxIndex = i"
+            >
+              <img :src="img" :alt="`thumb ${i + 1}`" loading="lazy">
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -193,7 +244,13 @@ export default {
       heroSlide: 0,
       heroTimer: null,
       rowScrollRefs: {},
-    
+
+      // ── Lightbox / popup ──
+      lightboxOpen: false,
+      lightboxImages: [],
+      lightboxIndex: 0,
+      lightboxTitle: '',
+      touchStartX: 0,
     }
   },
   computed: {
@@ -250,29 +307,16 @@ export default {
       })
       return imgs.length ? imgs : ['']
     },
-    statBar() {
-      return [
-        { icon: 'fas fa-user-tie', title: 'ทีมงานมืออาชีพ', label: 'ประสบการณ์กว่า 15 ปี' },
-        { icon: 'fas fa-microchip', title: 'เทคโนโลยีทันสมัย', label: 'เครื่องมือมาตรฐานสากล' },
-        { icon: 'fas fa-check-circle', title: 'วิเคราะห์แม่นยำ', label: 'แก้ไขปัญหาตรงจุด' },
-        { icon: 'fas fa-bolt', title: 'ลด Downtime', label: 'เพิ่มประสิทธิภาพการผลิต' }
-      ]
-    }
+
   },
   mounted() {
     this.startHeroAutoplay()
   },
   beforeUnmount() {
     clearInterval(this.heroTimer)
+    document.removeEventListener('keydown', this.onLightboxKeydown)
   },
   methods: {
-    rowIcon(idx) {
-      return idx === 0 ? 'fas fa-wave-square' : 'fas fa-cog'
-    },
-    cardIcon(idx) {
-      const icons = ['fas fa-book', 'fas fa-users', 'fas fa-clipboard-list', 'fas fa-graduation-cap']
-      return icons[idx % icons.length]
-    },
     startHeroAutoplay() {
       clearInterval(this.heroTimer)
       this.heroTimer = setInterval(() => {
@@ -299,6 +343,42 @@ export default {
       const maxScroll = el.scrollWidth - el.clientWidth
       const next = el.scrollLeft + cardWidth + 16
       el.scrollTo({ left: next > maxScroll ? 0 : next, behavior: 'smooth' })
+    },
+
+    // ── Lightbox / popup ──
+    openLightbox(item, startIndex = 0) {
+      if (!item.images.length) return
+      this.lightboxImages = item.images
+      this.lightboxTitle = item.title
+      this.lightboxIndex = startIndex
+      this.lightboxOpen = true
+      document.body.style.overflow = 'hidden'
+      document.addEventListener('keydown', this.onLightboxKeydown)
+    },
+    closeLightbox() {
+      this.lightboxOpen = false
+      document.body.style.overflow = ''
+      document.removeEventListener('keydown', this.onLightboxKeydown)
+    },
+    lightboxNext() {
+      this.lightboxIndex = (this.lightboxIndex + 1) % this.lightboxImages.length
+    },
+    lightboxPrev() {
+      this.lightboxIndex = (this.lightboxIndex - 1 + this.lightboxImages.length) % this.lightboxImages.length
+    },
+    onLightboxKeydown(e) {
+      if (e.key === 'Escape') this.closeLightbox()
+      else if (e.key === 'ArrowRight') this.lightboxNext()
+      else if (e.key === 'ArrowLeft') this.lightboxPrev()
+    },
+    onLightboxTouchStart(e) {
+      this.touchStartX = e.changedTouches[0].clientX
+    },
+    onLightboxTouchEnd(e) {
+      const diff = e.changedTouches[0].clientX - this.touchStartX
+      if (Math.abs(diff) < 40) return
+      if (diff < 0) this.lightboxNext()
+      else this.lightboxPrev()
     }
   }
 }

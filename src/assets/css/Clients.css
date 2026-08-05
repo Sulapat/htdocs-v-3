@@ -16,63 +16,119 @@ body {
 }
 
 /* ========================================
-   HERO SECTION (theme เดียวกับ Courses)
+   HERO SPLIT SECTION (ตาม ref: Option C — Split View: Story + Masonry Grid)
+   พื้นหลังกรมท่าเข้ม #112E81 คลุมทั้ง section (ทั้งฝั่ง story และฝั่งคอลัมน์โลโก้)
+   ซ้าย = story panel: headline (เด่น) + body (รอง)
+   ขวา  = คอลัมน์โลโก้ลูกค้า เลื่อนขึ้น/ลงสวนกันอัตโนมัติ (ดูรายละเอียดที่ .clients-columns ด้านล่าง)
    ======================================== */
-.clients-hero {
-    padding: 2rem 2rem;
-    padding-top: calc(80px + 2rem);
-    min-height: 28vh;
+.clients-split {
+    padding: calc(80px + 2rem) 3rem 2rem;
     display: flex;
+    align-items: stretch;
+    gap: 4.5rem;
+    width: 100%;
+    max-width: 100%;
+    margin: 2rem 0 0;
+    background: linear-gradient(160deg, #0a1f6b 0%, #112E81 55%, #16389c 100%);
+    border-radius: 24px;
+    box-shadow: 0 25px 50px rgba(17, 46, 129, 0.35);
+}
+
+.clients-story {
+    flex: 1;
+    min-width: 280px;
+    max-width: 620px;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
+    padding-top: 2.75rem;
+}
+
+/* กล่องรวม headline + body ให้ใช้ขอบซ้ายเดียวกัน แล้วค่อยจัดทั้งก้อนให้อยู่กึ่งกลางโซนซ้าย
+   (ไม่ใช้ align-items:center ที่ตัว h2/p โดยตรง เพราะจะทำให้แต่ละบรรทัด shrink-to-fit แยกกัน ดูเพี้ยน) */
+.story-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 440px;
+    text-align: left;
+}
+
+/* กล่อง 1: headline — เด่นที่สุดของ story panel (ตัวใหญ่ ตัวหนา สีขาวเต็ม)
+   text-wrap: balance ช่วยให้บรรทัดยาวใกล้เคียงกัน ไม่ให้เหลือคำเดียวโดดๆ บรรทัดสุดท้าย */
+.story-headline {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.25;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+}
+
+/* กล่อง 2: body — รองจาก headline (ตัวเล็กกว่า น้ำหนักเบากว่า สีจางกว่า)
+   text-wrap: balance ให้แต่ละบรรทัดยาวใกล้เคียงกัน รองรับ browser กว้างกว่า pretty */
+.story-body {
+    font-size: 0.98rem;
+    font-weight: 400;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.62);
+    max-width: 340px;
+    text-wrap: balance;
+}
+
+/* ========================================
+   CLIENT LOGO COLUMNS (มุมขวาของ split section)
+   แต่ละคอลัมน์เลื่อนขึ้น/ลงอัตโนมัติสวนทางกัน (คอลัมน์คู่ขึ้น, คอลัมน์คี่ลง)
+   วนซ้ำแบบไม่มีที่สิ้นสุดด้วยการ duplicate การ์ดในคอลัมน์เดียวกัน 2 ชุด แล้วเลื่อน track ครึ่งความสูง
+   hover ที่คอลัมน์ไหน หยุดเฉพาะคอลัมน์นั้น (ไม่กระทบคอลัมน์ข้างๆ) — ตอนนี้ทำแค่ hover ก่อน ยังไม่มีระบบกด/เลือกค้าง
+   ======================================== */
+.clients-columns {
+    flex: 1;
+    min-width: 0;
+    display: flex;
     justify-content: center;
-    position: relative;
+    gap: 0.85rem;
+    height: 520px;
+}
+
+.client-column {
+    flex: 0 0 235px;
+    width: 235px;
+    height: 100%;
     overflow: hidden;
-    background: linear-gradient(180deg, #eef1fa 0%, transparent 100%);
-    text-align: center;
+    border-radius: 14px;
+    /* mask ขอบบน-ล่างให้การ์ดเลื่อนเข้า/ออกแบบจางๆ แทนการตัดโครมๆ */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 6%, #000 94%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 6%, #000 94%, transparent 100%);
 }
 
-.clients-hero .hero-content {
-    position: relative;
-    z-index: 1;
+.client-column-track {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    will-change: transform;
 }
 
-.clients-hero h1 {
-    font-size: 3.5rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 1.5rem;
-    line-height: 1.2;
+.client-column-track.scroll-up   { animation-name: colScrollUp; }
+.client-column-track.scroll-down { animation-name: colScrollDown; }
+
+/* hover ที่คอลัมน์ไหน หยุดเลื่อนเฉพาะคอลัมน์นั้น (ตอนนี้ทำแค่ hover ก่อน ยังไม่มีระบบกด/เลือกค้าง) */
+.client-column:hover .client-column-track {
+    animation-play-state: paused;
 }
 
-.clients-hero h1 span {
-    color: #1a60ec;
+@keyframes colScrollUp {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-50%); }
 }
 
-.clients-hero p {
-    font-size: 1.2rem;
-    color: #64748b;
-    line-height: 1.8;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-/* Portfolio Section */
-.portfolio-container {
-  background: #fff;
-  padding: 50px 30px;
-  margin: 50px auto;
-  border-radius: 20px;
-  max-width: 1100px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-}
-
-.clients-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
-  justify-items: stretch;
-  align-items: stretch;
-  isolation: isolate;
+@keyframes colScrollDown {
+    from { transform: translateY(-50%); }
+    to   { transform: translateY(0); }
 }
 
 .client-card {
@@ -80,7 +136,7 @@ body {
   border-radius: 15px;
   padding: 10px;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -88,19 +144,14 @@ body {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
   position: relative;
-  overflow: visible;     /* ให้ tooltip โผล่ขึ้นมาได้ */
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .client-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-8px) scale(1.03);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
   z-index: 10;
-}
-
-/* transition สำหรับ dim effect */
-.client-card {
-  transition: all 0.3s ease;
 }
 
 .client-logo {
@@ -116,32 +167,53 @@ body {
   transform: scale(1.05);
 }
 
-/* เมื่อ grid มี hover ให้ card อื่นจางลง */
-.clients-grid:has(.client-card:hover) .client-card:not(:hover) {
+/* fallback: ใช้ตอนหาไฟล์โลโก้จริงไม่เจอเลย (กันไม่ให้เห็นไอคอนรูปหักๆ) โชว์ชื่อบริษัทแทน */
+.client-logo--fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #64748b;
+  line-height: 1.3;
+  padding: 0 4px;
+  overflow: hidden;
+}
+
+/* การ์ดอื่นในคอลัมน์เดียวกัน (หรือคอลัมน์อื่น) จางลงเมื่อมีการ hover การ์ดหนึ่งอยู่
+   ผูกกับ state ใน JS (hoveredClient) แทน :has() เพราะการ์ดถูก duplicate ในแต่ละคอลัมน์
+   เพื่อทำ infinite scroll เทียบ object identity ได้แม่นยำกว่า */
+.client-card.is-dimmed {
   opacity: 0.4;
   filter: grayscale(40%);
 }
 
-.client-info {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
+/* Tooltip: teleport ไปที่ body (position: fixed) แทนวางซ้อนในการ์ดตรงๆ
+   เพราะ .client-column ต้อง overflow:hidden เพื่อ mask การเลื่อนแบบ infinite scroll
+   ถ้า tooltip ยังอยู่ในการ์ด มันจะโดนตัดขอบหายไปด้วย */
+.client-info-teleport {
+  position: fixed;
+  transform: translate(-50%, calc(-100% - 12px));
   background: rgba(15, 23, 42, 0.95);
   color: #fff;
   border-radius: 8px;
   padding: 6px 12px;
   white-space: nowrap;
   pointer-events: none;
-  opacity: 0;
-  transition: all 0.25s ease;
   z-index: 9999;          /* สูงกว่า navbar */
   box-shadow: 0 4px 16px rgba(0,0,0,0.25);
   text-align: center;
+  animation: tooltipFadeIn 0.15s ease forwards;
+}
+
+@keyframes tooltipFadeIn {
+  from { opacity: 0; transform: translate(-50%, calc(-100% - 6px)); }
+  to   { opacity: 1; transform: translate(-50%, calc(-100% - 12px)); }
 }
 
 /* ลูกศรชี้ลง */
-.client-info::after {
+.client-info-teleport::after {
   content: '';
   position: absolute;
   top: 100%;
@@ -149,11 +221,6 @@ body {
   transform: translateX(-50%);
   border: 5px solid transparent;
   border-top-color: rgba(15, 23, 42, 0.95);
-}
-
-.client-card:hover .client-info {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
 }
 
 .client-name {
@@ -169,6 +236,60 @@ body {
   opacity: 0.85;
   color: #fff;
   white-space: nowrap;
+}
+
+/* ========================================
+   TESTIMONIAL SECTION (ส่วนที่วงสีเขียวใน ref)
+   กล่อง 3 = tag/label นำสายตา (รอง) กล่อง 4 = testimonial card (เด่น สุด: ตัวอักษรใหญ่กว่า มีกรอบเน้นสี)
+   ======================================== */
+.clients-testimonial {
+    padding: 3.5rem 2rem 4.5rem;
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* กล่อง 3: tag — ข้อความนำ ขนาดเล็ก น้ำหนักปกติ สีเทา ไม่แย่งซีนกับ testimonial card
+   text-wrap: balance บาลานซ์ทุกบรรทัดให้ยาวใกล้เคียงกัน แก้ปัญหาบรรทัดสุดท้ายเหลือคำเดียวโดดๆ */
+.testimonial-tag {
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.7;
+    color: #64748b;
+    max-width: 500px;
+    margin: 0 auto 1.75rem;
+    text-wrap: balance;
+}
+
+/* กล่อง 4: testimonial card — เด่นกว่ากล่อง 3 ด้วยกรอบสีเน้น + ตัวอักษรใหญ่กว่า/หนักกว่า */
+.testimonial-card {
+    position: relative;
+    background: #ffffff;
+    border: 2px solid #112E81;
+    border-radius: 18px;
+    padding: 2.5rem 3rem;
+    box-shadow: 0 15px 35px rgba(17, 46, 129, 0.12);
+}
+
+.testimonial-quote-mark {
+    position: absolute;
+    top: 0.75rem;
+    right: 1.5rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 3.5rem;
+    line-height: 1;
+    color: rgba(17, 46, 129, 0.15);
+    pointer-events: none;
+}
+
+.testimonial-quote {
+    position: relative;
+    z-index: 1;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.65;
+    color: #0f172a;
+    text-wrap: balance;
 }
 
 /* ===== Wave Animation ===== */
@@ -206,6 +327,46 @@ body {
 }
 
 /* ===== Responsive Media Queries ===== */
+
+/* แก้บั๊ก overflow แนวนอน: .clients-split (story panel + 3 คอลัมน์โลโก้ fix width 235px)
+   ต้องการความกว้างจริงราว 1270px+ ถึงจะเรียงแถวได้พอดีโดยไม่ล้นจอ
+   breakpoint เดิมที่ 768px เลยปล่อยให้ทุกความกว้าง 769–~1270px (มือถือแนวนอน/แท็บเล็ต/
+   หรือกรณี mobile browser คำนวณ viewport แบบ desktop ~980px) ยังใช้ layout แถวเดิมแล้วล้นจอ
+   จุดนี้เลยต้องสลับเป็นแนวตั้งให้เร็วขึ้นกว่าจุดที่ปรับ font/spacing อื่นๆ */
+@media (max-width: 1300px) {
+    .clients-split {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .clients-story {
+        flex: none;
+        min-width: 0;
+        max-width: none;
+        width: 100%;
+        align-items: center;
+        padding-top: 0;
+    }
+
+    .story-text {
+        max-width: 600px;
+        text-align: center;
+        align-items: center;
+    }
+
+    .clients-columns {
+        flex: none;
+        width: 100%;
+    }
+
+    /* ยกเลิก margin-top ติดลบ (inline style จาก columnOffset() ใน Vue, ใช้ทำ masonry ตอนอยู่แถวเดียวกัน)
+       เพราะพอสลับเป็นแนวตั้ง ค่าติดลบ (เช่น -92px) จะดันคอลัมน์ขึ้นไปทับ story text ด้านบนแทน
+       ใช้ !important เพราะต้อง override inline style ที่ Vue ใส่ไว้ */
+    .client-column {
+        margin-top: 0 !important;
+    }
+}
+
 @media (max-width: 968px) {
     .about-grid {
         grid-template-columns: 1fr;
@@ -243,35 +404,79 @@ body {
         font-size: 1.2rem;
     }
 
-    /* Hero Mobile Styles */
-    .clients-hero {
-        padding-top: calc(80px + 1rem);
-        min-height: 24vh;
+    /* Hero Split Mobile Styles: เรียงเป็นแนวตั้ง story อยู่บน คอลัมน์โลโก้อยู่ล่าง */
+    .clients-split {
+        flex-direction: column;
+        padding: calc(80px + 1rem) 1rem 1.5rem;
+        gap: 1.5rem;
     }
 
-    .clients-hero h1 {
-        font-size: 2rem;
+    .clients-story {
+        flex: none;
+        min-width: 0;
+        max-width: none;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding-top: 0;
     }
 
-    .clients-hero p {
-        font-size: 0.95rem;
-        padding: 0 10px;
+    .story-text {
+        max-width: none;
+        gap: 1.1rem;
     }
 
-    /* Portfolio Mobile Styles */
-    .portfolio-container {
-        padding: 30px 15px;
-        margin: 30px 15px;
-        border-radius: 15px;
+    .story-headline {
+        font-size: 1.5rem;
     }
 
-    .clients-grid {
-        grid-template-columns: repeat(5, 1fr);
-        gap: 6px;
+    .story-body {
+        font-size: 0.9rem;
+        max-width: none;
+    }
+
+    .clients-testimonial {
+        padding: 2.5rem 1rem 3rem;
+    }
+
+    .testimonial-tag {
+        font-size: 0.85rem;
+        max-width: none;
+        margin: 0 0 1.25rem;
+    }
+
+    .testimonial-card {
+        padding: 1.75rem 1.5rem;
+    }
+
+    .testimonial-quote {
+        font-size: 1.02rem;
+    }
+
+    .testimonial-quote-mark {
+        font-size: 2.75rem;
+        top: 0.5rem;
+        right: 1rem;
+    }
+
+    .clients-columns {
+        height: 420px;
+        gap: 0.6rem;
+        justify-content: stretch;
+    }
+
+    .client-column {
+        flex: 1;
+        width: auto;
+        border-radius: 10px;
+    }
+
+    .client-column-track {
+        gap: 0.6rem;
     }
 
     .client-card {
         width: 100%;
+        max-width: 110px;
         height: auto;
         aspect-ratio: 1 / 1;
         padding: 6px;
@@ -294,25 +499,29 @@ body {
 }
 
 @media (max-width: 480px) {
-    .clients-hero h1 {
-        font-size: 1.6rem;
+    .story-headline {
+        font-size: 1.3rem;
     }
 
-    .clients-hero p {
+    .story-body {
         font-size: 0.85rem;
     }
 
-    .portfolio-container {
-        padding: 10px 10px;
+    .testimonial-card {
+        padding: 1.5rem 1.25rem;
     }
 
-    .clients-grid {
-        grid-template-columns: repeat(5, 1fr);
-        gap: 4px;
+    .testimonial-quote {
+        font-size: 0.95rem;
+    }
+
+    .clients-columns {
+        height: 360px;
     }
 
     .client-card {
         width: 100%;
+        max-width: 90px;
         height: auto;
         aspect-ratio: 1 / 1;
         padding: 4px;

@@ -3,459 +3,189 @@
         <!-- Navigation -->
         <div id="nav-placeholder"></div>
 
-        <!-- Hero Section (theme เดียวกับ Courses) -->
-        <section class="clients-hero">
-            <div class="hero-content">
-                <h1><span>{{ $t('clients.title') }}</span></h1>
-                <p>{{ $t('clients.subtitle') }}</p>
+        <!-- Hero Split Section (ref: Option C — Split View: Story + Masonry Grid)
+             ซ้าย = story panel (เนื้อหายังไม่ finalize -> เป็น mockup จองพื้นที่ไว้ก่อน)
+             ขวา  = คอลัมน์โลโก้ลูกค้าเลื่อนขึ้น/ลงสวนกันอัตโนมัติ -->
+        <section class="clients-split" id="Portfolio">
+
+            <!-- Story panel: headline (เด่น) + body (รอง) บนพื้นหลังกรมท่าเข้ม #112E81
+                 ครอบด้วย .story-text เพื่อให้ headline/body อยู่ในกล่องเดียวกัน ใช้ขอบซ้ายร่วมกัน
+                 แล้วค่อยจัดกล่องนี้ทั้งก้อนให้อยู่กึ่งกลางโซนซ้าย (ไม่ centered แยกทีละบรรทัด) -->
+            <div class="clients-story">
+                <div class="story-text">
+                    <h2 class="story-headline">{{ $t('clients.story.headline') }}</h2>
+                    <p class="story-body">{{ $t('clients.story.body') }}</p>
+                </div>
             </div>
+
+            <!-- คอลัมน์โลโก้ลูกค้า: เลื่อนอัตโนมัติสวนทางกันทีละคอลัมน์ hover คอลัมน์ไหนหยุดเฉพาะคอลัมน์นั้น (ยังไม่มีระบบกด/เลือกค้าง) -->
+            <div class="clients-columns">
+                <div
+                    v-for="(col, colIndex) in columns"
+                    :key="colIndex"
+                    class="client-column"
+                    :style="{ marginTop: columnOffset(colIndex) }"
+                >
+                    <div
+                        class="client-column-track"
+                        :class="colIndex % 2 === 0 ? 'scroll-up' : 'scroll-down'"
+                        :style="{ animationDuration: columnDuration(col) }"
+                    >
+                        <div
+                            v-for="(client, i) in col.concat(col)"
+                            :key="colIndex + '-' + i"
+                            class="client-card"
+                            :class="{ 'is-dimmed': hoveredClient && hoveredClient !== client }"
+                            @mouseenter="showTooltip($event, client)"
+                            @mouseleave="hideTooltip"
+                        >
+                            <img v-if="getLogo(client.file)" :src="getLogo(client.file)" :alt="client.alt" class="client-logo">
+                            <span v-else class="client-logo client-logo--fallback">{{ client.name }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tooltip: teleport ไป body เพราะ .client-column ต้อง overflow:hidden เพื่อ mask การเลื่อนแบบ infinite scroll -->
+            <Teleport to="body">
+                <div v-if="hoveredClient" class="client-info-teleport" :style="tooltipStyle">
+                    <div class="client-name">{{ hoveredClient.name }}</div>
+                    <div class="client-description">{{ $t(hoveredClient.descKey) }}</div>
+                </div>
+            </Teleport>
         </section>
 
-        <!-- Portfolio Section -->
-        <div class="portfolio-container" id="Portfolio">
-            <div class="clients-grid">  
-                <!-- Client Card Template - Repeat for each logo -->
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Atsumitec.jpg" alt="Atsumitec" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Atsumitec</div>
-                        <div class="client-description">{{ $t('clients.desc.atsumitec') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/B_G.jpg" alt="B.G" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Bgrim</div>
-                        <div class="client-description">{{ $t('clients.desc.b_g') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/BD_th.jpg" alt="BD Thailand" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Broadcast depot Thailand</div>
-                        <div class="client-description">{{ $t('clients.desc.bd_thailand') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/BDMS.jpg" alt="BDMS" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">BDMS</div>
-                        <div class="client-description">{{ $t('clients.desc.bdms') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Boon.jpg" alt="Boon" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Boon Rawd Brewery</div>
-                        <div class="client-description">{{ $t('clients.desc.boon') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Daikin.jpg" alt="Daikin" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Daikin</div>
-                        <div class="client-description">{{ $t('clients.desc.daikin') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Egat.jpg" alt="EGAT" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">EGAT</div>
-                        <div class="client-description">{{ $t('clients.desc.egat') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/enfourt.jpg" alt="Enfourt" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Enfourtech</div>
-                        <div class="client-description">{{ $t('clients.desc.enfourt') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/GCME.jpg" alt="GCME" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">GCME</div>
-                        <div class="client-description">{{ $t('clients.desc.gcme') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Griffith.jpg" alt="Griffith" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Griffith</div>
-                        <div class="client-description">{{ $t('clients.desc.griffith') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Gulf.jpg" alt="Gulf" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Gulf</div>
-                        <div class="client-description">{{ $t('clients.desc.gulf') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/GYPROC.png" alt="GYPROC" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">GYPROC</div>
-                        <div class="client-description">{{ $t('clients.desc.gyproc') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/IHI.jpg" alt="IHI" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">IHI</div>
-                        <div class="client-description">{{ $t('clients.desc.ihi') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Indoama.jpg" alt="Indoama" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Indorama</div>
-                        <div class="client-description">{{ $t('clients.desc.indoama') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Is_software.jpg" alt="IS Software" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">IS Software</div>
-                        <div class="client-description">{{ $t('clients.desc.is_software') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/JSJS.jpg" alt="JSJS" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Johnson & Johnson</div>
-                        <div class="client-description">{{ $t('clients.desc.jsjs') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/KI.jpg" alt="KI" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">ki sugar group</div>
-                        <div class="client-description">{{ $t('clients.desc.ki') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/KKF.jpg" alt="KKF" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">KKF khon kaen</div> 
-                        <div class="client-description">{{ $t('clients.desc.kkf') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Mars.jpg" alt="Mars" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Mars petcare</div>
-                        <div class="client-description">{{ $t('clients.desc.mars') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Mitr_phol.jpg" alt="Mitr Phol" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Mitr Phol</div>
-                        <div class="client-description">{{ $t('clients.desc.mitr_phol') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Nestle.jpg" alt="Nestle" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Nestle</div>
-                        <div class="client-description">{{ $t('clients.desc.nestle') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Npp.jpg" alt="Npp" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">NPP Combined Heat and Power Producing</div>
-                        <div class="client-description">{{ $t('clients.desc.npp') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Nteq.jpg" alt="Nteq" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Nteq polymer co. ltd</div>
-                        <div class="client-description">{{ $t('clients.desc.nteq') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/PAE.jpg" alt="PAE" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">PAE</div>
-                        <div class="client-description">{{ $t('clients.desc.pae') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Pttep.jpg" alt="PTTEP" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">PTT Exploration and Production</div>
-                        <div class="client-description">{{ $t('clients.desc.pttep') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/repo.jpg" alt="Repo" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">REPCO NEX</div>
-                        <div class="client-description">{{ $t('clients.desc.repo') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/sahakol.png" alt="Sahakol" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Sahakol Equipment</div>
-                        <div class="client-description">{{ $t('clients.desc.sahakol') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/SCG.jpg" alt="SCG" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">SCG</div>
-                        <div class="client-description">{{ $t('clients.desc.scg') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/seckisui.png" alt="Seckisui" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">SEKISUI</div>
-                        <div class="client-description">{{ $t('clients.desc.seckisui') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/SKF.jpg" alt="SKF" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">SKF</div>
-                        <div class="client-description">{{ $t('clients.desc.skf') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Sotus.jpg" alt="Sotus" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Sotus</div>
-                        <div class="client-description">{{ $t('clients.desc.sotus') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/SSG.jpg" alt="SSG" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">SSG</div>
-                        <div class="client-description">{{ $t('clients.desc.ssg') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/SSL.jpg" alt="SSL" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">SSL manufacturing</div>
-                        <div class="client-description">{{ $t('clients.desc.ssl') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/STM.jpg" alt="STM" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">STM</div>
-                        <div class="client-description">{{ $t('clients.desc.stm') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Thaioil.jpg" alt="Thaioil" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Thai Oil</div>
-                        <div class="client-description">{{ $t('clients.desc.thaioil') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Thanakorn.jpg" alt="Thanakorn" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Thanakorn Vegetable Oil Products</div>
-                        <div class="client-description">{{ $t('clients.desc.thanakorn') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/TRANE.jpg" alt="TRANE" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">TRANE</div>
-                        <div class="client-description">{{ $t('clients.desc.trane') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Transitions.jpg" alt="Transitions" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">Transitions Optical</div>
-                        <div class="client-description">{{ $t('clients.desc.transitions') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/TTM.jpg" alt="TTM" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">TRANS THAI-MALAYSIA </div>
-                        <div class="client-description">{{ $t('clients.desc.ttm') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/WHA.jpg" alt="WHA" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">WHA</div>
-                        <div class="client-description">{{ $t('clients.desc.wha') }}</div>
-                    </div>
-                </div>
-                
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/ADS.jpg" alt="ADS" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">ADS SALES AND SERVICE CO., LTD.</div>
-                        <div class="client-description">{{ $t('clients.desc.ads') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/NPS.jpg" alt="NPS" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">NPS ENGINEERING CO.,LTD.</div>
-                        <div class="client-description">{{ $t('clients.desc.nps') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/SES.jpg" alt="SES" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">SES SUCCESS ENGINEERING AND SERVICE CO., LTD.</div>
-                        <div class="client-description">{{ $t('clients.desc.ses') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Murata.jpg" alt="MURATA" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">MURATA ELECTRONIC (THAILAND) CO., LTD.</div>
-                        <div class="client-description">{{ $t('clients.desc.murata') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/Proterial.png" alt="PROTERIAL" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">PROTERIAL (THAILAND) LTD.</div>
-                        <div class="client-description">{{ $t('clients.desc.proterial') }}</div>
-                    </div>
-                </div>
-                
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/TT.png" alt="TT" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">TT FUJI TOOL SUPPORT CO.,LTD</div>
-                        <div class="client-description">{{ $t('clients.desc.tt') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/U-Services.jpg" alt="U-Services" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">U-Services Thailand Co.,Ltd</div>
-                        <div class="client-description">{{ $t('clients.desc.uservice') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/ming.png" alt="MING" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">MING TAI INDUSTRIAL (THAILAND) CO., LTD.</div>
-                        <div class="client-description">{{ $t('clients.desc.ming') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/ASKO.jpg" alt="ASKO" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">ASKO EQUIPMENT COMPANY LIMITED</div>
-                        <div class="client-description">{{ $t('clients.desc.asko') }}</div>
-                    </div>
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/BGC.jpg" alt="BGC" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">BG CONTAINER GLASS PUBLIC COMPANY LIMITED</div>
-                        <div class="client-description">{{ $t('clients.desc.bgc') }}</div>
-                    </div>  
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/EWater.jpg" alt="EW" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">EASTERN WATER RESOURCES DEVELOPMENT AND MANAGEMENT PUBLIC COMPANY LIMITED</div>
-                        <div class="client-description">{{ $t('clients.desc.ewater') }}</div>
-                    </div>  
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/OTANI.jpg" alt="OTANI" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">OTANI RADIAL CO.,LTD.</div>
-                        <div class="client-description">{{ $t('clients.desc.otani') }}</div>
-                    </div>  
-                </div>
-
-                <div class="client-card">
-                    <img src="@/assets/images/data/Logo_partners/MCL.png" alt="MICHELIN" class="client-logo">
-                    <div class="client-info">
-                        <div class="client-name">MICHELIN SIAM COMPANY LIMITED  </div>
-                        <div class="client-description">{{ $t('clients.desc.mcl') }}</div>
-                    </div>  
-                </div>
-
+        <!-- Testimonial section: tag (รอง) นำสายตาสู่ testimonial card (เด่น) -->
+        <section class="clients-testimonial">
+            <p class="testimonial-tag">{{ $t('clients.testimonial.tag') }}</p>
+            <div class="testimonial-card">
+                <span class="testimonial-quote-mark" aria-hidden="true">&ldquo;</span>
+                <p class="testimonial-quote">{{ $t('clients.testimonial.quote') }}</p>
             </div>
-        </div>
+        </section>
     </div>
 </template>
 
-<script>
-export default {
-  name: 'Clients',
-  data() {
-    return {
-      clients: [
-        { id: 1, name: 'Client 1', logo: '...' },
-        { id: 2, name: 'Client 2', logo: '...' },
-        // ... clients data
-      ]
-    }
+<script setup>
+import { ref, computed } from 'vue'
+
+// รายชื่อลูกค้าทั้งหมด (ของจริง ไม่ใช่ mockup) — เก็บเป็น data array แทนการเขียน
+// <div class="client-card"> ซ้ำทีละใบ เพื่อให้แบ่งลงคอลัมน์และทำ infinite scroll ได้
+const CLIENTS = [
+  { file: 'Atsumitec.jpg', alt: 'Atsumitec', name: 'Atsumitec', descKey: 'clients.desc.atsumitec' },
+  { file: 'B_G.jpg', alt: 'B.G', name: 'Bgrim', descKey: 'clients.desc.b_g' },
+  { file: 'BD_th.jpg', alt: 'BD Thailand', name: 'Broadcast depot Thailand', descKey: 'clients.desc.bd_thailand' },
+  { file: 'BDMS.jpg', alt: 'BDMS', name: 'BDMS', descKey: 'clients.desc.bdms' },
+  { file: 'Boon.jpg', alt: 'Boon', name: 'Boon Rawd Brewery', descKey: 'clients.desc.boon' },
+  { file: 'Daikin.jpg', alt: 'Daikin', name: 'Daikin', descKey: 'clients.desc.daikin' },
+  { file: 'Egat.jpg', alt: 'EGAT', name: 'EGAT', descKey: 'clients.desc.egat' },
+  { file: 'enfourt.jpg', alt: 'Enfourt', name: 'Enfourtech', descKey: 'clients.desc.enfourt' },
+  { file: 'GCME.jpg', alt: 'GCME', name: 'GCME', descKey: 'clients.desc.gcme' },
+  { file: 'Griffith.jpg', alt: 'Griffith', name: 'Griffith', descKey: 'clients.desc.griffith' },
+  { file: 'Gulf.jpg', alt: 'Gulf', name: 'Gulf', descKey: 'clients.desc.gulf' },
+  { file: 'GYPROC.png', alt: 'GYPROC', name: 'GYPROC', descKey: 'clients.desc.gyproc' },
+  { file: 'IHI.jpg', alt: 'IHI', name: 'IHI', descKey: 'clients.desc.ihi' },
+  { file: 'Indoama.jpg', alt: 'Indoama', name: 'Indorama', descKey: 'clients.desc.indoama' },
+  { file: 'Is_software.jpg', alt: 'IS Software', name: 'IS Software', descKey: 'clients.desc.is_software' },
+  { file: 'JSJS.jpg', alt: 'JSJS', name: 'Johnson & Johnson', descKey: 'clients.desc.jsjs' },
+  { file: 'KI.jpg', alt: 'KI', name: 'ki sugar group', descKey: 'clients.desc.ki' },
+  { file: 'KKF.jpg', alt: 'KKF', name: 'KKF khon kaen', descKey: 'clients.desc.kkf' },
+  { file: 'Mars.jpg', alt: 'Mars', name: 'Mars petcare', descKey: 'clients.desc.mars' },
+  { file: 'Mitr_phol.jpg', alt: 'Mitr Phol', name: 'Mitr Phol', descKey: 'clients.desc.mitr_phol' },
+  { file: 'Nestle.jpg', alt: 'Nestle', name: 'Nestle', descKey: 'clients.desc.nestle' },
+  { file: 'Npp.jpg', alt: 'Npp', name: 'NPP Combined Heat and Power Producing', descKey: 'clients.desc.npp' },
+  { file: 'Nteq.jpg', alt: 'Nteq', name: 'Nteq polymer co. ltd', descKey: 'clients.desc.nteq' },
+  { file: 'PAE.jpg', alt: 'PAE', name: 'PAE', descKey: 'clients.desc.pae' },
+  { file: 'Pttep.jpg', alt: 'PTTEP', name: 'PTT Exploration and Production', descKey: 'clients.desc.pttep' },
+  { file: 'repo.jpg', alt: 'Repo', name: 'REPCO NEX', descKey: 'clients.desc.repo' },
+  { file: 'sahakol.png', alt: 'Sahakol', name: 'Sahakol Equipment', descKey: 'clients.desc.sahakol' },
+  { file: 'SCG.jpg', alt: 'SCG', name: 'SCG', descKey: 'clients.desc.scg' },
+  { file: 'seckisui.png', alt: 'Seckisui', name: 'SEKISUI', descKey: 'clients.desc.seckisui' },
+  { file: 'SKF.jpg', alt: 'SKF', name: 'SKF', descKey: 'clients.desc.skf' },
+  { file: 'Sotus.jpg', alt: 'Sotus', name: 'Sotus', descKey: 'clients.desc.sotus' },
+  { file: 'SSG.jpg', alt: 'SSG', name: 'SSG', descKey: 'clients.desc.ssg' },
+  { file: 'SSL.jpg', alt: 'SSL', name: 'SSL manufacturing', descKey: 'clients.desc.ssl' },
+  { file: 'STM.jpg', alt: 'STM', name: 'STM', descKey: 'clients.desc.stm' },
+  { file: 'Thaioil.jpg', alt: 'Thaioil', name: 'Thai Oil', descKey: 'clients.desc.thaioil' },
+  { file: 'Thanakorn.jpg', alt: 'Thanakorn', name: 'Thanakorn Vegetable Oil Products', descKey: 'clients.desc.thanakorn' },
+  { file: 'TRANE.jpg', alt: 'TRANE', name: 'TRANE', descKey: 'clients.desc.trane' },
+  { file: 'Transitions.jpg', alt: 'Transitions', name: 'Transitions Optical', descKey: 'clients.desc.transitions' },
+  { file: 'TTM.jpg', alt: 'TTM', name: 'TRANS THAI-MALAYSIA', descKey: 'clients.desc.ttm' },
+  { file: 'WHA.jpg', alt: 'WHA', name: 'WHA', descKey: 'clients.desc.wha' },
+  { file: 'ADS.jpg', alt: 'ADS', name: 'ADS SALES AND SERVICE CO., LTD.', descKey: 'clients.desc.ads' },
+  { file: 'NPS.jpg', alt: 'NPS', name: 'NPS ENGINEERING CO.,LTD.', descKey: 'clients.desc.nps' },
+  { file: 'SES.jpg', alt: 'SES', name: 'SES SUCCESS ENGINEERING AND SERVICE CO., LTD.', descKey: 'clients.desc.ses' },
+  { file: 'Murata.jpg', alt: 'MURATA', name: 'MURATA ELECTRONIC (THAILAND) CO., LTD.', descKey: 'clients.desc.murata' },
+  { file: 'Proterial.png', alt: 'PROTERIAL', name: 'PROTERIAL (THAILAND) LTD.', descKey: 'clients.desc.proterial' },
+  { file: 'TT.png', alt: 'TT', name: 'TT FUJI TOOL SUPPORT CO.,LTD', descKey: 'clients.desc.tt' },
+  { file: 'U-Services.jpg', alt: 'U-Services', name: 'U-Services Thailand Co.,Ltd', descKey: 'clients.desc.uservice' },
+  { file: 'ming.png', alt: 'MING', name: 'MING TAI INDUSTRIAL (THAILAND) CO., LTD.', descKey: 'clients.desc.ming' },
+  { file: 'ASKO.jpg', alt: 'ASKO', name: 'ASKO EQUIPMENT COMPANY LIMITED', descKey: 'clients.desc.asko' },
+  { file: 'BGC.jpg', alt: 'BGC', name: 'BG CONTAINER GLASS PUBLIC COMPANY LIMITED', descKey: 'clients.desc.bgc' },
+  { file: 'EWater.jpg', alt: 'EW', name: 'EASTERN WATER RESOURCES DEVELOPMENT AND MANAGEMENT PUBLIC COMPANY LIMITED', descKey: 'clients.desc.ewater' },
+  { file: 'OTANI.jpg', alt: 'OTANI', name: 'OTANI RADIAL CO.,LTD.', descKey: 'clients.desc.otani' },
+  { file: 'MCL.png', alt: 'MICHELIN', name: 'MICHELIN SIAM COMPANY LIMITED', descKey: 'clients.desc.mcl' },
+]
+
+// โหลดโลโก้ทั้งหมดด้วย import.meta.glob (แบบเดียวกับ Courses.vue) แล้ว lookup ตามชื่อไฟล์ตอน render
+const logoModules = import.meta.glob('@/assets/images/data/Logo_partners/*', { eager: true })
+function getLogo(file) {
+  const exactKey = `/src/assets/images/data/Logo_partners/${file}`
+  if (logoModules[exactKey]) return logoModules[exactKey].default
+
+  // fallback 1: ไม่สนตัวพิมพ์เล็ก-ใหญ่ (เช่น Is_software.jpg ในโค้ด vs IS_Software.jpg บน disk จริง)
+  const targetLower = file.toLowerCase()
+  let foundKey = Object.keys(logoModules).find(k => k.toLowerCase().endsWith('/' + targetLower))
+  if (foundKey) return logoModules[foundKey].default
+
+  // fallback 2: ไม่สนทั้งตัวพิมพ์เล็ก-ใหญ่และนามสกุลไฟล์ (เผื่อไฟล์จริงเป็นคนละนามสกุล เช่น .png แทน .jpg)
+  const stem = targetLower.replace(/\.[a-z0-9]+$/, '')
+  foundKey = Object.keys(logoModules).find(k => {
+    const kStem = k.toLowerCase().replace(/\.[a-z0-9]+$/, '')
+    return kStem.endsWith('/' + stem)
+  })
+  return foundKey ? logoModules[foundKey].default : ''
+}
+
+// ── จำนวนคอลัมน์: fix ไว้ที่ 3 เสมอ (ขึ้น 2 คอลัมน์ + ลง 1 คอลัมน์ ตามที่ต้องการ) ──
+const columnCount = ref(3)
+
+// ── แบ่งลูกค้าลงคอลัมน์แบบ round-robin ──
+const columns = computed(() => {
+  const cols = Array.from({ length: columnCount.value }, () => [])
+  CLIENTS.forEach((client, i) => {
+    cols[i % columnCount.value].push(client)
+  })
+  return cols
+})
+
+// ── offset แนวตั้งสลับกันของแต่ละคอลัมน์ ให้ดูเป็น masonry แบบใน ref ──
+const OFFSET_PATTERN = [0, -46, -92, -22] // px, วนซ้ำตามจำนวนคอลัมน์
+function columnOffset(colIndex) {
+  return `${OFFSET_PATTERN[colIndex % OFFSET_PATTERN.length]}px`
+}
+
+// ── ความเร็วเลื่อน: คอลัมน์ที่มีการ์ดเยอะกว่าใช้เวลาต่อรอบนานกว่า เพื่อให้ความเร็ว (px/s) ใกล้เคียงกันทุกคอลัมน์
+//    (ปรับตัวคูณให้ช้าลงเพื่อความ smooth ไม่รีบ) ──
+function columnDuration(col) {
+  return `${col.length * 9}s`
+}
+
+// ── Tooltip (teleport ไป body เพื่อไม่ให้โดน overflow:hidden ของคอลัมน์ตัดขอบ) ──
+const hoveredClient = ref(null)
+const tooltipStyle = ref({})
+
+function showTooltip(e, client) {
+  hoveredClient.value = client
+  const rect = e.currentTarget.getBoundingClientRect()
+  tooltipStyle.value = {
+    left: `${rect.left + rect.width / 2}px`,
+    top: `${rect.top}px`,
   }
+}
+
+function hideTooltip() {
+  hoveredClient.value = null
 }
 </script>
 

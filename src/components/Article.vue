@@ -12,10 +12,6 @@
 
       <div class="al-hero-right">
         <div class="al-hero-carousel" @mouseenter="stopHeroAutoplay" @mouseleave="startHeroAutoplay">
-          <button class="al-hero-nav-btn" @click="goPrevHero" aria-label="Previous">
-            <i class="fas fa-chevron-left"></i>
-          </button>
-
           <transition name="al-hero-slide" mode="out-in">
             <div
               v-if="currentHeroArticle"
@@ -32,10 +28,6 @@
               </div>
             </div>
           </transition>
-
-          <button class="al-hero-nav-btn" @click="goNextHero" aria-label="Next">
-            <i class="fas fa-chevron-right"></i>
-          </button>
         </div>
       </div>
     </div>
@@ -43,7 +35,6 @@
 
   <!-- Articles Section -->
   <section class="articles-section">
-    <h2 class="section-title">{{ $t('articles.section.title') }}</h2>
 
     <!-- Loading (ครั้งแรกเท่านั้น — ยังไม่มีข้อมูลเลย) -->
     <div v-if="loading" class="loading-state">
@@ -281,18 +272,6 @@ const heroReadMoreLabel = computed(() => (locale.value === 'th' ? 'อ่าน�
 function nextHero() {
   if (!heroArticles.value.length) return
   heroIndex.value = (heroIndex.value + 1) % heroArticles.value.length
-}
-function prevHero() {
-  if (!heroArticles.value.length) return
-  heroIndex.value = (heroIndex.value - 1 + heroArticles.value.length) % heroArticles.value.length
-}
-function goNextHero() {
-  nextHero()
-  startHeroAutoplay() // รีเซ็ตนับถอยหลังเมื่อผู้ใช้กดเอง
-}
-function goPrevHero() {
-  prevHero()
-  startHeroAutoplay()
 }
 function startHeroAutoplay() {
   stopHeroAutoplay()

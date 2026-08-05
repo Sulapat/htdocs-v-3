@@ -1,12 +1,3 @@
-/* ============================================================
-   GALLERY SHOWCASE — /service#gallery (GalleryShowcase.vue)
-   ============================================================
-   แยกออกมาจาก <style scoped> เดิมในไฟล์ .vue มาไว้ที่นี่แทน
-   ทุก selector ใช้ prefix "gs-" (namespace ผ่านชื่อ class เอง เหมือน
-   .tr-page ใน styles.css และ .courses-* ใน courses.css) จึงไม่ชนกับ
-   class ของหน้าอื่น แม้จะไม่มี Vue scoped attribute (data-v-xxxx) มาช่วยกันแล้วก็ตาม
-   ============================================================ */
-
 /* ============================================
    โทนสี: อ้างอิงจากภาพ mockup — กรมท่าเข้ม + ส้มอิฐเป็นจุดเน้น
    ============================================ */
@@ -40,11 +31,21 @@
 
 .gs-hero-inner {
   display: grid;
-  grid-template-columns: minmax(280px, 420px) 1fr;
-  gap: 3rem;
+  grid-template-columns: minmax(260px, 360px) 1fr;
+  gap: 2rem;
   align-items: center;
   max-width: 1280px;
   margin: 0 auto;
+}
+
+.gs-hero-text {
+  /* กันไม่ให้ความสูงของบล็อกข้อความเปลี่ยนไปมาตอนสลับภาษา (ไทย/อังกฤษ ยาวไม่เท่ากัน)
+     ซึ่งจะไปดันความสูงของทั้งแถว hero และเนื้อหาด้านล่าง (เลขขั้นตอน ฯลฯ) ให้ขยับตาม */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 340px;
 }
 
 .gs-hero-title {
@@ -82,9 +83,14 @@
 
 .gs-hero-media {
   position: relative;
+  aspect-ratio: 16 / 10;
+}
+
+.gs-hero-photo {
+  position: absolute;
+  inset: 0;
   border-radius: 20px;
   overflow: hidden;
-  aspect-ratio: 16 / 10;
   box-shadow: 0 24px 48px -20px rgba(14, 42, 94, 0.35);
 }
 
@@ -93,6 +99,31 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  /* ลดความสว่างจ้าของภาพลงเล็กน้อยให้เข้ากับข้อความ/ป้ายทับ */
+  filter: brightness(0.94);
+}
+
+/* ── Hero crossfade: ภาพทุกใบซ้อนกันอยู่ที่ตำแหน่งเดียว แล้วค่อยๆ opacity สลับ
+   ทำให้เปลี่ยนภาพนุ่มนวล ไม่มีช่วงกระพริบ/ว่างเหมือน mode="out-in" เดิม ── */
+.gs-hero-imgwrap {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+  will-change: opacity;
+}
+
+.gs-hero-imgwrap--active {
+  opacity: 1;
+  z-index: 1;
+}
+
+.gs-hero-media-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(10, 20, 45, 0.08) 0%, rgba(10, 20, 45, 0) 35%, rgba(10, 20, 45, 0.38) 100%);
 }
 
 .gs-fade-enter-active, .gs-fade-leave-active { transition: opacity 0.5s ease; }
@@ -100,43 +131,82 @@
 
 .gs-hero-badge {
   position: absolute;
-  left: 1.5rem;
-  bottom: 1.5rem;
-  background: rgba(14, 26, 56, 0.82);
-  backdrop-filter: blur(6px);
-  color: #fff;
-  padding: 1.1rem 1.3rem;
-  border-radius: 14px;
-  max-width: 240px;
+  left: -2rem;
+  bottom: 2.5rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* 1. สีพื้นหลังน้ำเงินเข้ม แบบไล่เฉดให้มีความลึก */
+  background: linear-gradient(
+    145deg,
+    rgba(32, 64, 120, 0.65) 0%,   /* สีน้ำเงินสว่างขึ้นมานิดนึงตรงมุมซ้ายบน */
+    rgba(10, 25, 60, 0.8) 100%    /* สีน้ำเงินเข้มลึกตรงมุมขวาล่าง */
+  );
+  /* 2. ความฝ้าแบบวุ้นใส (Frosted Effect) */
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  /* 3. เส้นขอบสว่างกระจกบางๆ */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  /* 4. เงาฟุ้งด้านนอก + ไฮไลท์แสงตรงขอบด้านใน */
+  box-shadow:
+    0 15px 35px rgba(5, 12, 30, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.3) inset;
+  color: #ffffff;
+  padding: 1.6rem 1.75rem;
+  width: 320px;
+  min-height: 230px;
+  box-sizing: border-box;
 }
 
+/* 5. ไอคอนวงกลมสีขาว ด้านในเป็นไอคอนสีฟ้าตามรูป */
 .gs-hero-badge-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
-  background: var(--gs-accent);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%; /* เปลี่ยนเป็นวงกลมมนตามรูป */
+  background: #ffffff;
+  color: #2563eb;    /* สีไอคอนโล่ด้านใน */
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 0.6rem;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 0.9rem;
+}
+
+/* 6. เส้นขีดแบ่งสัดส่วน (Divider Line) ด้านบนข้อความ SVEC x PATINEER */
+.gs-hero-badge-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 1rem 0 0.5rem 0;
 }
 
 .gs-hero-badge p {
-  font-size: 0.85rem;
+  font-size: 1.15rem;
+  font-weight: 600;
   line-height: 1.5;
-  margin: 0 0 0.6rem;
+  margin: 0;
+  min-height: 4.5em;
+  background: linear-gradient(120deg, #ffffff 0%, #cfe0ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 1px 18px rgba(255, 255, 255, 0.15);
 }
 
 .gs-hero-badge-tag {
   font-size: 0.72rem;
-  letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.65);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.7);
   text-transform: uppercase;
 }
 
 .gs-hero-nav {
   position: absolute;
+  z-index: 3;
   bottom: 1.5rem;
   width: 40px;
   height: 40px;
@@ -161,7 +231,7 @@
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  padding-left: calc(280px * 0 + 0px); /* aligns naturally via flex column below */
+  padding-left: 0;
 }
 
 .gs-hero-step {
@@ -205,19 +275,6 @@
   align-items: start;
 }
 
-.gs-row-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: #eef1fb;
-  color: var(--gs-navy);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.05rem;
-  margin-bottom: 1rem;
-}
-
 .gs-row-title {
   font-size: 1.25rem;
   font-weight: 700;
@@ -241,9 +298,18 @@
   font-weight: 600;
   font-size: 0.88rem;
   text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
 }
 
-.gs-row-media { position: relative; }
+.gs-row-media {
+  position: relative;
+  min-width: 0; /* กัน grid column ขยายตามความกว้างเนื้อหาจริงของรูปทั้งหมด
+                   ไม่งั้น .gs-row-scroll จะไม่มีอะไรให้เลื่อน เพราะ container โตตามรูป */
+}
 
 .gs-row-scroll {
   display: flex;
@@ -263,6 +329,7 @@
   overflow: hidden;
   scroll-snap-align: start;
   background: #dfe4ee;
+  cursor: pointer;
 }
 
 .gs-row-photo img {
@@ -345,13 +412,16 @@
 }
 
 .gs-card {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   background: #fff;
   border: 1px solid var(--gs-line);
   border-radius: 16px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -364,20 +434,7 @@
 .gs-card-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .gs-card-media--empty { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #b7bfcf; }
 
-.gs-card-body { padding: 1.25rem; }
-
-.gs-card-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: #eef1fb;
-  color: var(--gs-navy);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.85rem;
-  margin-bottom: 0.75rem;
-}
+.gs-card-body { display: flex; flex-direction: column; flex: 1; padding: 1.25rem; }
 
 .gs-card-title {
   font-size: 0.98rem;
@@ -405,6 +462,8 @@
   font-size: 0.82rem;
   font-weight: 600;
   color: var(--gs-accent);
+  margin-top: auto;
+  padding-top: 0.5rem;
 }
 
 /* ── CTA banner ── */
@@ -419,19 +478,6 @@
   align-items: center;
   gap: 1.5rem;
   box-shadow: 0 20px 40px -30px rgba(14, 42, 94, 0.3);
-}
-
-.gs-cta-icon {
-  width: 54px;
-  height: 54px;
-  border-radius: 999px;
-  background: #eef1fb;
-  color: var(--gs-navy);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  flex-shrink: 0;
 }
 
 .gs-cta-text { flex: 1; }
@@ -469,31 +515,197 @@
 
 .gs-stat-item {
   display: flex;
-  align-items: center;
-  gap: 0.85rem;
+  flex-direction: column;
+  gap: 0.2rem;
   color: #fff;
-}
-
-.gs-stat-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--gs-accent);
-  flex-shrink: 0;
 }
 
 .gs-stat-title { font-size: 0.88rem; font-weight: 600; margin: 0; }
 .gs-stat-label { font-size: 0.76rem; color: rgba(255, 255, 255, 0.65); margin: 0; }
 
+/* ── Lightbox / popup ── */
+.gs-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(10, 18, 38, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.gs-modal-fade-enter-active, .gs-modal-fade-leave-active { transition: opacity 0.25s ease; }
+.gs-modal-fade-enter-from, .gs-modal-fade-leave-to { opacity: 0; }
+
+.gs-lightbox-panel {
+  width: 100%;
+  max-width: 860px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.gs-lightbox-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.gs-lightbox-title {
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.gs-lightbox-close {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.gs-lightbox-close:hover { background: var(--gs-accent); }
+
+.gs-lightbox-stage {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0a1226;
+  aspect-ratio: 16 / 10;
+}
+
+.gs-lightbox-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: #0a1226;
+}
+
+.gs-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--gs-navy);
+  cursor: pointer;
+}
+
+.gs-lightbox-nav:hover { background: var(--gs-accent); color: #fff; }
+.gs-lightbox-nav--prev { left: 1rem; }
+.gs-lightbox-nav--next { right: 1rem; }
+
+.gs-lightbox-count {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.gs-lightbox-thumbs {
+  display: flex;
+  gap: 0.6rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  scrollbar-width: none;
+}
+
+.gs-lightbox-thumbs::-webkit-scrollbar { display: none; }
+
+.gs-lightbox-thumb {
+  flex: 0 0 72px;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.gs-lightbox-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.gs-lightbox-thumb--active,
+.gs-lightbox-thumb:hover {
+  opacity: 1;
+  border-color: var(--gs-accent);
+}
+
+@media (max-width: 560px) {
+  .gs-lightbox { padding: 1rem; }
+  .gs-lightbox-nav { width: 38px; height: 38px; }
+}
+
 /* ── Responsive ── */
 @media (max-width: 960px) {
+  .gs-hero { padding: calc(80px + 2rem) 5% 2rem; }
   .gs-hero-inner { grid-template-columns: 1fr; }
-  .gs-row-grid { grid-template-columns: 1fr; }
+  .gs-hero-title { font-size: 2rem; }
+  .gs-hero-text { min-height: 0; }
+
+  /* เดิม badge เป็น position:absolute ลอยทับรูปเสมอ ต่อให้ย่อขนาดแค่ไหนก็ยังกินพื้นที่ภาพอยู่ดี
+     ตราบใดที่มันยังคงลอยอยู่บนรูป เลยเปลี่ยนโครงสร้างใหม่บนจอแคบ: รูปเต็มความกว้างอยู่แถวบน
+     ส่วน badge + ปุ่มเลื่อน (prev/next) ย้ายลงมาเป็นแถวใต้ภาพแทน (ไม่ทับภาพเลย)
+     ใช้ grid จัดแถวล่างให้ badge กินพื้นที่ที่เหลือ ส่วนปุ่มอยู่ชิดขวา */
+  .gs-hero-media {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 0.75rem 0.6rem;
+    aspect-ratio: auto;
+  }
+  .gs-hero-photo {
+    grid-column: 1 / -1;
+    position: relative;
+    inset: auto;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+  }
+  .gs-hero-media-overlay { display: none; } /* ไม่จำเป็นแล้ว เพราะไม่มีตัวหนังสือวางทับรูปอีกต่อไป */
+  .gs-hero-badge {
+    grid-column: 1;
+    position: static;
+    width: 100%;
+    min-height: 0;
+    padding: 1.1rem 1.25rem;
+  }
+  .gs-hero-badge-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+  }
+  .gs-hero-badge p {
+    font-size: 0.95rem;
+    min-height: 0;
+  }
+  .gs-hero-badge-divider {
+    margin: 0.7rem 0 0.4rem;
+  }
+  .gs-hero-nav { position: static; }
+  .gs-hero-nav--prev { grid-column: 2; }
+  .gs-hero-nav--next { grid-column: 3; }
+
+  .gs-row-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .gs-row { margin-bottom: 2.5rem; }
   .gs-row-dots { padding-left: 0; }
+  /* การ์ดในแถวเลื่อนแนวนอน: ลดจาก 260px ให้เห็นการ์ดถัดไปโผล่มาบางส่วน (ใบ้ว่าเลื่อนได้) ชัดขึ้นบนจอแคบ */
+  .gs-row-photo { flex-basis: 220px; }
+
   .gs-cards-grid { grid-template-columns: repeat(2, 1fr); }
   .gs-stats-bar { grid-template-columns: repeat(2, 1fr); }
 }
@@ -501,6 +713,13 @@
 @media (max-width: 560px) {
   .gs-hero { padding: calc(80px + 2rem) 5% 2rem; }
   .gs-hero-title { font-size: 1.9rem; }
+  .gs-hero-text { min-height: 0; }
+  .gs-hero-media { grid-template-columns: 1fr auto auto; gap: 0.6rem; }
+  .gs-hero-badge { padding: 0.9rem 1.1rem; }
+  .gs-hero-nav { width: 34px; height: 34px; }
+  .gs-rows-section { padding: 2.5rem 5%; }
+  .gs-row { margin-bottom: 2rem; }
+  .gs-row-photo { flex-basis: 200px; }
   .gs-cards-grid { grid-template-columns: 1fr; }
   .gs-stats-bar { grid-template-columns: 1fr; }
   .gs-cta { flex-direction: column; align-items: flex-start; }

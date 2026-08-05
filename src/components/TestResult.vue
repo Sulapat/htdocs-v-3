@@ -112,7 +112,7 @@
       </div>
 
       <!-- All Results (before search) -->
-      <div v-else-if="isEmpty" class="results-container">
+      <div v-else-if="isEmpty" class="results-container" ref="resultsContainerRef">
         <div class="results-grid">
           <div v-for="(result, index) in pagedData" :key="result.id" class="result-card" :style="{ borderColor: cardBorderColor(index, pagedData.length) }">
             <div class="result-avatar-area">
@@ -167,7 +167,7 @@
       </div>
 
       <!-- Search Results -->
-      <div v-else-if="!isEmpty" class="results-container">
+      <div v-else-if="!isEmpty" class="results-container" ref="resultsContainerRef">
         <div class="results-grid">
           <div v-for="(result, index) in pagedSearchData" :key="result.id" class="result-card" :style="{ borderColor: cardBorderColor(index, pagedSearchData.length) }">
             <div class="result-avatar-area">
@@ -346,6 +346,27 @@ const dotClass = (val) => ({
   'dot-va4': val === 'C4VA',
 })
 
+// ── กันไม่ให้เห็น footer เวลาสลับหมวดหมู่แล้วเนื้อหาสั้นลง ──
+// dropdown ตัวนี้เป็น sticky ตำแหน่ง scroll เดิมจะถูกคงไว้ตอนเปลี่ยนหมวดหมู่ (ไม่เด้งกลับขึ้นบนสุด)
+// แต่ละหมวดหมู่มีจำนวนผลลัพธ์ไม่เท่ากัน ถ้าหมวดใหม่สั้นกว่าตำแหน่ง scroll เดิม
+// ผู้ใช้จะเห็น footer แทนเนื้อหาที่เพิ่งเปลี่ยน ฟังก์ชันนี้เลื่อนจอขึ้นแค่พอให้ขอบล่างของ
+// เนื้อหาชุดใหม่ชนขอบล่างจอพอดี (ไม่เด้งกลับขึ้นบนสุด)
+const resultsContainerRef = ref(null)
+const adjustScrollToNewContentBottom = async () => {
+  await nextTick()
+  requestAnimationFrame(() => {
+    const el = resultsContainerRef.value
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    // ปรับเฉพาะตอนที่ผู้ใช้เลื่อนลงมาเลยจุดเริ่มต้นของเนื้อหาไปแล้ว (rect.top < 0)
+    // และเนื้อหาชุดใหม่จบเหนือขอบล่างจอ (เห็นพื้นที่ว่าง/footer แทนที่)
+    if (rect.top < 0 && rect.bottom < window.innerHeight) {
+      const delta = window.innerHeight - rect.bottom
+      window.scrollTo({ top: window.scrollY - delta, behavior: 'smooth' })
+    }
+  })
+}
+
 // courseOptions เป็น computed เพื่อให้ label เปลี่ยนตามภาษาที่เลือกแบบ reactive
 const courseOptions = computed(() => [
   { value: 'ALL',  label: t('testResult.dropdown.all') },
@@ -386,6 +407,7 @@ const selectCourse = (val) => {
   if (!q) {
     results.value = []
     isEmpty.value = true
+    adjustScrollToNewContentBottom()
     return
   }
 
@@ -401,6 +423,7 @@ const selectCourse = (val) => {
       (item.email || '').toLowerCase().includes(q)
     )
     loading.value = false
+    adjustScrollToNewContentBottom()
   }, 300)
 }
 

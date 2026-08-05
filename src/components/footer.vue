@@ -20,6 +20,7 @@
                 <ul>
                     <li><router-link to="/">{{ $t('nav.home') }}</router-link></li>
                     <li><a href="#service" @click.prevent="handleServiceClick">{{ $t('nav.service') }}</a></li>
+                    <li><router-link to="/showcase" @click="closeAll">{{ $t('nav.portfolio') }}</router-link></li>
                     <li><router-link to="/knowledge">{{ $t('nav.knowledge') }}</router-link></li>
                     <li><a href="#article" @click.prevent="handleArticleClick">{{ $t('nav.article') }}</a></li>
                     <li><router-link to="/result">{{ $t('nav.viAnalysts') }}</router-link></li>

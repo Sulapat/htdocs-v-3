@@ -247,6 +247,20 @@
   margin-bottom: 20px;
 }
 
+/* ── Objectives (highlighted green frame) ── */
+.cd-section--objectives {
+  border: 1.5px solid #22c55e;
+  background: rgba(34, 197, 94, 0.06);
+  border-radius: 14px;
+  padding: 24px 28px;
+}
+.cd-section--objectives .cd-section-title {
+  border-bottom-color: rgba(34, 197, 94, 0.25);
+}
+.cd-section--objectives .cd-checklist li i {
+  color: #16a34a;
+}
+
 /* ── Prose ── */
 .cd-prose {
   color: #475569; line-height: 1.9;

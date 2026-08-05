@@ -1,88 +1,109 @@
 <template>
     <div class="detail">
-        
-        <div class="detail-wrapper" v-if="news">
-            <div class="detail-main">
-                <div class="detail-card">
-                    <!-- Image Gallery -->
-                    <div class="detail-image-wrapper">
-                        <button 
-                            v-if="showArrows" 
-                            class="arrow-btn left" 
-                            @click="prevImage">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <img :src="currentImage" :alt="news.title" class="detail-image">
-                        <button 
-                            v-if="showArrows" 
-                            class="arrow-btn right" 
-                            @click="nextImage">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
 
-                    <!-- Meta Info -->
-                    <div class="detail-meta">
-                        <div class="meta-item">
-                            <i class="fas fa-calendar"></i>
-                            <span>{{ news.date }}</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>{{ news.location }}</span>
+        <template v-if="news">
+            <div class="detail-wrapper">
+                <!-- รูปโปสเตอร์: ย้ายมาเป็นคอลัมน์ซ้ายเดี่ยวๆ -->
+                <div class="detail-media">
+                    <div class="detail-card">
+                        <div class="detail-image-wrapper">
+                            <button
+                                v-if="showArrows"
+                                class="arrow-btn left"
+                                @click="prevImage">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <img :src="currentImage" :alt="news.title" class="detail-image">
+                            <button
+                                v-if="showArrows"
+                                class="arrow-btn right"
+                                @click="nextImage">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Title -->
-                    <h1 class="detail-title">{{ news.title }}</h1>
+                <!-- เนื้อหา: ย้ายขึ้นมาอยู่คอลัมน์ขวาแทนที่ "ข่าวประชาสัมพันธ์อื่นๆ" เดิม -->
+                <div class="detail-info">
+                    <div class="detail-card">
+                        <!-- Meta Info -->
+                        <div class="detail-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>{{ news.date }}</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>{{ news.location }}</span>
+                            </div>
+                        </div>
 
-                    <!-- Lead summary: ข้อความเดียวกับที่การ์ดใน Knowledge.vue ตัดไว้แค่ 2 บรรทัด (line-clamp)
-                         ที่นี่แสดงแบบเต็ม ไม่ตัดบรรทัด เพื่อไม่ให้เนื้อหาส่วนนี้หายไปสำหรับคนที่กดเข้ามาดู -->
-                    <p class="detail-lead" v-if="news.shortDesc || news.description">
-                        {{ news.shortDesc || news.description }}
-                    </p>
+                        <!-- Title -->
+                        <h1 class="detail-title">{{ news.title }}</h1>
 
-                    <div class="detail-content" v-html="news.fullDescription"></div>
+                        <!-- Lead summary: ข้อความเดียวกับที่การ์ดใน Knowledge.vue ตัดไว้แค่ 2 บรรทัด (line-clamp)
+                             ที่นี่แสดงแบบเต็ม ไม่ตัดบรรทัด เพื่อไม่ให้เนื้อหาส่วนนี้หายไปสำหรับคนที่กดเข้ามาดู -->
+                        <p class="detail-lead" v-if="news.shortDesc || news.description">
+                            {{ news.shortDesc || news.description }}
+                        </p>
 
-                    <!-- Tags -->
-                    <div class="tags" v-if="news.tags">
-                        <span v-for="tag in news.tags" :key="tag" class="tag">
-                            {{ tag }}
-                        </span>
-                    </div>
+                        <div class="detail-content" v-html="news.fullDescription"></div>
 
-                    <!-- Contact -->
-                    <div class="contact-box">
-                        <h3><i class="fas fa-phone-alt"></i> <span>{{ $t('detail.contactTitle') }}</span></h3>
-                        <p>{{ $t('detail.contactSubtitle') }}</p>
-                        <div class="contact-buttons">
-                            <a href="tel:0961879595" class="contact-btn">
-                                <i class="fas fa-phone"></i> 096-1879595
-                            </a>
-                            <a href="https://line.me/R/ti/p/@530ddhwa" target="_blank" class="contact-btn">
-                                <i class="fab fa-line"></i> @530ddhwa
-                            </a>
-                            <a href="mailto:patineer@outlook.com" class="contact-btn">
-                                <i class="fas fa-envelope"></i> <span>{{ $t('detail.emailLabel') }}</span>
-                            </a>
+                        <!-- Tags -->
+                        <div class="tags" v-if="news.tags">
+                            <span v-for="tag in news.tags" :key="tag" class="tag">
+                                {{ tag }}
+                            </span>
+                        </div>
+
+                        <!-- Contact -->
+                        <div class="contact-box">
+                            <h3><i class="fas fa-phone-alt"></i> <span>{{ $t('detail.contactTitle') }}</span></h3>
+                            <p>{{ $t('detail.contactSubtitle') }}</p>
+                            <div class="contact-buttons">
+                                <a href="tel:0961879595" class="contact-btn">
+                                    <i class="fas fa-phone"></i> 096-1879595
+                                </a>
+                                <a href="https://line.me/R/ti/p/@530ddhwa" target="_blank" class="contact-btn">
+                                    <i class="fab fa-line"></i> @530ddhwa
+                                </a>
+                                <a href="mailto:patineer@outlook.com" class="contact-btn">
+                                    <i class="fas fa-envelope"></i> <span>{{ $t('detail.emailLabel') }}</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Related News -->
-            <aside class="related-news">
-                <h2><i class="fas fa-bullhorn"></i> <span>{{ $t('detail.relatedNewsTitle') }}</span></h2>
-                <ul v-if="relatedNews.length" class="related-news-list">
-                    <li v-for="item in relatedNews" :key="item.id">
-                        <router-link :to="`?id=${item.id}`">
-                            {{ item.title }}
-                        </router-link>
-                    </li>
-                </ul>
-                <p v-else>{{ $t('detail.noMoreNews') }}</p>
-            </aside>
-        </div>
+            <!-- ข่าวประชาสัมพันธ์อื่นๆ: เปลี่ยนเป็นการ์ดเลื่อนอัตโนมัติแบบเดียวกับ hero ของ Knowledge -->
+            <section class="related-section" v-if="relatedArticles.length">
+                <div class="related-container">
+                    <h2 class="related-title"><i class="fas fa-bullhorn"></i> <span>{{ $t('detail.relatedNewsTitle') }}</span></h2>
+
+                    <div class="related-carousel" @mouseenter="stopRelatedAutoplay" @mouseleave="startRelatedAutoplay">
+                        <transition name="related-slide" mode="out-in">
+                            <router-link
+                                v-if="currentRelatedArticle"
+                                :key="currentRelatedArticle.id"
+                                :to="`?id=${currentRelatedArticle.id}`"
+                                class="related-card">
+                                <img :src="currentRelatedArticle.image" :alt="currentRelatedArticle.title" class="related-card-image">
+                                <div class="related-card-content">
+                                    <span class="article-category" :class="'cat-' + currentRelatedArticle.category">
+                                        {{ getCategoryLabel(currentRelatedArticle.category) }}
+                                    </span>
+                                    <h3>{{ currentRelatedArticle.title }}</h3>
+                                    <p>{{ currentRelatedArticle.description }}</p>
+                                    <span class="btn-read-more"><span>{{ $t('knowledge.readMore') }}</span> <i class="fas fa-arrow-right"></i></span>
+                                </div>
+                            </router-link>
+                        </transition>
+                    </div>
+                </div>
+            </section>
+        </template>
 
         <div v-else-if="loading" class="no-news">
             <p>{{ $t('detail.loading') }}</p>
@@ -114,7 +135,9 @@ export default {
       images: [],
       currentImageIndex: 0,
       loading: false,
-      error: ''
+      error: '',
+      relatedIndex: 0,
+      relatedTimer: null
     }
   },
 
@@ -129,6 +152,13 @@ export default {
     relatedNews() {
       if (!this.news || !this.newsList) return []
       return this.newsList.filter(n => n.id !== this.news.id).slice(0, 5)
+    },
+    // แปลง relatedNews (ข้อมูลดิบ) ให้อยู่ในรูปแบบการ์ดเดียวกับ hero ของ Knowledge.vue
+    relatedArticles() {
+      return this.relatedNews.map(this.mapRelatedArticle)
+    },
+    currentRelatedArticle() {
+      return this.relatedArticles[this.relatedIndex] || null
     }
   },
 
@@ -171,6 +201,10 @@ export default {
 
       document.title = `${this.news.title} - PATINEER`
       this.currentImageIndex = 0
+
+      // การ์ดข่าวประชาสัมพันธ์อื่นๆ เปลี่ยนทุกครั้งที่เปิดข่าวใหม่ → เริ่มนับที่การ์ดแรกและรีเซ็ต autoplay ใหม่
+      this.relatedIndex = 0
+      this.startRelatedAutoplay()
     },
 
     prevImage() {
@@ -196,6 +230,49 @@ export default {
       if (this.images.length < 2) return
       if (e.key === 'ArrowLeft') this.prevImage()
       else if (e.key === 'ArrowRight') this.nextImage()
+    },
+
+    // ── Related carousel: แปลงข้อมูลข่าวดิบให้เป็นการ์อยู่ในฟอร์แมตเดียวกับ hero-card ของ Knowledge.vue ──
+    mapRelatedArticle(n) {
+      let category = 'news'
+      if (n.tags && n.tags.includes('Category II')) {
+        category = 'category2'
+      } else if (n.tags && (n.tags.includes('อบรม') || n.tags.includes('สัมมนา') || n.tags.includes('Training'))) {
+        category = 'training'
+      }
+      return {
+        id: n.id,
+        title: n.title,
+        description: n.shortDesc,
+        image: resolveImage(n.image),
+        category: category
+      }
+    },
+
+    getCategoryLabel(category) {
+      const labels = {
+        'category2': this.$t('knowledge.categoryLabel.category2'),
+        'training': this.$t('knowledge.categoryLabel.training'),
+        'news': this.$t('knowledge.categoryLabel.news')
+      }
+      return labels[category] || this.$t('knowledge.categoryLabel.default')
+    },
+
+    nextRelated() {
+      if (!this.relatedArticles.length) return
+      this.relatedIndex = (this.relatedIndex + 1) % this.relatedArticles.length
+    },
+
+    startRelatedAutoplay() {
+      this.stopRelatedAutoplay()
+      this.relatedTimer = setInterval(this.nextRelated, 5000) // เลื่อนอัตโนมัติทุก 5 วิ เหมือน Knowledge.vue
+    },
+
+    stopRelatedAutoplay() {
+      if (this.relatedTimer) {
+        clearInterval(this.relatedTimer)
+        this.relatedTimer = null
+      }
     }
   },
 
@@ -209,6 +286,7 @@ export default {
 
   beforeUnmount() {
     window.removeEventListener('keydown', this.handleKeydown)
+    this.stopRelatedAutoplay()
   },
 
   watch: {

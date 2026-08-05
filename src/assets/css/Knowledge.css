@@ -12,6 +12,17 @@ body {
     padding-top: 80px;
 }
 
+/* ── Background theme: ส่วน Knowledge ทั้งหมด (header + filter + grid) ==
+   ใช้โทนน้ำเงินอ่อนคลุมทั้ง section เพื่อให้แยกจาก Article (โทนเขียว) ที่ต่อท้ายด้านล่าง ── */
+.Knowledge {
+    background:
+        linear-gradient(90deg, #f6f9fd 0%, transparent 22%, transparent 78%, #f6f9fd 100%),
+        radial-gradient(circle at 10% 6%, rgba(10, 17, 114, 0.10) 0%, transparent 42%),
+        radial-gradient(circle at 90% 22%, rgba(30, 89, 172, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 82% 95%, rgba(18, 63, 158, 0.10) 0%, transparent 45%),
+        linear-gradient(160deg, #e2edfa 0%, #eef4fc 45%, #e6effa 100%);
+}
+
 /* ===== HEADER =====
    ธีมสีดึงมาจากโลโก้ Patineer: น้ำเงินกรมท่า (#0a1172) + เขียว (#067b06)
    ให้ความรู้สึกเดียวกับแบรนด์ พร้อมริบบิ้นทแยงมุมจางๆ ที่ล้อลายโลโก้ */
@@ -89,14 +100,19 @@ body {
     text-align: left;
 }
 
+/* ── สลับตำแหน่ง hero: การ์ดข่าวย้ายไปขวา / ข้อความประชาสัมพันธ์ย้ายมาซ้าย ──
+   ใช้ order (flex) แทนการสลับ DOM เพื่อไม่กระทบ event binding (mouseenter/leave) ที่ผูกกับ .hero-carousel */
 .hero-left {
     flex: 3;
     min-width: 0;
+    order: 2;
 }
 
 .hero-right {
-    flex: 0 0 auto;
-    text-align: right;
+    flex: 0 1 460px;
+    min-width: 280px;
+    text-align: left;
+    order: 1;
 }
 
 .hero-right h1 {
@@ -104,13 +120,12 @@ body {
     font-weight: 700;
     margin-bottom: 1rem;
     letter-spacing: 0.01em;
-    white-space: nowrap;
 }
 
 .hero-right p {
     font-size: 1rem;
     color: rgba(255, 255, 255, 0.85);
-    margin: 0 0 0 auto;
+    margin: 0;
     word-break: keep-all;
     overflow-wrap: break-word;
     text-wrap: balance;
@@ -120,29 +135,6 @@ body {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-}
-
-.hero-nav-btn {
-    flex-shrink: 0;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    border: none;
-    background: rgba(255, 255, 255, 0.95);
-    color: #0a1172;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 0.95rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s;
-}
-
-.hero-nav-btn:hover {
-    background: #067b06;
-    color: #fff;
-    transform: scale(1.08);
 }
 
 .hero-card {
@@ -209,20 +201,23 @@ body {
     min-height: 0;
 }
 
-/* ── Animation ตอนเลื่อนการ์ด (ทั้ง autoplay และกดปุ่มเอง) ── */
+/* ── Animation ตอนเลื่อนการ์ด (ทั้ง autoplay และกดปุ่มเอง) ──
+   ช้าลงจาก 0.45s -> 0.9s และเปลี่ยนจาก ease ธรรมดาเป็น cubic-bezier แบบ
+   ease-in-out ที่นุ่มนวลกว่า เพื่อให้ความเคลื่อนไหวลื่นไหล ไม่กระตุก
+   ไม่เป็นจุดสังเกตเกินไป แต่ยังคงมี motion ให้เห็นอยู่ (ไม่ fade เฉยๆ จนจืด) */
 .hero-slide-enter-active,
 .hero-slide-leave-active {
-    transition: opacity 0.45s ease, transform 0.45s ease;
+    transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1), transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hero-slide-enter-from {
     opacity: 0;
-    transform: translateX(30px);
+    transform: translateX(18px);
 }
 
 .hero-slide-leave-to {
     opacity: 0;
-    transform: translateX(-30px);
+    transform: translateX(-18px);
 }
 
 @media (max-width: 900px) {
@@ -234,6 +229,12 @@ body {
         order: -1;
         text-align: center;
         min-width: 0;
+        /* เดิม .hero-right มี flex: 0 1 460px (กำหนดไว้ตอนเป็น row สำหรับ desktop
+           460px = ความกว้าง) พอสลับเป็น column ค่านี้จะกลายเป็น "ความสูง" แทนทันที
+           (flex-basis อิงตามแกนหลักซึ่งเปลี่ยนทิศทาง) ทำให้กล่องข้อความที่จริงสูงแค่
+           ~150px ถูกดันให้สูงถึง 460px ว่างเปล่า กลายเป็นช่องว่างมหาศาลก่อนถึงการ์ด
+           ด้านล่าง ต้อง reset กลับไปยึดตามเนื้อหาจริง */
+        flex: none;
     }
     .hero-right h1 {
         font-size: 1.8rem;
@@ -264,11 +265,6 @@ body {
     .knowledge-header::after {
         width: 260px;
         height: 260px;
-    }
-    .hero-nav-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 0.85rem;
     }
 }
 
@@ -394,19 +390,23 @@ body {
     font-weight: 600;
     margin-bottom: 0.8rem;
     text-transform: uppercase;
-    color: white;
+    background: #fff;
+    border: 1.5px solid currentColor;
 }
 
 .cat-training {
-    background: #6c63ff;
+    color: #6c63ff;
+    background: rgba(108, 99, 255, 0.08);
 }
 
 .cat-category2 {
-    background: #17a2b8;
+    color: #17a2b8;
+    background: rgba(23, 162, 184, 0.08);
 }
 
 .cat-news {
-    background: #28a745;
+    color: #28a745;
+    background: rgba(40, 167, 69, 0.08);
 }
 
 .article-info h3 {

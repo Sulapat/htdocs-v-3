@@ -4,10 +4,6 @@
       <div class="knowledge-header-inner knowledge-hero">
         <div class="hero-left">
           <div class="hero-carousel" @mouseenter="stopHeroAutoplay" @mouseleave="startHeroAutoplay">
-            <button class="hero-nav-btn hero-nav-prev" @click="goPrevHero" aria-label="Previous">
-              <i class="fas fa-chevron-left"></i>
-            </button>
-
             <transition name="hero-slide" mode="out-in">
               <router-link
                   v-if="currentHeroArticle"
@@ -25,10 +21,6 @@
                   </div>
               </router-link>
             </transition>
-
-            <button class="hero-nav-btn hero-nav-next" @click="goNextHero" aria-label="Next">
-              <i class="fas fa-chevron-right"></i>
-            </button>
           </div>
         </div>
 
@@ -323,18 +315,6 @@ export default {
       if (!this.heroArticles.length) return
       this.heroIndex = (this.heroIndex + 1) % this.heroArticles.length
     },
-    prevHero() {
-      if (!this.heroArticles.length) return
-      this.heroIndex = (this.heroIndex - 1 + this.heroArticles.length) % this.heroArticles.length
-    },
-    goNextHero() {
-      this.nextHero()
-      this.startHeroAutoplay() // รีเซ็ตนับถอยหลังเมื่อผู้ใช้กดเอง
-    },
-    goPrevHero() {
-      this.prevHero()
-      this.startHeroAutoplay()
-    },
     startHeroAutoplay() {
       this.stopHeroAutoplay()
       this.heroTimer = setInterval(this.nextHero, 5000) // เลื่อนอัตโนมัติทุก 5 วิ
@@ -388,4 +368,4 @@ export default {
    shadow/overflow อีกครั้ง กลายเป็น element ไหลแบบ default (รูปเล็ก + ข้อความ
    ล้นออกมานอกกรอบการ์ดตรงๆ บนพื้นหลังไล่สี ไม่มีกรอบขาวคลุม) */
 @import "@/assets/css/Knowledge.css";
-</style>  
+</style>

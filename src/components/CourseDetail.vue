@@ -83,7 +83,7 @@
               <h2 class="cd-section-title">{{ $t('courseDetail.detailTab.aboutTitle') }}</h2>
               <p class="cd-prose">{{ course.description }}</p>
             </section>
-            <section class="cd-section">
+            <section class="cd-section cd-section--objectives">
               <h2 class="cd-section-title">{{ $t('courseDetail.detailTab.objectivesTitle') }}</h2>
               <ul class="cd-checklist">
                 <li v-for="obj in course.objectives" :key="obj">

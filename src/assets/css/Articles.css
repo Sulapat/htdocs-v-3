@@ -44,6 +44,7 @@
 .al-hero-left {
     flex: 0 1 460px;
     min-width: 280px;
+    order: 2;
 }
 
 .articles-hero h1 {
@@ -52,15 +53,15 @@
     color: #ffffff;
     margin: 0 0 0.1rem 0;
     line-height: 1.1;
-    text-align: left;
+    text-align: right;
 }
 
 .articles-hero p {
     font-size: 1.1rem;
     color: rgba(255, 255, 255, 0.85);
     line-height: 1.7;
-    margin: 0;
-    text-align: left;
+    margin: 0 0 0 auto;
+    text-align: right;
     max-width: 460px;
     /* จองพื้นที่ไว้เท่ากับ 2 บรรทัดเสมอ กันการ์ดสูงไม่เท่ากันตอนสลับภาษา */
     min-height: calc(1.1rem * 1.7 * 2);
@@ -71,38 +72,18 @@
 /* ── Hero carousel: การ์ดบทความเลื่อนอัตโนมัติ ฝั่งขวา ──
    ใช้ prefix "al-" (Article) เพราะ Knowledge.vue render <Article/> ต่อท้ายตัวเองในหน้าเดียวกัน
    ถ้าใช้ชื่อคลาส .hero-carousel / .hero-card ซ้ำกับที่ Knowledge.css ประกาศไว้ สไตล์จะไปทับกัน */
+/* ── สลับตำแหน่ง hero: การ์ดบทความย้ายไปซ้าย / ข้อความหัวข้อย้ายมาขวา ──
+   ใช้ order (flex) แทนการสลับ DOM เพื่อไม่กระทบ event binding (mouseenter/leave) ที่ผูกกับ .al-hero-carousel */
 .al-hero-right {
     flex: 3;
     min-width: 0;
+    order: 1;
 }
 
 .al-hero-carousel {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-}
-
-.al-hero-nav-btn {
-    flex-shrink: 0;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    border: none;
-    background: rgba(255, 255, 255, 0.95);
-    color: #020266;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 0.95rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s;
-}
-
-.al-hero-nav-btn:hover {
-    background: #0c7a2e;
-    color: #fff;
-    transform: scale(1.08);
 }
 
 .al-hero-card {
@@ -210,18 +191,32 @@
 /* ========================================
    ARTICLES SECTION
    ======================================== */
+/* ── Background theme: ส่วน Article ทั้งหมด (หัวข้อ + grid + sidebar) ──
+   .articles-section เองถูกจำกัดความกว้างไว้ที่ 1400px และ margin:auto อยู่กึ่งกลาง
+   จึงใช้ ::before เป็นแผ่นพื้นหลังเต็มความกว้างจอ (full-bleed) วางไว้หลังเนื้อหา
+   แทนการใส่ background ตรงๆ ที่ตัว section (ไม่งั้นสีจะโชว์แค่แถบกลางจอ ไม่เต็มขอบ) */
 .articles-section {
+    position: relative;
     padding: 80px 20px;
     max-width: 1400px;
     margin: 0 auto;
 }
 
-.section-title {
-    text-align: center;
-    font-size: 2.5rem;
-    color: #020266;
-    margin-bottom: 60px;
-    font-weight: 700;
+.articles-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+    background:
+        linear-gradient(90deg, #f6fbf7 0%, transparent 22%, transparent 78%, #f6fbf7 100%),
+        radial-gradient(circle at 12% 8%, rgba(12, 122, 46, 0.16) 0%, transparent 42%),
+        radial-gradient(circle at 88% 18%, rgba(6, 123, 6, 0.12) 0%, transparent 38%),
+        radial-gradient(circle at 80% 92%, rgba(12, 122, 46, 0.14) 0%, transparent 45%),
+        linear-gradient(160deg, #e3f7ea 0%, #eefaf1 45%, #e9f8ee 100%);
+    z-index: -1;
 }
 
 /* Loading / error states */
@@ -417,8 +412,17 @@
         gap: 1.5rem;
     }
 
+    .al-hero-left {
+        order: -1;
+        /* เหตุผลเดียวกับ .hero-right ใน Knowledge.css: flex: 0 1 460px เดิมตั้งใจ
+           ให้เป็นความกว้าง 460px ตอน desktop (row) แต่พอสลับเป็น column ค่านี้
+           กลายเป็นความสูงแทน ดันกล่องข้อความให้สูงว่างเปล่าก่อนถึงการ์ดด้านล่าง */
+        flex: none;
+    }
+
     .al-hero-right {
         min-width: 0;
+        order: 2;
     }
 
     .al-hero-card {
@@ -433,12 +437,6 @@
 
     .al-hero-card-content {
         padding: 1rem 1.25rem;
-    }
-
-    .al-hero-nav-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 0.85rem;
     }
 
     .articles-hero h1 {
@@ -457,11 +455,6 @@
         padding: 50px 15px;
     }
 
-    .section-title {
-        font-size: 2rem;
-        margin-bottom: 40px;
-    }
-
     .articles-grid {
         grid-template-columns: 1fr;
         gap: 22px;
@@ -471,10 +464,6 @@
 @media (max-width: 480px) {
     .articles-hero h1 {
         font-size: 1.5rem;
-    }
-
-    .section-title {
-        font-size: 1.6rem;
     }
 
     .article-content h3 {

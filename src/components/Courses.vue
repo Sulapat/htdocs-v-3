@@ -111,7 +111,7 @@
         </div>
 
         <!-- Cards grid -->
-        <div v-if="filteredCourses.length > 0" class="courses-grid">
+        <div v-if="filteredCourses.length > 0" class="courses-grid" ref="coursesGridRef">
           <div
             v-for="course in filteredCourses"
             :key="course.id"
@@ -121,37 +121,17 @@
           >
             <div class="course-image">
               <img :src="course.image">
-              <span v-if="course.badge" class="course-badge" :class="course.badgeClass">
-                <!-- ✅ badge อาจมีหลายภาษา -->
-                {{ lf(course.badge) }}
-              </span>
-              <span
-                class="course-cat-chip"
-                :style="{
-                  background: (course.categoryColor || '#475569') + 'cc',
-                  color: '#fff'
-                }"
-              >
-                {{ course.category }}
-              </span>
             </div>
             <div class="course-content">
               <!-- ✅ title และ desc จาก API → ใช้ lf() -->
               <h3>{{ lf(course.title) }}</h3>
               <p class="course-desc">{{ lf(course.desc) }}</p>
-              <div class="course-details">
-                <span><i class="far fa-clock"></i> {{ lf(course.duration) }}</span>
-                <span><i class="far fa-user"></i> {{ lf(course.capacity) }}</span>
-              </div>
-              <div class="course-price">
-                <span class="per-person">{{ $t('courses.card.perPerson') }}</span>
-              </div>
-              <div class="card-actions">
-                <!-- ✅ ส่ง title ที่แปลแล้วเข้า modal -->
-                <button class="btn-book" @click.stop="openBookingModal(lf(course.title), course.price)">
-                  <i class="fas fa-calendar-check"></i> <span>{{ $t('courses.card.bookButton') }}</span>
-                </button>
-              </div>
+            </div>
+            <div class="card-actions">
+              <!-- ✅ ส่ง title ที่แปลแล้วเข้า modal -->
+              <button class="btn-book" @click.stop="openBookingModal(lf(course.title), course.price)">
+                <i class="fas fa-calendar-check"></i> <span>{{ $t('courses.card.bookButton') }}</span>
+              </button>
             </div>
           </div>
         </div>
@@ -380,10 +360,37 @@ const searchQuery = ref('')
 
 const selectedCategory = ref(sessionStorage.getItem('coursesCategory') || 'ALL')
 
+// ── กันไม่ให้เห็น footer เวลาสลับหมวดหมู่ใน sidebar แล้วเนื้อหาสั้นลง ──
+// sidebar เป็น sticky ตำแหน่ง scroll เดิมจะถูกคงไว้ตอนเปลี่ยนหมวดหมู่ (ไม่เด้งกลับขึ้นบนสุด)
+// แต่ละหมวดหมู่มีจำนวนคอร์สไม่เท่ากัน ถ้าหมวดใหม่สั้นกว่าตำแหน่ง scroll เดิม ผู้ใช้จะเห็น
+// footer แทนเนื้อหาที่เพิ่งเปลี่ยน ฟังก์ชันนี้เลื่อนจอขึ้นแค่พอให้ขอบล่างของเนื้อหาชุดใหม่
+// ชนขอบล่างจอพอดี (ไม่เด้งกลับขึ้นบนสุด)
+const coursesGridRef = ref(null)
+const adjustScrollToNewContentBottom = async () => {
+  await nextTick()
+  requestAnimationFrame(() => {
+    const el = coursesGridRef.value
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    // ปรับเฉพาะตอนที่ผู้ใช้เลื่อนลงมาเลยจุดเริ่มต้นของเนื้อหาไปแล้ว (rect.top < 0)
+    // และเนื้อหาชุดใหม่จบเหนือขอบล่างจอ (เห็นพื้นที่ว่าง/footer แทนที่)
+    if (rect.top < 0 && rect.bottom < window.innerHeight) {
+      const delta = window.innerHeight - rect.bottom
+      window.scrollTo({ top: window.scrollY - delta, behavior: 'smooth' })
+    }
+  })
+}
+
 function selectCategory(code) {
   selectedCategory.value = code
-  sessionStorage.setItem('coursesCategory', code)
 }
+
+// ✅ mobile dropdown ใช้ v-model="selectedCategory" ตรงๆ (ไม่ผ่าน selectCategory()) ต้อง watch
+// เพิ่มเพื่อให้ปรับ scroll ด้วยเช่นกัน
+watch(selectedCategory, () => {
+  sessionStorage.setItem('coursesCategory', selectedCategory.value)
+  adjustScrollToNewContentBottom()
+})
 
 function getCategoryCount(code) {
   return _courses.value.filter(c => c.category === code).length

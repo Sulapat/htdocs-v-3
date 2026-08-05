@@ -69,7 +69,7 @@ body {
     font-size: 1.2rem;
 }
 
-.detail-content h1 {
+.detail-title {
     font-size: 2.5rem;
     color: #333;
     margin-bottom: 1.5rem;
@@ -134,15 +134,16 @@ body {
 }
 
 .tag {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
+    background: #44c859;
+    color: #0a3d1a;
     padding: 0.5rem 1rem;
     border-radius: 20px;
     font-size: 0.9rem;
+    font-weight: 600;
 }
 
 .contact-box {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: #050c9c;
     color: white;
     padding: 2rem;
     border-radius: 12px;
@@ -174,7 +175,7 @@ body {
     gap: 0.5rem;
     padding: 0.8rem 1.5rem;
     background: white;
-    color: #667eea;
+    color: #050c9c;
     text-decoration: none;
     border-radius: 8px;
     font-weight: 600;
@@ -196,7 +197,11 @@ body {
         padding: 1.5rem;
     }
 
-    .detail-content h1 {
+    .detail-info .detail-card {
+        padding: 1.5rem;
+    }
+
+    .detail-title {
         font-size: 1.8rem;
     }
 
@@ -209,117 +214,29 @@ body {
         display: none;
     }
 }
+/* โครงร่างสองคอลัมน์: รูปโปสเตอร์ (ซ้าย) + เนื้อหาข่าว (ขวา) */
 .detail-wrapper {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1.15fr 1.3fr; /* ขยายคอลัมน์รูปโปสเตอร์ให้ใหญ่ขึ้น อ่านเนื้อหาในโปสเตอร์ได้ */
     gap: 2rem;
-    max-width: 1200px;
+    align-items: start;
+    max-width: 1400px;
     margin: 120px auto 50px;
     padding: 0 2rem;
 }
 
-.detail-main {
-    background: none;
+/* คอลัมน์รูป: ค้างไว้ (sticky) ระหว่างเลื่อนอ่านเนื้อหาที่ยาวกว่าทางขวา */
+.detail-media {
+    position: sticky;
+    top: 100px;
 }
 
-.related-news {
-    background: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    padding: 2rem;
-    height: fit-content;
+.detail-media .detail-card {
+    padding: 1rem;
 }
 
-.related-news h2 {
-    font-size: 1.4rem;
-    color: #333;
-    margin-bottom: 1rem;
-    border-left: 4px solid #00cc99;
-    padding-left: 0.8rem;
-}
-
-.related-news ul {
-    list-style: none;
-}
-
-.related-news li {
-    margin-bottom: 1rem;
-}
-
-.related-news a {
-    text-decoration: none;
-    color: #007BFF;
-    font-weight: 500;
-    transition: color 0.3s;
-}
-
-.related-news a:hover {
-    color: #00cc99;
-}
-
-/* Responsive */
-@media (max-width: 992px) {
-    .detail-wrapper {
-        grid-template-columns: 1fr;
-    }
-
-    .related-news {
-        margin-top: 2rem;
-    }
-}
-/* โครงร่างสองคอลัมน์ */
-.detail-wrapper {
-    display: grid;
-    grid-template-columns: 2fr 1fr; /* ซ้ายกว้าง ขวาแคบ */
-    gap: 2rem;
-    max-width: 1200px;
-    margin: 120px auto 50px;
-    padding: 0 2rem;
-}
-
-/* ข่าวหลัก */
-.detail-main {
-    background: none;
-}
-
-/* ข่าวประชาสัมพันธ์อื่นๆ */
-.related-news {
-    background: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    padding: 1.8rem;
-    height: fit-content;
-    position: sticky;   /* ให้อยู่คงที่ขณะเลื่อน */
-    top: 100px;         /* ห่างจากขอบบนเล็กน้อย */
-}
-
-.related-news h2 {
-    font-size: 1.3rem;
-    color: #333;
-    margin-bottom: 1.2rem;
-    border-left: 4px solid #00cc99;
-    padding-left: 0.8rem;
-}
-
-.related-news ul {
-    list-style: none;
-    padding-left: 0;
-}
-
-.related-news li {
-    margin-bottom: 0.8rem;
-    line-height: 1.5;
-}
-
-.related-news a {
-    text-decoration: none;
-    color: #007BFF;
-    font-weight: 500;
-    transition: color 0.3s;
-}
-
-.related-news a:hover {
-    color: #00cc99;
+.detail-info .detail-card {
+    padding: 2.5rem;
 }
 
 /* สำหรับจอเล็ก */
@@ -328,9 +245,160 @@ body {
         grid-template-columns: 1fr;
     }
 
-    .related-news {
+    .detail-media {
         position: static;
-        margin-top: 2rem;
+    }
+}
+
+/* ===== ข่าวประชาสัมพันธ์อื่นๆ: การ์ดเลื่อนอัตโนมัติ (เหมือน hero ของ Knowledge.vue) ===== */
+.related-section {
+    max-width: 1400px;
+    margin: 0 auto 50px;
+    padding: 0 2rem;
+}
+
+.related-title {
+    font-size: 1.4rem;
+    color: #333;
+    margin-bottom: 1.2rem;
+    border-left: 4px solid #00cc99;
+    padding-left: 0.8rem;
+}
+
+.related-carousel {
+    display: flex;
+}
+
+.related-card {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: stretch;
+    border-radius: 15px;
+    background: #ffffff;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    text-decoration: none;
+    color: inherit;
+    height: 190px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.related-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.related-card-image {
+    width: 220px;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+.related-card-content {
+    padding: 1rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    min-height: 0; /* กัน flex item ยืดโป่งเกินการ์ด (flexbug #13) เหมือน hero-card ของ Knowledge */
+}
+
+.related-card-content h3 {
+    font-size: 1.15rem;
+    color: #1a1a1a;
+    margin: 0.35rem 0 0.5rem;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.related-card-content p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* ป้าย category บนการ์ด (ใช้ชุดสีเดียวกับ Knowledge.css) */
+.article-category {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 0.8rem;
+    width: 100px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+    color: white;
+}
+
+.cat-training {
+    background: #6c63ff;
+}
+
+.cat-category2 {
+    background: #17a2b8;
+}
+
+.cat-news {
+    background: #28a745;
+}
+
+.btn-read-more {
+    color: #667eea;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.related-card:hover .btn-read-more {
+    color: #764ba2;
+}
+
+/* Animation ตอนเลื่อนการ์ด (fade + slide ช้าๆ เหมือนที่ปรับให้ Knowledge.vue) */
+.related-slide-enter-active,
+.related-slide-leave-active {
+    transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1), transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.related-slide-enter-from {
+    opacity: 0;
+    transform: translateX(18px);
+}
+
+.related-slide-leave-to {
+    opacity: 0;
+    transform: translateX(-18px);
+}
+
+@media (max-width: 700px) {
+    .related-card {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .related-card-image {
+        width: 100%;
+        height: 160px;
+    }
+
+    .related-card-content {
+        padding: 1rem 1.25rem 1.25rem;
     }
 }
 /* กรอบรูปหลัก */
