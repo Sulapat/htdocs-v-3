@@ -6,20 +6,22 @@
         <!-- Hero Split Section (ref: Option C — Split View: Story + Masonry Grid)
              ซ้าย = story panel (เนื้อหายังไม่ finalize -> เป็น mockup จองพื้นที่ไว้ก่อน)
              ขวา  = คอลัมน์โลโก้ลูกค้าเลื่อนขึ้น/ลงสวนกันอัตโนมัติ -->
-        <section class="clients-split" id="Portfolio">
+        <section class="clients-split" id="Portfolio" ref="clientsSplitRef">
 
             <!-- Story panel: headline (เด่น) + body (รอง) บนพื้นหลังกรมท่าเข้ม #112E81
                  ครอบด้วย .story-text เพื่อให้ headline/body อยู่ในกล่องเดียวกัน ใช้ขอบซ้ายร่วมกัน
                  แล้วค่อยจัดกล่องนี้ทั้งก้อนให้อยู่กึ่งกลางโซนซ้าย (ไม่ centered แยกทีละบรรทัด) -->
-            <div class="clients-story">
-                <div class="story-text">
-                    <h2 class="story-headline">{{ $t('clients.story.headline') }}</h2>
-                    <p class="story-body">{{ $t('clients.story.body') }}</p>
+            <div class="clients-story" ref="clientsStoryRef">
+                <div class="story-center" :style="storyCenterStyle">
+                    <div class="story-text">
+                        <h2 class="story-headline">{{ $t('clients.story.headline') }}</h2>
+                        <p class="story-body">{{ $t('clients.story.body') }}</p>
+                    </div>
                 </div>
             </div>
 
             <!-- คอลัมน์โลโก้ลูกค้า: เลื่อนอัตโนมัติสวนทางกันทีละคอลัมน์ hover คอลัมน์ไหนหยุดเฉพาะคอลัมน์นั้น (ยังไม่มีระบบกด/เลือกค้าง) -->
-            <div class="clients-columns">
+            <div class="clients-columns" ref="clientsColumnsRef">
                 <div
                     v-for="(col, colIndex) in columns"
                     :key="colIndex"
@@ -59,72 +61,73 @@
         <section class="clients-testimonial">
             <p class="testimonial-tag">{{ $t('clients.testimonial.tag') }}</p>
             <div class="testimonial-card">
-                <span class="testimonial-quote-mark" aria-hidden="true">&ldquo;</span>
+                <span class="testimonial-quote-mark testimonial-quote-mark--open" aria-hidden="true">&ldquo;</span>
                 <p class="testimonial-quote">{{ $t('clients.testimonial.quote') }}</p>
+                <span class="testimonial-quote-mark testimonial-quote-mark--close" aria-hidden="true">&rdquo;</span>
             </div>
         </section>
     </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 
 // รายชื่อลูกค้าทั้งหมด (ของจริง ไม่ใช่ mockup) — เก็บเป็น data array แทนการเขียน
 // <div class="client-card"> ซ้ำทีละใบ เพื่อให้แบ่งลงคอลัมน์และทำ infinite scroll ได้
 const CLIENTS = [
-  { file: 'Atsumitec.jpg', alt: 'Atsumitec', name: 'Atsumitec', descKey: 'clients.desc.atsumitec' },
-  { file: 'B_G.jpg', alt: 'B.G', name: 'Bgrim', descKey: 'clients.desc.b_g' },
-  { file: 'BD_th.jpg', alt: 'BD Thailand', name: 'Broadcast depot Thailand', descKey: 'clients.desc.bd_thailand' },
-  { file: 'BDMS.jpg', alt: 'BDMS', name: 'BDMS', descKey: 'clients.desc.bdms' },
-  { file: 'Boon.jpg', alt: 'Boon', name: 'Boon Rawd Brewery', descKey: 'clients.desc.boon' },
-  { file: 'Daikin.jpg', alt: 'Daikin', name: 'Daikin', descKey: 'clients.desc.daikin' },
-  { file: 'Egat.jpg', alt: 'EGAT', name: 'EGAT', descKey: 'clients.desc.egat' },
-  { file: 'enfourt.jpg', alt: 'Enfourt', name: 'Enfourtech', descKey: 'clients.desc.enfourt' },
-  { file: 'GCME.jpg', alt: 'GCME', name: 'GCME', descKey: 'clients.desc.gcme' },
-  { file: 'Griffith.jpg', alt: 'Griffith', name: 'Griffith', descKey: 'clients.desc.griffith' },
-  { file: 'Gulf.jpg', alt: 'Gulf', name: 'Gulf', descKey: 'clients.desc.gulf' },
-  { file: 'GYPROC.png', alt: 'GYPROC', name: 'GYPROC', descKey: 'clients.desc.gyproc' },
-  { file: 'IHI.jpg', alt: 'IHI', name: 'IHI', descKey: 'clients.desc.ihi' },
-  { file: 'Indoama.jpg', alt: 'Indoama', name: 'Indorama', descKey: 'clients.desc.indoama' },
+  { file: 'Atsumitec.jpg',   alt: 'Atsumitec',   name: 'Atsumitec', descKey: 'clients.desc.atsumitec' },
+  { file: 'B_G.jpg',         alt: 'B.G',         name: 'Bgrim', descKey: 'clients.desc.b_g' },
+  { file: 'BD_th.jpg',       alt: 'BD Thailand', name: 'Broadcast depot Thailand', descKey: 'clients.desc.bd_thailand' },
+  { file: 'BDMS.jpg',        alt: 'BDMS',        name: 'BDMS', descKey: 'clients.desc.bdms' },
+  { file: 'Boon.jpg',        alt: 'Boon',        name: 'Boon Rawd Brewery', descKey: 'clients.desc.boon' },
+  { file: 'Daikin.jpg',      alt: 'Daikin',      name: 'Daikin', descKey: 'clients.desc.daikin' },
+  { file: 'Egat.jpg',        alt: 'EGAT',        name: 'EGAT', descKey: 'clients.desc.egat' },
+  { file: 'enfourt.jpg',     alt: 'Enfourt',     name: 'Enfourtech', descKey: 'clients.desc.enfourt' },
+  { file: 'GCME.jpg',        alt: 'GCME',        name: 'GCME', descKey: 'clients.desc.gcme' },
+  { file: 'Griffith.jpg',    alt: 'Griffith',    name: 'Griffith', descKey: 'clients.desc.griffith' },
+  { file: 'Gulf.jpg',        alt: 'Gulf',        name: 'Gulf', descKey: 'clients.desc.gulf' },
+  { file: 'GYPROC.png',      alt: 'GYPROC',      name: 'GYPROC', descKey: 'clients.desc.gyproc' },
+  { file: 'IHI.jpg',         alt: 'IHI',         name: 'IHI', descKey: 'clients.desc.ihi' },
+  { file: 'Indoama.jpg',     alt: 'Indoama',     name: 'Indorama', descKey: 'clients.desc.indoama' },
   { file: 'Is_software.jpg', alt: 'IS Software', name: 'IS Software', descKey: 'clients.desc.is_software' },
-  { file: 'JSJS.jpg', alt: 'JSJS', name: 'Johnson & Johnson', descKey: 'clients.desc.jsjs' },
-  { file: 'KI.jpg', alt: 'KI', name: 'ki sugar group', descKey: 'clients.desc.ki' },
-  { file: 'KKF.jpg', alt: 'KKF', name: 'KKF khon kaen', descKey: 'clients.desc.kkf' },
-  { file: 'Mars.jpg', alt: 'Mars', name: 'Mars petcare', descKey: 'clients.desc.mars' },
-  { file: 'Mitr_phol.jpg', alt: 'Mitr Phol', name: 'Mitr Phol', descKey: 'clients.desc.mitr_phol' },
-  { file: 'Nestle.jpg', alt: 'Nestle', name: 'Nestle', descKey: 'clients.desc.nestle' },
-  { file: 'Npp.jpg', alt: 'Npp', name: 'NPP Combined Heat and Power Producing', descKey: 'clients.desc.npp' },
-  { file: 'Nteq.jpg', alt: 'Nteq', name: 'Nteq polymer co. ltd', descKey: 'clients.desc.nteq' },
-  { file: 'PAE.jpg', alt: 'PAE', name: 'PAE', descKey: 'clients.desc.pae' },
-  { file: 'Pttep.jpg', alt: 'PTTEP', name: 'PTT Exploration and Production', descKey: 'clients.desc.pttep' },
-  { file: 'repo.jpg', alt: 'Repo', name: 'REPCO NEX', descKey: 'clients.desc.repo' },
-  { file: 'sahakol.png', alt: 'Sahakol', name: 'Sahakol Equipment', descKey: 'clients.desc.sahakol' },
-  { file: 'SCG.jpg', alt: 'SCG', name: 'SCG', descKey: 'clients.desc.scg' },
-  { file: 'seckisui.png', alt: 'Seckisui', name: 'SEKISUI', descKey: 'clients.desc.seckisui' },
-  { file: 'SKF.jpg', alt: 'SKF', name: 'SKF', descKey: 'clients.desc.skf' },
-  { file: 'Sotus.jpg', alt: 'Sotus', name: 'Sotus', descKey: 'clients.desc.sotus' },
-  { file: 'SSG.jpg', alt: 'SSG', name: 'SSG', descKey: 'clients.desc.ssg' },
-  { file: 'SSL.jpg', alt: 'SSL', name: 'SSL manufacturing', descKey: 'clients.desc.ssl' },
-  { file: 'STM.jpg', alt: 'STM', name: 'STM', descKey: 'clients.desc.stm' },
-  { file: 'Thaioil.jpg', alt: 'Thaioil', name: 'Thai Oil', descKey: 'clients.desc.thaioil' },
-  { file: 'Thanakorn.jpg', alt: 'Thanakorn', name: 'Thanakorn Vegetable Oil Products', descKey: 'clients.desc.thanakorn' },
-  { file: 'TRANE.jpg', alt: 'TRANE', name: 'TRANE', descKey: 'clients.desc.trane' },
+  { file: 'JSJS.jpg',        alt: 'JSJS',        name: 'Johnson & Johnson', descKey: 'clients.desc.jsjs' },
+  { file: 'KI.jpg',          alt: 'KI',          name: 'Ki sugar group', descKey: 'clients.desc.ki' },
+  { file: 'KKF.jpg',         alt: 'KKF',         name: 'KKF khon kaen', descKey: 'clients.desc.kkf' },
+  { file: 'Mars.jpg',        alt: 'Mars',        name: 'Mars petcare', descKey: 'clients.desc.mars' },
+  { file: 'Mitr_phol.jpg',   alt: 'Mitr Phol',   name: 'Mitr Phol', descKey: 'clients.desc.mitr_phol' },
+  { file: 'Nestle.jpg',      alt: 'Nestle',      name: 'Nestle', descKey: 'clients.desc.nestle' },
+  { file: 'Npp.jpg',         alt: 'Npp',         name: 'NPP', descKey: 'clients.desc.npp' },
+  { file: 'Nteq.jpg',        alt: 'Nteq',        name: 'Nteq', descKey: 'clients.desc.nteq' },
+  { file: 'PAE.jpg',         alt: 'PAE',         name: 'PAE', descKey: 'clients.desc.pae' },
+  { file: 'Pttep.jpg',       alt: 'PTTEP',       name: 'PTT Exploration and Production', descKey: 'clients.desc.pttep' },
+  { file: 'repo.jpg',        alt: 'Repo',        name: 'REPCO NEX', descKey: 'clients.desc.repo' },
+  { file: 'sahakol.png',     alt: 'Sahakol',     name: 'Sahakol Equipment', descKey: 'clients.desc.sahakol' },
+  { file: 'SCG.jpg',         alt: 'SCG',         name: 'SCG', descKey: 'clients.desc.scg' },
+  { file: 'seckisui.png',    alt: 'Seckisui',    name: 'SEKISUI', descKey: 'clients.desc.seckisui' },
+  { file: 'SKF.jpg',         alt: 'SKF',         name: 'SKF', descKey: 'clients.desc.skf' },
+  { file: 'Sotus.jpg',       alt: 'Sotus',       name: 'Sotus', descKey: 'clients.desc.sotus' },
+  { file: 'SSG.jpg',         alt: 'SSG',         name: 'SSG', descKey: 'clients.desc.ssg' },
+  { file: 'SSL.jpg',         alt: 'SSL',         name: 'SSL manufacturing', descKey: 'clients.desc.ssl' },
+  { file: 'STM.jpg',         alt: 'STM',         name: 'STM', descKey: 'clients.desc.stm' },
+  { file: 'Thaioil.jpg',     alt: 'Thaioil',     name: 'Thai Oil', descKey: 'clients.desc.thaioil' },
+  { file: 'Thanakorn.jpg',   alt: 'Thanakorn',   name: 'Thanakorn Vegetable Oil Products', descKey: 'clients.desc.thanakorn' },
+  { file: 'TRANE.jpg',       alt: 'TRANE',       name: 'TRANE', descKey: 'clients.desc.trane' },
   { file: 'Transitions.jpg', alt: 'Transitions', name: 'Transitions Optical', descKey: 'clients.desc.transitions' },
-  { file: 'TTM.jpg', alt: 'TTM', name: 'TRANS THAI-MALAYSIA', descKey: 'clients.desc.ttm' },
-  { file: 'WHA.jpg', alt: 'WHA', name: 'WHA', descKey: 'clients.desc.wha' },
-  { file: 'ADS.jpg', alt: 'ADS', name: 'ADS SALES AND SERVICE CO., LTD.', descKey: 'clients.desc.ads' },
-  { file: 'NPS.jpg', alt: 'NPS', name: 'NPS ENGINEERING CO.,LTD.', descKey: 'clients.desc.nps' },
-  { file: 'SES.jpg', alt: 'SES', name: 'SES SUCCESS ENGINEERING AND SERVICE CO., LTD.', descKey: 'clients.desc.ses' },
-  { file: 'Murata.jpg', alt: 'MURATA', name: 'MURATA ELECTRONIC (THAILAND) CO., LTD.', descKey: 'clients.desc.murata' },
-  { file: 'Proterial.png', alt: 'PROTERIAL', name: 'PROTERIAL (THAILAND) LTD.', descKey: 'clients.desc.proterial' },
-  { file: 'TT.png', alt: 'TT', name: 'TT FUJI TOOL SUPPORT CO.,LTD', descKey: 'clients.desc.tt' },
-  { file: 'U-Services.jpg', alt: 'U-Services', name: 'U-Services Thailand Co.,Ltd', descKey: 'clients.desc.uservice' },
-  { file: 'ming.png', alt: 'MING', name: 'MING TAI INDUSTRIAL (THAILAND) CO., LTD.', descKey: 'clients.desc.ming' },
-  { file: 'ASKO.jpg', alt: 'ASKO', name: 'ASKO EQUIPMENT COMPANY LIMITED', descKey: 'clients.desc.asko' },
-  { file: 'BGC.jpg', alt: 'BGC', name: 'BG CONTAINER GLASS PUBLIC COMPANY LIMITED', descKey: 'clients.desc.bgc' },
-  { file: 'EWater.jpg', alt: 'EW', name: 'EASTERN WATER RESOURCES DEVELOPMENT AND MANAGEMENT PUBLIC COMPANY LIMITED', descKey: 'clients.desc.ewater' },
-  { file: 'OTANI.jpg', alt: 'OTANI', name: 'OTANI RADIAL CO.,LTD.', descKey: 'clients.desc.otani' },
-  { file: 'MCL.png', alt: 'MICHELIN', name: 'MICHELIN SIAM COMPANY LIMITED', descKey: 'clients.desc.mcl' },
+  { file: 'TTM.jpg',         alt: 'TTM',         name: 'TRANS THAI-MALAYSIA', descKey: 'clients.desc.ttm' },
+  { file: 'WHA.jpg',         alt: 'WHA',         name: 'WHA', descKey: 'clients.desc.wha' },
+  { file: 'ADS.jpg',         alt: 'ADS',         name: 'ADS', descKey: 'clients.desc.ads' },
+  { file: 'NPS.jpg',         alt: 'NPS',         name: 'NPS', descKey: 'clients.desc.nps' },
+  { file: 'SES.jpg',         alt: 'SES',         name: 'SES', descKey: 'clients.desc.ses' },
+  { file: 'Murata.jpg',      alt: 'MURATA',      name: 'MURATA', descKey: 'clients.desc.murata' },
+  { file: 'Proterial.png',   alt: 'PROTERIAL',   name: 'PROTERIAL', descKey: 'clients.desc.proterial' },
+  { file: 'TT.png',          alt: 'TT',          name: 'TT FUJI', descKey: 'clients.desc.tt' },
+  { file: 'U-Services.jpg',  alt: 'U-Services',  name: 'U-Services', descKey: 'clients.desc.uservice' },
+  { file: 'ming.png',        alt: 'MING',        name: 'MING TAI', descKey: 'clients.desc.ming' },
+  { file: 'ASKO.jpg',        alt: 'ASKO',        name: 'ASKO', descKey: 'clients.desc.asko' },
+  { file: 'BGC.jpg',         alt: 'BGC',         name: 'BGC', descKey: 'clients.desc.bgc' },
+  { file: 'EWater.jpg',      alt: 'EW',          name: 'EASTWATER', descKey: 'clients.desc.ewater' },
+  { file: 'OTANI.jpg',       alt: 'OTANI',       name: 'OTANI', descKey: 'clients.desc.otani' },
+  { file: 'MCL.png',         alt: 'MICHELIN',    name: 'MICHELIN', descKey: 'clients.desc.mcl' },
 ]
 
 // โหลดโลโก้ทั้งหมดด้วย import.meta.glob (แบบเดียวกับ Courses.vue) แล้ว lookup ตามชื่อไฟล์ตอน render
@@ -171,7 +174,64 @@ function columnDuration(col) {
   return `${col.length * 9}s`
 }
 
-// ── Tooltip (teleport ไป body เพื่อไม่ให้โดน overflow:hidden ของคอลัมน์ตัดขอบ) ──
+// ── Center ข้อความ story panel ให้ตรงกับพื้นที่ที่ตาเห็นจริง (ขอบซ้าย section ถึงขอบซ้ายการ์ดใบแรก) ──
+// เหตุผลที่ต้องวัดด้วย JS แทนการเดาค่า CSS ตายตัว: .clients-columns เป็น flex:1 แล้วใช้ justify-content:center
+// จัดการ์ด (ซึ่งความกว้างจริงคงที่ ~732px) ให้อยู่กลางกล่องของมันอีกที ทำให้ระยะห่างจริงจาก .clients-story
+// ถึงขอบการ์ดใบแรกไม่คงที่ แปรผันตามความกว้างจอ เดาด้วยค่า rem ตายตัวจึงไม่แม่น ต้องวัดตำแหน่งจริงเท่านั้น
+const clientsSplitRef = ref(null)
+const clientsStoryRef = ref(null)
+const clientsColumnsRef = ref(null)
+const storyCenterStyle = ref({})
+
+function updateStoryCenter() {
+  const splitEl = clientsSplitRef.value
+  const storyEl = clientsStoryRef.value
+  const columnsEl = clientsColumnsRef.value
+  if (!splitEl || !storyEl || !columnsEl) return
+
+  // โหมดจอแคบ (layout สลับเป็นแนวตั้ง, media query จัดการ .story-center เป็น position:static อยู่แล้ว)
+  // ไม่ต้องคำนวณ ปล่อย inline style ว่างไว้ให้ CSS ปกติทำงาน
+  if (window.getComputedStyle(splitEl).flexDirection === 'column') {
+    storyCenterStyle.value = {}
+    return
+  }
+
+  const firstColumn = columnsEl.querySelector('.client-column')
+  if (!firstColumn) return
+
+  const splitRect = splitEl.getBoundingClientRect()
+  const storyRect = storyEl.getBoundingClientRect()
+  const columnRect = firstColumn.getBoundingClientRect()
+
+  const leftPx = splitRect.left - storyRect.left        // ระยะจากขอบซ้ายจริงของ section ถึงขอบซ้ายของ .clients-story (ปกติติดลบ)
+  const rightExtendPx = columnRect.left - storyRect.right // ระยะจากขอบขวาของ .clients-story ถึงขอบซ้ายการ์ดใบแรกจริง (ปกติเป็นบวก)
+
+  storyCenterStyle.value = {
+    top: 'calc(-1 * (80px + 2rem))',
+    bottom: '-2rem',
+    left: `${leftPx}px`,
+    right: `${-rightExtendPx}px`,
+  }
+}
+
+let resizeObserver
+onMounted(() => {
+  nextTick(updateStoryCenter)
+  // รูปภาพโลโก้โหลดเสร็จอาจทำให้ layout ขยับเล็กน้อย เผื่อไว้คำนวณซ้ำหลังโหลดหน้าเสร็จ
+  window.addEventListener('load', updateStoryCenter)
+  window.addEventListener('resize', updateStoryCenter)
+  if (typeof ResizeObserver !== 'undefined') {
+    resizeObserver = new ResizeObserver(updateStoryCenter)
+    resizeObserver.observe(document.body)
+  }
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('load', updateStoryCenter)
+  window.removeEventListener('resize', updateStoryCenter)
+  resizeObserver?.disconnect()
+})
+
 const hoveredClient = ref(null)
 const tooltipStyle = ref({})
 

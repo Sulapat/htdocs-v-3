@@ -30,7 +30,6 @@ body {
     max-width: 100%;
     margin: 2rem 0 0;
     background: linear-gradient(160deg, #0a1f6b 0%, #112E81 55%, #16389c 100%);
-    border-radius: 24px;
     box-shadow: 0 25px 50px rgba(17, 46, 129, 0.35);
 }
 
@@ -38,16 +37,34 @@ body {
     flex: 1;
     min-width: 280px;
     max-width: 620px;
+    position: relative; /* จุดยึดให้ .story-center ลอย absolute ทับพื้นที่เต็ม (รวม padding บน-ล่างของ .clients-split และช่องว่างก่อนถึงการ์ด)
+                            โดยไม่เปลี่ยนขนาด/ตำแหน่งของ .clients-story เอง จึงไม่กระทบตำแหน่งคอลัมน์การ์ดฝั่งขวา */
+}
+
+/* กล่อง "ลอย" สำหรับ center ข้อความ: ขยายออกจาก .clients-story ไปคลุมพื้นที่ที่ตาเห็นจริงทั้งหมด
+   - top/bottom ด้านล่างเป็นค่าคงที่ (ชดเชย padding บน-ล่างของ .clients-split ที่ไม่เท่ากัน ใช้ได้แน่นอนเพราะ padding คงที่)
+   - left/right ที่นี่เป็นแค่ "ค่า fallback" ก่อน JS คำนวณเสร็จ (กันไม่ให้กระพริบ/เพี้ยนตอนโหลดแรก)
+     ค่าจริงจะถูก override ด้วย inline style จาก storyCenterStyle ใน Clients.vue เสมอ
+     เพราะระยะห่างจริงจาก .clients-story ถึงขอบการ์ดใบแรกไม่คงที่ (คอลัมน์การ์ดใช้ flex:1 + justify-content:center
+     ทำให้มีพื้นที่ว่างส่วนเกินแปรผันตามความกว้างจอ) ต้องวัดตำแหน่งจริงด้วย getBoundingClientRect() เท่านั้นถึงจะแม่น
+   ทำแบบนี้แทนการแก้ padding/max-width ของ .clients-story ตรงๆ เพราะการแก้ตรงๆ จะไปเปลี่ยนสัดส่วน flex
+   ระหว่าง .clients-story กับ .clients-columns ทำให้คอลัมน์การ์ดขยับ/เปลี่ยนขนาดไปด้วย */
+.story-center {
+    position: absolute;
+    top: calc(-1 * (80px + 2rem));
+    bottom: -2rem;
+    left: -3rem;
+    right: -4.5rem;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    padding-top: 2.75rem;
+    justify-content: center;
+    pointer-events: none; /* พื้นที่ลอยนี้ทับซ้อนกับ gap/padding รอบๆ ไม่ควรกันคลิก/hover ของการ์ดข้างๆ */
 }
 
 /* กล่องรวม headline + body ให้ใช้ขอบซ้ายเดียวกัน แล้วค่อยจัดทั้งก้อนให้อยู่กึ่งกลางโซนซ้าย
    (ไม่ใช้ align-items:center ที่ตัว h2/p โดยตรง เพราะจะทำให้แต่ละบรรทัด shrink-to-fit แยกกัน ดูเพี้ยน) */
 .story-text {
+    pointer-events: auto;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
@@ -58,12 +75,18 @@ body {
 /* กล่อง 1: headline — เด่นที่สุดของ story panel (ตัวใหญ่ ตัวหนา สีขาวเต็ม)
    text-wrap: balance ช่วยให้บรรทัดยาวใกล้เคียงกัน ไม่ให้เหลือคำเดียวโดดๆ บรรทัดสุดท้าย */
 .story-headline {
-    font-size: 2rem;
+    font-size: 1.7rem;
     font-weight: 800;
     line-height: 1.25;
     color: #ffffff;
     letter-spacing: -0.01em;
     text-wrap: balance;
+    /* ล็อกไว้ที่ 2 บรรทัดโดยไม่ตัดคำทิ้ง: กว้างพอ (max-width กว้างกว่า .story-text เดิม)
+       + ลด font-size ลงเล็กน้อยให้ข้อความภาษาไทย (ยาวกว่าอังกฤษ) พอดี 2 บรรทัดพอดีจริงๆ
+       min-height จองพื้นที่ไว้เท่ากับ 2 บรรทัดตายตัว กัน layout กระโดดตอนข้อความสั้นแค่ 1 บรรทัด
+       (ไม่ใช้ -webkit-line-clamp เพราะจะตัดคำทิ้งเป็น ... ถ้าเผื่อพื้นที่ไม่พอในบางกรณี) */
+    max-width: 520px;
+    min-height: calc(1.25 * 1.7rem * 2);
 }
 
 /* กล่อง 2: body — รองจาก headline (ตัวเล็กกว่า น้ำหนักเบากว่า สีจางกว่า)
@@ -88,13 +111,13 @@ body {
     min-width: 0;
     display: flex;
     justify-content: center;
-    gap: 0.85rem;
-    height: 520px;
+    gap: 0.75rem;
+    height: 460px;
 }
 
 .client-column {
-    flex: 0 0 235px;
-    width: 235px;
+    flex: 0 0 200px;
+    width: 200px;
     height: 100%;
     overflow: hidden;
     border-radius: 14px;
@@ -107,7 +130,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 0.85rem;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     will-change: transform;
@@ -133,8 +156,8 @@ body {
 
 .client-card {
   background: white;
-  border-radius: 15px;
-  padding: 10px;
+  border-radius: 14px;
+  padding: 8px;
   width: 100%;
   aspect-ratio: 4 / 3;
   display: flex;
@@ -244,21 +267,21 @@ body {
    ======================================== */
 .clients-testimonial {
     padding: 3.5rem 2rem 4.5rem;
-    max-width: 760px;
+    max-width: 900px;
     margin: 0 auto;
     text-align: center;
 }
 
 /* กล่อง 3: tag — ข้อความนำ ขนาดเล็ก น้ำหนักปกติ สีเทา ไม่แย่งซีนกับ testimonial card
-   text-wrap: balance บาลานซ์ทุกบรรทัดให้ยาวใกล้เคียงกัน แก้ปัญหาบรรทัดสุดท้ายเหลือคำเดียวโดดๆ */
+   white-space: nowrap บังคับให้อยู่บรรทัดเดียวบนจอกว้าง (ยกเลิกตอนจอแคบใน media query ด้านล่าง กันข้อความล้นจอ) */
 .testimonial-tag {
     font-size: 0.95rem;
     font-weight: 500;
     line-height: 1.7;
     color: #64748b;
-    max-width: 500px;
+    max-width: none;
     margin: 0 auto 1.75rem;
-    text-wrap: balance;
+    white-space: nowrap;
 }
 
 /* กล่อง 4: testimonial card — เด่นกว่ากล่อง 3 ด้วยกรอบสีเน้น + ตัวอักษรใหญ่กว่า/หนักกว่า */
@@ -273,13 +296,21 @@ body {
 
 .testimonial-quote-mark {
     position: absolute;
-    top: 0.75rem;
-    right: 1.5rem;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 3.5rem;
     line-height: 1;
     color: rgba(17, 46, 129, 0.15);
     pointer-events: none;
+}
+
+.testimonial-quote-mark--open {
+    top: 0.75rem;
+    left: 1.5rem;
+}
+
+.testimonial-quote-mark--close {
+    top: 0.75rem;
+    right: 1.5rem;
 }
 
 .testimonial-quote {
@@ -344,8 +375,20 @@ body {
         min-width: 0;
         max-width: none;
         width: 100%;
+        position: static;
+        display: flex;
         align-items: center;
+        justify-content: center;
         padding-top: 0;
+    }
+
+    .story-center {
+        position: static;
+        top: auto;
+        bottom: auto;
+        left: auto;
+        right: auto;
+        pointer-events: auto;
     }
 
     .story-text {
@@ -426,7 +469,9 @@ body {
     }
 
     .story-headline {
-        font-size: 1.5rem;
+        font-size: 1.45rem;
+        max-width: 600px;
+        min-height: calc(1.25 * 1.45rem * 2);
     }
 
     .story-body {
@@ -442,6 +487,8 @@ body {
         font-size: 0.85rem;
         max-width: none;
         margin: 0 0 1.25rem;
+        white-space: normal;
+        text-wrap: balance;
     }
 
     .testimonial-card {
@@ -454,13 +501,21 @@ body {
 
     .testimonial-quote-mark {
         font-size: 2.75rem;
+    }
+
+    .testimonial-quote-mark--open {
+        top: 0.5rem;
+        left: 1rem;
+    }
+
+    .testimonial-quote-mark--close {
         top: 0.5rem;
         right: 1rem;
     }
 
     .clients-columns {
         height: 420px;
-        gap: 0.6rem;
+        gap: 0.5rem;
         justify-content: stretch;
     }
 
@@ -471,15 +526,14 @@ body {
     }
 
     .client-column-track {
-        gap: 0.6rem;
+        gap: 0.5rem;
     }
 
     .client-card {
         width: 100%;
-        max-width: 110px;
         height: auto;
         aspect-ratio: 1 / 1;
-        padding: 6px;
+        padding: 8px;
         border-radius: 10px;
     }
 
@@ -500,7 +554,9 @@ body {
 
 @media (max-width: 480px) {
     .story-headline {
-        font-size: 1.3rem;
+        font-size: 1.15rem;
+        max-width: none;
+        min-height: calc(1.25 * 1.15rem * 2);
     }
 
     .story-body {
@@ -517,14 +573,18 @@ body {
 
     .clients-columns {
         height: 360px;
+        gap: 0.4rem;
+    }
+
+    .client-column-track {
+        gap: 0.4rem;
     }
 
     .client-card {
         width: 100%;
-        max-width: 90px;
         height: auto;
         aspect-ratio: 1 / 1;
-        padding: 4px;
+        padding: 6px;
         border-radius: 8px;
     }
 
