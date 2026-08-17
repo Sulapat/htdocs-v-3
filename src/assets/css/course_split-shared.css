@@ -1,0 +1,106 @@
+/* ========================================
+   RESET & BASE STYLES
+   (คงไว้แบบ global/unscoped เพราะต้องมีผลกับ html/body ทั้งเว็บ)
+   ======================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'Prompt', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #ffffff;
+}
+
+/* ========================================
+   NAVIGATION
+   (คงไว้แบบ global/unscoped เพราะ navbar render จาก component แยก
+   ไม่ได้อยู่ใน template ของ course_split.vue เอง — ถ้า scoped จะไม่ทำงาน)
+   ======================================== */
+#navbar {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.8rem 2rem;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.logo img {
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.logo img:hover {
+    transform: scale(1.05);
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.nav-links a:hover,
+.nav-links a:focus,
+.nav-links a.active {
+    color: #007BFF;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-links a {
+    color: #333;
+    font-size: 1.1rem;
+    transition: color 0.3s;
+}
+
+.social-links a:hover {
+    color: #007BFF;
+}
+
+/* .hamburger ถูกลบออก — ใช้ style จาก nav.css แทน เพื่อไม่ให้ชนกัน */
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        right: 15px;
+        background: white;
+        padding: 0.5rem 1rem;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        z-index: 1000;
+    }
+
+    .nav-links.show {
+        display: flex;
+    }
+
+    .social-links {
+        display: none;
+    }
+}

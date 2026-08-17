@@ -1,7 +1,9 @@
 <template>
-  <AppNav />
-  <router-view />
-  <AppFooter />
+  <AppNav v-if="!$route.meta.hideChrome" />
+  <div class="page-content">
+    <router-view />
+  </div>
+  <AppFooter v-if="!$route.meta.hideChrome" />
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-    <footer class="footer">
+    <footer class="footer" ref="footerEl">
         <div class="footer-container">
             <div class="footer-col footer-contact">
                 <h3>{{ $t('footer.contactUs') }}</h3>
@@ -65,8 +65,23 @@ export default {
             link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
             document.head.appendChild(link)
         }
+
+        // วัดความสูง footer แล้วส่งเป็น --footer-height ให้ App.vue เอาไปคำนวณ
+        // negative margin ของ .page-content (ต้องเท่ากันเป๊ะถึงจะซ้อนทับพอดี ไม่มีรอยห่าง/ล้น)
+        this.footerHeightObserver = new ResizeObserver(this.updateFooterHeightVar)
+        this.footerHeightObserver.observe(this.$refs.footerEl)
+        this.updateFooterHeightVar()
+    },
+    beforeUnmount() {
+        if (this.footerHeightObserver) this.footerHeightObserver.disconnect()
     },
     methods: {
+        // อัปเดตตัวแปร global --footer-height (ใช้โดย .page-content ใน App.vue)
+        updateFooterHeightVar() {
+            const el = this.$refs.footerEl
+            if (!el) return
+            document.documentElement.style.setProperty('--footer-height', el.offsetHeight + 'px')
+        },
         // เหมือน logic ใน nav.vue: ถ้าอยู่หน้าแรกอยู่แล้วให้เลื่อนทันที ถ้าไม่ใช่ให้พาไปหน้าแรกก่อนแล้วค่อยเลื่อน
         handleServiceClick() {
             if (this.$route.path === '/') {

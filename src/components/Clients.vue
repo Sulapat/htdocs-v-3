@@ -57,13 +57,18 @@
             </Teleport>
         </section>
 
-        <!-- Testimonial section: tag (รอง) นำสายตาสู่ testimonial card (เด่น) -->
+        <!-- Testimonial section: tag (รอง) นำสายตาสู่ testimonial card (เด่น)
+             .clients-testimonial = full-bleed background (คลุมเต็มความกว้างจอ กัน footer ทะลุ
+             เพราะนี่คือ section สุดท้ายของหน้า ต้องทึบเต็มพื้นที่ตามกลไก negative-margin ใน App.vue)
+             .clients-testimonial-inner = จัดเนื้อหาจริงให้อยู่กลางที่ max-width 900px เหมือนเดิม -->
         <section class="clients-testimonial">
-            <p class="testimonial-tag">{{ $t('clients.testimonial.tag') }}</p>
-            <div class="testimonial-card">
-                <span class="testimonial-quote-mark testimonial-quote-mark--open" aria-hidden="true">&ldquo;</span>
-                <p class="testimonial-quote">{{ $t('clients.testimonial.quote') }}</p>
-                <span class="testimonial-quote-mark testimonial-quote-mark--close" aria-hidden="true">&rdquo;</span>
+            <div class="clients-testimonial-inner">
+                <p class="testimonial-tag">{{ $t('clients.testimonial.tag') }}</p>
+                <div class="testimonial-card">
+                    <span class="testimonial-quote-mark testimonial-quote-mark--open" aria-hidden="true">&ldquo;</span>
+                    <p class="testimonial-quote">{{ $t('clients.testimonial.quote') }}</p>
+                    <span class="testimonial-quote-mark testimonial-quote-mark--close" aria-hidden="true">&rdquo;</span>
+                </div>
             </div>
         </section>
     </div>
@@ -75,59 +80,60 @@ import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 // รายชื่อลูกค้าทั้งหมด (ของจริง ไม่ใช่ mockup) — เก็บเป็น data array แทนการเขียน
 // <div class="client-card"> ซ้ำทีละใบ เพื่อให้แบ่งลงคอลัมน์และทำ infinite scroll ได้
 const CLIENTS = [
-  { file: 'Atsumitec.jpg',   alt: 'Atsumitec',   name: 'Atsumitec', descKey: 'clients.desc.atsumitec' },
-  { file: 'B_G.jpg',         alt: 'B.G',         name: 'Bgrim', descKey: 'clients.desc.b_g' },
-  { file: 'BD_th.jpg',       alt: 'BD Thailand', name: 'Broadcast depot Thailand', descKey: 'clients.desc.bd_thailand' },
-  { file: 'BDMS.jpg',        alt: 'BDMS',        name: 'BDMS', descKey: 'clients.desc.bdms' },
-  { file: 'Boon.jpg',        alt: 'Boon',        name: 'Boon Rawd Brewery', descKey: 'clients.desc.boon' },
-  { file: 'Daikin.jpg',      alt: 'Daikin',      name: 'Daikin', descKey: 'clients.desc.daikin' },
-  { file: 'Egat.jpg',        alt: 'EGAT',        name: 'EGAT', descKey: 'clients.desc.egat' },
-  { file: 'enfourt.jpg',     alt: 'Enfourt',     name: 'Enfourtech', descKey: 'clients.desc.enfourt' },
-  { file: 'GCME.jpg',        alt: 'GCME',        name: 'GCME', descKey: 'clients.desc.gcme' },
-  { file: 'Griffith.jpg',    alt: 'Griffith',    name: 'Griffith', descKey: 'clients.desc.griffith' },
-  { file: 'Gulf.jpg',        alt: 'Gulf',        name: 'Gulf', descKey: 'clients.desc.gulf' },
-  { file: 'GYPROC.png',      alt: 'GYPROC',      name: 'GYPROC', descKey: 'clients.desc.gyproc' },
-  { file: 'IHI.jpg',         alt: 'IHI',         name: 'IHI', descKey: 'clients.desc.ihi' },
-  { file: 'Indoama.jpg',     alt: 'Indoama',     name: 'Indorama', descKey: 'clients.desc.indoama' },
-  { file: 'Is_software.jpg', alt: 'IS Software', name: 'IS Software', descKey: 'clients.desc.is_software' },
-  { file: 'JSJS.jpg',        alt: 'JSJS',        name: 'Johnson & Johnson', descKey: 'clients.desc.jsjs' },
-  { file: 'KI.jpg',          alt: 'KI',          name: 'Ki sugar group', descKey: 'clients.desc.ki' },
-  { file: 'KKF.jpg',         alt: 'KKF',         name: 'KKF khon kaen', descKey: 'clients.desc.kkf' },
-  { file: 'Mars.jpg',        alt: 'Mars',        name: 'Mars petcare', descKey: 'clients.desc.mars' },
-  { file: 'Mitr_phol.jpg',   alt: 'Mitr Phol',   name: 'Mitr Phol', descKey: 'clients.desc.mitr_phol' },
-  { file: 'Nestle.jpg',      alt: 'Nestle',      name: 'Nestle', descKey: 'clients.desc.nestle' },
-  { file: 'Npp.jpg',         alt: 'Npp',         name: 'NPP', descKey: 'clients.desc.npp' },
-  { file: 'Nteq.jpg',        alt: 'Nteq',        name: 'Nteq', descKey: 'clients.desc.nteq' },
-  { file: 'PAE.jpg',         alt: 'PAE',         name: 'PAE', descKey: 'clients.desc.pae' },
-  { file: 'Pttep.jpg',       alt: 'PTTEP',       name: 'PTT Exploration and Production', descKey: 'clients.desc.pttep' },
-  { file: 'repo.jpg',        alt: 'Repo',        name: 'REPCO NEX', descKey: 'clients.desc.repo' },
-  { file: 'sahakol.png',     alt: 'Sahakol',     name: 'Sahakol Equipment', descKey: 'clients.desc.sahakol' },
-  { file: 'SCG.jpg',         alt: 'SCG',         name: 'SCG', descKey: 'clients.desc.scg' },
-  { file: 'seckisui.png',    alt: 'Seckisui',    name: 'SEKISUI', descKey: 'clients.desc.seckisui' },
-  { file: 'SKF.jpg',         alt: 'SKF',         name: 'SKF', descKey: 'clients.desc.skf' },
-  { file: 'Sotus.jpg',       alt: 'Sotus',       name: 'Sotus', descKey: 'clients.desc.sotus' },
-  { file: 'SSG.jpg',         alt: 'SSG',         name: 'SSG', descKey: 'clients.desc.ssg' },
-  { file: 'SSL.jpg',         alt: 'SSL',         name: 'SSL manufacturing', descKey: 'clients.desc.ssl' },
-  { file: 'STM.jpg',         alt: 'STM',         name: 'STM', descKey: 'clients.desc.stm' },
-  { file: 'Thaioil.jpg',     alt: 'Thaioil',     name: 'Thai Oil', descKey: 'clients.desc.thaioil' },
+  { file: 'Atsumitec.jpg',   alt: 'Atsumitec',   
+name: 'Atsumitec',                        descKey: 'clients.desc.atsumitec' },
+  { file: 'B_G.jpg',         alt: 'B.G',         name: 'Bgrim',                            descKey: 'clients.desc.b_g' },
+  { file: 'BD_th.jpg',       alt: 'BD Thailand', name: 'Broadcast depot Thailand',         descKey: 'clients.desc.bd_thailand' },
+  { file: 'BDMS.jpg',        alt: 'BDMS',        name: 'BDMS',                             descKey: 'clients.desc.bdms' },
+  { file: 'Boon.jpg',        alt: 'Boon',        name: 'Boon Rawd Brewery',                descKey: 'clients.desc.boon' },
+  { file: 'Daikin.jpg',      alt: 'Daikin',      name: 'Daikin',                           descKey: 'clients.desc.daikin' },
+  { file: 'Egat.jpg',        alt: 'EGAT',        name: 'EGAT',                             descKey: 'clients.desc.egat' },
+  { file: 'enfourt.jpg',     alt: 'Enfourt',     name: 'Enfourtech',                       descKey: 'clients.desc.enfourt' },
+  { file: 'GCME.jpg',        alt: 'GCME',        name: 'GCME',                             descKey: 'clients.desc.gcme' },
+  { file: 'Griffith.jpg',    alt: 'Griffith',    name: 'Griffith',                         descKey: 'clients.desc.griffith' },
+  { file: 'Gulf.jpg',        alt: 'Gulf',        name: 'Gulf',                             descKey: 'clients.desc.gulf' },
+  { file: 'GYPROC.png',      alt: 'GYPROC',      name: 'GYPROC',                           descKey: 'clients.desc.gyproc' },
+  { file: 'IHI.jpg',         alt: 'IHI',         name: 'IHI',                              descKey: 'clients.desc.ihi' },
+  { file: 'Indoama.jpg',     alt: 'Indoama',     name: 'Indorama',                         descKey: 'clients.desc.indoama' },
+  { file: 'Is_software.jpg', alt: 'IS Software', name: 'IS Software',                      descKey: 'clients.desc.is_software' },
+  { file: 'JSJS.jpg',        alt: 'JSJS',        name: 'Johnson & Johnson',                descKey: 'clients.desc.jsjs' },
+  { file: 'KI.jpg',          alt: 'KI',          name: 'Ki sugar group',                   descKey: 'clients.desc.ki' },
+  { file: 'KKF.jpg',         alt: 'KKF',         name: 'KKF khon kaen',                    descKey: 'clients.desc.kkf' },
+  { file: 'Mars.jpg',        alt: 'Mars',        name: 'Mars petcare',                     descKey: 'clients.desc.mars' },
+  { file: 'Mitr_phol.jpg',   alt: 'Mitr Phol',   name: 'Mitr Phol',                        descKey: 'clients.desc.mitr_phol' },
+  { file: 'Nestle.jpg',      alt: 'Nestle',      name: 'Nestle',                           descKey: 'clients.desc.nestle' },
+  { file: 'Npp.jpg',         alt: 'Npp',         name: 'NPP',                              descKey: 'clients.desc.npp' },
+  { file: 'Nteq.jpg',        alt: 'Nteq',        name: 'Nteq',                             descKey: 'clients.desc.nteq' },
+  { file: 'PAE.jpg',         alt: 'PAE',         name: 'PAE',                              descKey: 'clients.desc.pae' },
+  { file: 'Pttep.jpg',       alt: 'PTTEP',       name: 'PTT Exploration and Production',   descKey: 'clients.desc.pttep' },
+  { file: 'repo.jpg',        alt: 'Repo',        name: 'REPCO NEX',                        descKey: 'clients.desc.repo' },
+  { file: 'sahakol.png',     alt: 'Sahakol',     name: 'Sahakol Equipment',                descKey: 'clients.desc.sahakol' },
+  { file: 'SCG.jpg',         alt: 'SCG',         name: 'SCG',                              descKey: 'clients.desc.scg' },
+  { file: 'seckisui.png',    alt: 'Seckisui',    name: 'SEKISUI',                          descKey: 'clients.desc.seckisui' },
+  { file: 'SKF.jpg',         alt: 'SKF',         name: 'SKF',                              descKey: 'clients.desc.skf' },
+  { file: 'Sotus.jpg',       alt: 'Sotus',       name: 'Sotus',                            descKey: 'clients.desc.sotus' },
+  { file: 'SSG.jpg',         alt: 'SSG',         name: 'SSG',                              descKey: 'clients.desc.ssg' },
+  { file: 'SSL.jpg',         alt: 'SSL',         name: 'SSL manufacturing',                descKey: 'clients.desc.ssl' },
+  { file: 'STM.jpg',         alt: 'STM',         name: 'STM',                              descKey: 'clients.desc.stm' },
+  { file: 'Thaioil.jpg',     alt: 'Thaioil',     name: 'Thai Oil',                         descKey: 'clients.desc.thaioil' },
   { file: 'Thanakorn.jpg',   alt: 'Thanakorn',   name: 'Thanakorn Vegetable Oil Products', descKey: 'clients.desc.thanakorn' },
-  { file: 'TRANE.jpg',       alt: 'TRANE',       name: 'TRANE', descKey: 'clients.desc.trane' },
-  { file: 'Transitions.jpg', alt: 'Transitions', name: 'Transitions Optical', descKey: 'clients.desc.transitions' },
-  { file: 'TTM.jpg',         alt: 'TTM',         name: 'TRANS THAI-MALAYSIA', descKey: 'clients.desc.ttm' },
-  { file: 'WHA.jpg',         alt: 'WHA',         name: 'WHA', descKey: 'clients.desc.wha' },
-  { file: 'ADS.jpg',         alt: 'ADS',         name: 'ADS', descKey: 'clients.desc.ads' },
-  { file: 'NPS.jpg',         alt: 'NPS',         name: 'NPS', descKey: 'clients.desc.nps' },
-  { file: 'SES.jpg',         alt: 'SES',         name: 'SES', descKey: 'clients.desc.ses' },
-  { file: 'Murata.jpg',      alt: 'MURATA',      name: 'MURATA', descKey: 'clients.desc.murata' },
-  { file: 'Proterial.png',   alt: 'PROTERIAL',   name: 'PROTERIAL', descKey: 'clients.desc.proterial' },
-  { file: 'TT.png',          alt: 'TT',          name: 'TT FUJI', descKey: 'clients.desc.tt' },
-  { file: 'U-Services.jpg',  alt: 'U-Services',  name: 'U-Services', descKey: 'clients.desc.uservice' },
-  { file: 'ming.png',        alt: 'MING',        name: 'MING TAI', descKey: 'clients.desc.ming' },
-  { file: 'ASKO.jpg',        alt: 'ASKO',        name: 'ASKO', descKey: 'clients.desc.asko' },
-  { file: 'BGC.jpg',         alt: 'BGC',         name: 'BGC', descKey: 'clients.desc.bgc' },
-  { file: 'EWater.jpg',      alt: 'EW',          name: 'EASTWATER', descKey: 'clients.desc.ewater' },
-  { file: 'OTANI.jpg',       alt: 'OTANI',       name: 'OTANI', descKey: 'clients.desc.otani' },
-  { file: 'MCL.png',         alt: 'MICHELIN',    name: 'MICHELIN', descKey: 'clients.desc.mcl' },
+  { file: 'TRANE.jpg',       alt: 'TRANE',       name: 'TRANE',                            descKey: 'clients.desc.trane' },
+  { file: 'Transitions.jpg', alt: 'Transitions', name: 'Transitions Optical',              descKey: 'clients.desc.transitions' },
+  { file: 'TTM.jpg',         alt: 'TTM',         name: 'TRANS THAI-MALAYSIA',              descKey: 'clients.desc.ttm' },
+  { file: 'WHA.jpg',         alt: 'WHA',         name: 'WHA',                              descKey: 'clients.desc.wha' },
+  { file: 'ADS.jpg',         alt: 'ADS',         name: 'ADS',                              descKey: 'clients.desc.ads' },
+  { file: 'NPS.jpg',         alt: 'NPS',         name: 'NPS',                              descKey: 'clients.desc.nps' },
+  { file: 'SES.jpg',         alt: 'SES',         name: 'SES',                              descKey: 'clients.desc.ses' },
+  { file: 'Murata.jpg',      alt: 'MURATA',      name: 'MURATA',                           descKey: 'clients.desc.murata' },
+  { file: 'Proterial.png',   alt: 'PROTERIAL',   name: 'PROTERIAL',                        descKey: 'clients.desc.proterial' },
+  { file: 'TT.png',          alt: 'TT',          name: 'TT FUJI',                          descKey: 'clients.desc.tt' },
+  { file: 'U-Services.jpg',  alt: 'U-Services',  name: 'U-Services',                       descKey: 'clients.desc.uservice' },
+  { file: 'ming.png',        alt: 'MING',        name: 'MING TAI',                         descKey: 'clients.desc.ming' },
+  { file: 'ASKO.jpg',        alt: 'ASKO',        name: 'ASKO',                             descKey: 'clients.desc.asko' },
+  { file: 'BGC.jpg',         alt: 'BGC',         name: 'BGC',                              descKey: 'clients.desc.bgc' },
+  { file: 'EWater.jpg',      alt: 'EW',          name: 'EASTWATER',                        descKey: 'clients.desc.ewater' },
+  { file: 'OTANI.jpg',       alt: 'OTANI',       name: 'OTANI',                            descKey: 'clients.desc.otani' },
+  { file: 'MCL.png',         alt: 'MICHELIN',    name: 'MICHELIN',                         descKey: 'clients.desc.mcl' },
 ]
 
 // โหลดโลโก้ทั้งหมดด้วย import.meta.glob (แบบเดียวกับ Courses.vue) แล้ว lookup ตามชื่อไฟล์ตอน render

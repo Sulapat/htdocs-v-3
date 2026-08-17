@@ -29,7 +29,7 @@ body {
     width: 100%;
     max-width: 100%;
     margin: 2rem 0 0;
-    background: linear-gradient(160deg, #0a1f6b 0%, #112E81 55%, #16389c 100%);
+    background: linear-gradient(160deg, #0d0947 0%, #203768 55%, #62af62 100%);
     box-shadow: 0 25px 50px rgba(17, 46, 129, 0.35);
 }
 
@@ -112,12 +112,12 @@ body {
     display: flex;
     justify-content: center;
     gap: 0.75rem;
-    height: 460px;
+    height: 380px;
 }
 
 .client-column {
-    flex: 0 0 200px;
-    width: 200px;
+    flex: 0 0 160px;
+    width: 160px;
     height: 100%;
     overflow: hidden;
     border-radius: 14px;
@@ -156,8 +156,8 @@ body {
 
 .client-card {
   background: white;
-  border-radius: 14px;
-  padding: 8px;
+  border-radius: 12px;
+  padding: 6px;
   width: 100%;
   aspect-ratio: 4 / 3;
   display: flex;
@@ -265,11 +265,24 @@ body {
    TESTIMONIAL SECTION (ส่วนที่วงสีเขียวใน ref)
    กล่อง 3 = tag/label นำสายตา (รอง) กล่อง 4 = testimonial card (เด่น สุด: ตัวอักษรใหญ่กว่า มีกรอบเน้นสี)
    ======================================== */
+/* พื้นหลังทึบ: จำเป็นเพราะนี่คือ section สุดท้ายของหน้า .page-content (App.vue) ดึงตัวเองขึ้นไป
+   ซ้อนทับ footer ไว้เท่าความสูง footer เสมอ (negative margin trick) ถ้า section นี้โปร่งใส
+   จะเห็นพื้นหลังสีเข้มของ footer ทะลุออกมาตลอดเวลา ไม่ใช่แค่ตอนเลื่อนสุดจอ
+   ใช้สีเดียวกับพื้นหลังปกติของหน้าเว็บ (body ใน footer.css: #f5f5f5) ให้กลืนกัน */
+/* full-bleed background: จำเป็นเพราะนี่คือ section สุดท้ายของหน้า .page-content (App.vue) ดึงตัวเองขึ้นไป
+   ซ้อนทับ footer ไว้เท่าความสูง footer เสมอ (negative margin trick) ถ้า section นี้โปร่งใส/ไม่เต็มความกว้างจอ
+   จะเห็นพื้นหลังสีเข้มของ footer ทะลุออกมาตลอดเวลา ไม่ใช่แค่ตอนเลื่อนสุดจอ (เต็มความกว้างจอเสมอ
+   ไม่ผูกกับ max-width ของเนื้อหาข้างใน เพราะ footer เองก็กว้างเต็มจอ)
+   ใช้สีเดียวกับพื้นหลังปกติของหน้าเว็บ (body ใน footer.css: #f5f5f5) ให้กลืนกัน */
 .clients-testimonial {
     padding: 3.5rem 2rem 4.5rem;
+    text-align: center;
+    background: #f5f5f5;
+}
+
+.clients-testimonial-inner {
     max-width: 900px;
     margin: 0 auto;
-    text-align: center;
 }
 
 /* กล่อง 3: tag — ข้อความนำ ขนาดเล็ก น้ำหนักปกติ สีเทา ไม่แย่งซีนกับ testimonial card

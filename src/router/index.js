@@ -8,6 +8,7 @@ import Knowledge from '@/components/Knowledge.vue'
 import Portfolio from '@/components/Portfolio.vue'
 import TestResult from '@/components/TestResult.vue'
 import courses from '@/components/Courses.vue'
+import courseSplit from '@/components/course_split.vue'
 import CourseDetail from '@/components/CourseDetail.vue'
 import Article from '@/components/Article.vue'
 import ArticleDetail from '@/components/ArticleDetail.vue'
@@ -25,6 +26,7 @@ const routes = [
   { path: '/portfolio',  component: Portfolio },
   { path: '/result', component: TestResult },
   { path: '/courses', component: courses },
+  { path: '/course-split', component: courseSplit, meta: { hideChrome: true } },
   { path: '/courses/:slug', component: CourseDetail },
   { path: '/article', component: Article },
   { path: '/article/:slug', component: ArticleDetail },
