@@ -1,3 +1,5 @@
+@import "@/assets/css/styles.css";
+
 * {
     margin: 0;
     padding: 0;
@@ -320,9 +322,9 @@ body {
 
 .filter-btn:hover,
 .filter-btn.active {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
     color: white;
-    border-color: #667eea;
+    border-color: var(--color-primary);
 }
 
 /* ===== ARTICLES GRID (ประชาสัมพันธ์) =====
@@ -383,8 +385,10 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center; 
+    align-self: flex-start; /* ป้องกันไม่ให้ flex-direction:column ของ .article-info/.hero-card-content
+                                ยืด (stretch) แท็กนี้เต็มความกว้าง ให้ยึดตามเนื้อหาจริงเท่านั้น */
     padding: 0.4rem 0.8rem;
-    width: 100px;
+    white-space: nowrap; /* ไม่ให้ตัดขึ้นบรรทัดใหม่ */
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 600;
@@ -458,7 +462,7 @@ body {
 }
 
 .btn-read-more {
-    color: #667eea;          /* เปลี่ยนสีให้ตรง */
+    color: var(--color-primary);          /* เปลี่ยนสีให้ตรง */
     font-weight: 600;
     text-decoration: none;
     transition: color 0.3s;
@@ -467,10 +471,10 @@ body {
     gap: 0.3rem;
 }
 .btn-read-more:hover {
-    color: #764ba2;
+    color: var(--color-primary-dark);
 }
 .article-card:hover .btn-read-more {
-    color: #764ba2;
+    color: var(--color-primary-dark);
 }
 
 /* ===== PAGINATION ===== */
@@ -492,9 +496,9 @@ body {
 
 .page-btn:hover,
 .page-btn.active {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
     color: white;
-    border-color: #667eea;
+    border-color: var(--color-primary);
 }
 
 a.kn-article-card {
@@ -528,4 +532,50 @@ a.kn-article-card {
     align-items: center;
     justify-content: center;
     min-height: 40vh;
+}
+
+/* =============================================================
+   ภาษาไทย (TH) — จุดเน้น (filter/pagination/read more) เป็นธีมน้ำเงิน
+   ตาม var(--color-primary) ของ Patineer (ค่า default ด้านบน ไม่ต้องมี selector
+   [data-theme="en"] ครอบ เพราะเป็นสีตั้งต้นของหน้าอยู่แล้ว)
+
+   ภาษาอังกฤษ (EN) — สลับจุดเน้นเดียวกันนี้เป็นสีเขียว (โทนเดียวกับที่ Article.css
+   ใช้เป็นสี TH ของหน้าบทความ) ให้ทำงานสลับกันแบบเดียวกับหน้า Article
+   หมายเหตุ: .knowledge-header ไม่แตะ เพราะตั้งใจให้เป็นธีม Patineer
+   (น้ำเงิน+เขียว) คงที่เสมอไม่ผูกกับภาษาอยู่แล้ว
+   ตั้งค่าตอน currentLang === 'en' → <html data-theme="en"> (ดู nav.vue)
+   ============================================================= */
+/* ✅ FIX: พื้นหลังทั้งหน้า (.Knowledge) เดิมไม่เคยมี override ตอน EN เลย
+   เลยค้างเป็นน้ำเงินตลอดไม่ว่าจะสลับภาษาไหน ทั้งที่ element อื่นๆ ในหน้า
+   (filter-btn / read-more / page-btn) สลับเป็นเขียวไปแล้ว ทำให้พื้นหลัง
+   กับจุดเน้นสีไม่ตรงกัน เพิ่ม override ตรงนี้ โดย copy ค่าสีเขียวมาจาก
+   .articles-section::before ใน Articles.css (TH) แบบเป๊ะๆ เพื่อ "ยืมสีของกันและกัน" */
+[data-theme="en"] .Knowledge {
+    background:
+        linear-gradient(90deg, #f6fbf7 0%, transparent 22%, transparent 78%, #f6fbf7 100%),
+        radial-gradient(circle at 12% 8%, rgba(12, 122, 46, 0.16) 0%, transparent 42%),
+        radial-gradient(circle at 88% 18%, rgba(6, 123, 6, 0.12) 0%, transparent 38%),
+        radial-gradient(circle at 80% 92%, rgba(12, 122, 46, 0.14) 0%, transparent 45%),
+        linear-gradient(160deg, #e3f7ea 0%, #eefaf1 45%, #e9f8ee 100%);
+}
+
+[data-theme="en"] .filter-btn:hover,
+[data-theme="en"] .filter-btn.active {
+    background: linear-gradient(135deg, #0c7a2e, #085a22);
+    border-color: #0c7a2e;
+}
+
+[data-theme="en"] .btn-read-more {
+    color: #0c7a2e;
+}
+
+[data-theme="en"] .btn-read-more:hover,
+[data-theme="en"] .article-card:hover .btn-read-more {
+    color: #085a22;
+}
+
+[data-theme="en"] .page-btn:hover,
+[data-theme="en"] .page-btn.active {
+    background: linear-gradient(135deg, #0c7a2e, #085a22);
+    border-color: #0c7a2e;
 }

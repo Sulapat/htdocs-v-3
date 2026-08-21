@@ -26,7 +26,10 @@
     "hero": {
       "title": "Maintenance technology<br>Consulting <span class=\"highlight\">and</span><br>Training service",
       "description": "Patineer Co., Ltd. provides maintenance services for machinery in the industrial sector. Founded in 2014, the company was established to meet the industry's need to prevent machine breakdowns whose root causes could not be identified, leading to lost production opportunities. Patineer therefore offers consulting on Condition Based Maintenance technology, used to inspect machine condition and maximize the benefits of maintenance management.",
-      "ctaButton": "More About Us"
+      "ctaButton": "More About Us",
+      "eyebrow": "PATINEER / CONDITION MONITORING",
+      "finalTagline": "Measure.<br>Analyze.<br>Maintain.",
+      "finalDesc": "Analyze and plan your maintenance"
     },
     "services": {
       "sectionTitle": "Our Services",
@@ -250,7 +253,7 @@
     }
   },
   "knowledge": {
-    "title": "This News",
+    "title": "News",
     "headerText": "Stay up to date with information and best practices in maintenance",
     "searchPlaceholder": "Search articles...",
     "filterAll": "All",

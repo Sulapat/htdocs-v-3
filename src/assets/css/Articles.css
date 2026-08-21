@@ -1,3 +1,5 @@
+@import "@/assets/css/styles.css";
+
 /* ========================================
    ARTICLES HERO (with background image)
    ======================================== */
@@ -306,6 +308,15 @@
     margin-bottom: 10px;
     font-weight: 600;
     line-height: 1.4;
+    /* ✅ FIX: เดิมไม่มี line-clamp/min-height เลย พอแปลเป็นอังกฤษแล้วหัวข้อ
+       ยาวล้น 2 บรรทัดเป็น 3 บรรทัด การ์ดใบนั้นเลยสูงกว่าใบอื่นในกริดเดียวกัน
+       เผื่อพื้นที่ไว้ตายตัว 3 บรรทัดเสมอ ไม่ว่าเนื้อหาสั้นหรือยาว/ภาษาไหน */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: calc(1.2rem * 1.4 * 3);
 }
 
 .article-card:hover .article-content h3 {
@@ -318,6 +329,13 @@
     line-height: 1.6;
     margin-bottom: 15px;
     min-height: 48px;
+    /* ✅ FIX: เดิมมีแค่ min-height (กันเตี้ยเกินไป) แต่ไม่มี line-clamp กันยาวเกินไป
+       คำโปรยภาษาอังกฤษที่ยาวเลยดันความสูงการ์ดเพิ่มได้เหมือนกัน ล็อก 2 บรรทัดไว้ด้วย */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .article-meta {
@@ -661,4 +679,76 @@
         position: static;
         order: -1;
     }
+}
+
+/* =============================================================
+   ภาษาอังกฤษ (EN) — สลับสีจากธีมเดิมของหน้า Article (เขียว)
+   ให้เป็นธีมน้ำเงินตามโลโก้ Patineer เหมือนกับหน้า Service
+   ภาษาไทย (TH) ไม่แตะ ใช้สีเดิมของหน้าตามที่ออกแบบไว้แต่แรกทุกอย่าง
+   ตั้งค่าตอน currentLang === 'en' → <html data-theme="en"> (ดู nav.vue)
+   ============================================================= */
+/* ✅ FIX: ป้าย tag (.al-hero-tag / .article-tag) เดิมเป็นสีเขียว hardcode
+   ตรงๆ ไม่เคยถูกสลับตอน EN เลย ทำให้ตอนภาษาอังกฤษทุกอย่างในหน้ากลายเป็น
+   ธีมน้ำเงินหมดแล้ว แต่ป้ายนี้ยังเขียวค้างอยู่ใบเดียว ดูไม่เข้าธีม
+   เพิ่ม override ให้สลับเป็นน้ำเงินตามกลุ่ม accent อื่นๆ ด้วย */
+[data-theme="en"] .al-hero-tag,
+[data-theme="en"] .article-tag {
+    background: var(--color-primary);
+}
+
+[data-theme="en"] .al-hero-readmore {
+    color: var(--color-primary);
+}
+
+[data-theme="en"] .al-hero-card:hover .al-hero-readmore {
+    color: var(--color-primary-dark);
+}
+
+[data-theme="en"] .articles-section::before {
+    /* ✅ FIX: ก่อนหน้านี้ใช้ var(--color-primary)/color-mix() คำนวณสีน้ำเงินขึ้นมาเอง
+       ซึ่งไม่ตรงเป๊ะกับสีน้ำเงินอ่อนที่ .Knowledge (Knowledge.css) ใช้จริงตอนภาษาไทย
+       เปลี่ยนมา copy ค่าสีตรงๆ จาก .Knowledge (TH) ให้ "ยืมสีของกันและกัน" แบบเป๊ะๆ แทน */
+    background:
+        linear-gradient(90deg, #f6f9fd 0%, transparent 22%, transparent 78%, #f6f9fd 100%),
+        radial-gradient(circle at 10% 6%, rgba(10, 17, 114, 0.10) 0%, transparent 42%),
+        radial-gradient(circle at 90% 22%, rgba(30, 89, 172, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 82% 95%, rgba(18, 63, 158, 0.10) 0%, transparent 45%),
+        linear-gradient(160deg, #e2edfa 0%, #eef4fc 45%, #e6effa 100%);
+}
+
+[data-theme="en"] .article-card:hover .article-content h3 {
+    color: var(--color-primary);
+}
+
+[data-theme="en"] .article-meta i {
+    color: var(--color-primary-dark);
+}
+
+[data-theme="en"] .as-card-title {
+    color: var(--color-secondary);
+}
+
+[data-theme="en"] .as-search-box input:focus {
+    border-color: var(--color-secondary);
+}
+
+[data-theme="en"] .as-category-list li.active {
+    background: color-mix(in srgb, var(--color-primary) 12%, white);
+    color: var(--color-primary-dark);
+}
+
+[data-theme="en"] .as-category-list i {
+    color: var(--color-primary-dark);
+}
+
+[data-theme="en"] .as-category-list li.active .as-cat-count {
+    color: var(--color-primary-dark);
+}
+
+[data-theme="en"] .as-popular-rank {
+    background: var(--color-secondary);
+}
+
+[data-theme="en"] .as-popular-item:hover .as-popular-title {
+    color: var(--color-primary);
 }

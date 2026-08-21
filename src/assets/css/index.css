@@ -1,3 +1,8 @@
+/* โหลดฟอนต์ Prompt (หัวข้อ/ตัวเลข) + Sarabun (เนื้อหาภาษาไทย) จาก Google Fonts
+   — CSS ทั้งไฟล์อ้างอิงฟอนต์นี้อยู่แล้วแต่ไม่เคยมีการโหลดจริง ทำให้ fallback ไป
+   ใช้ system font (Arial/Segoe UI) แทน ตัวอักษรเลยดูแน่น/ไม่ตรงกับดีไซน์ที่ตั้งใจไว้ */
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap');
+
 /* ========================================
    RESET & BASE STYLES
    ======================================== */
@@ -8,185 +13,404 @@
 }
 
 html {
-    overflow-x: hidden;
+    /* overflow-x: clip (ไม่ใช่ hidden) — ป้องกัน horizontal scrollbar เหมือนเดิม
+       แต่ hidden บน html/body จะสร้าง scroll container ใหม่ ซึ่งทำให้ position: sticky
+       ของ .hero (ใน hero-wrap) หลุดอ้างอิงจาก viewport จริง โดยเฉพาะใน Safari/WebKit
+       ทำให้ sticky ไม่ทำงาน แล้วเหลือพื้นที่ว่างเปล่าตามความสูงของ track แทน */
+    overflow-x: clip;
 }
 
-/* เดิมเป็น body{} ตรงๆ — scope เข้า .home (root wrapper ของหน้านี้) แทน
-   กันชนกับ body{} ของหน้าอื่นที่ค้างโหลดอยู่ใน SPA session เดียวกัน */
-.home {
+body {
     font-family: 'Prompt', 'Sarabun', -apple-system, sans-serif;
     background: #ffffff;
-    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
 /* ========================================
-   HERO SECTION - Main Container
+   HERO SECTION — Scroll-driven story "From Vibration to Insight"
+   ย้ายมาจาก patineer-vibration-scroll-story.html ทั้งหมด (โครงสร้าง + สไตล์)
+   ขับเคลื่อนด้วย GSAP + ScrollTrigger (scrub) ใน index.vue — ดู initHeroStory()
    ======================================== */
-.hero {
-    margin-top: 5px;
-    padding: 4rem;
-    padding-top: calc(80px + 2rem);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
+.home .hero-wrap {
+    height: 620vh;
     position: relative;
+}
+
+.home .hero-wrap .hero {
+    height: 100vh;
+    min-height: 680px;
+    position: sticky;
+    top: 0;
     overflow: hidden;
-    background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 50%, #eef2f6 100%);
+    background:
+        radial-gradient(circle at 75% 48%, rgba(0, 145, 220, .08), transparent 28%),
+        linear-gradient(135deg, #020914 0%, #031124 55%, #020914 100%);
 }
 
-.hero-left {
-    padding-right: 2rem;
-    text-align: left;  /* ← เพิ่มบรรทัดนี้ */
+.hero .grid {
+    position: absolute;
+    inset: 0;
+    opacity: .20;
+    background-image:
+        linear-gradient(rgba(74, 155, 210, .12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74, 155, 210, .12) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: linear-gradient(to right, black 0%, black 65%, transparent 100%);
 }
-/* ========================================
-   HERO SECTION - Morphing Background — ลบออกแล้วตามคำขอ (ยังแล็คแม้เป็น static
-   เพราะ blur() ขนาดใหญ่มี paint cost สูงอยู่ดี) ไม่ได้ใช้ element นี้ใน template แล้ว
-   ======================================== */
 
-/* ========================================
-   HERO SECTION - Content Layout
-   ======================================== */
-.hero-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    width: 100%;
+.hero-inner {
+    width: min(1180px, calc(100% - 80px));
+    height: 100%;
+    margin: auto;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    grid-template-columns: 50% 50%;
     align-items: center;
     position: relative;
-    z-index: 1;
+    z-index: 2;
 }
 
-/* Hero Left Content (Text & Button) */
-.hero-left {
-    padding-right: 2rem;
+.copy {
+    padding-right: 50px;
+    transform: translateY(-20px);
 }
 
-.hero-left h1 {
-    font-size: 2.2rem;
+.copy .eyebrow {
+    font-size: 12px;
+    letter-spacing: .16em;
+    color: #58c7ff;
+    margin-bottom: 18px;
+    font-family: 'Prompt', 'Nunito', sans-serif;
+    font-weight: 600;
+}
+
+.copy h1 {
+    margin: 0;
+    font-size: clamp(38px, 3.6vw, 58px);
+    line-height: 1.08;
+    letter-spacing: -.025em;
     font-weight: 700;
-    line-height: 1.2;
-    color: #1e293b;
-    margin-bottom: 1.2rem;
+    color: #ffffff;
 }
 
-.hero-left h1 .highlight {
-    color: #1a60ec;
+.copy h1 span,
+.copy h1 .highlight {
+    color: #58c7ff;
 }
 
-.hero-left p {
-    font-size: 1.05rem;
-    color: #64748b;
-    line-height: 1.7;
-    margin-bottom: 2.5rem;
-    max-width: 500px;
-    margin-left: 0;    /* ← เพิ่ม */
-    margin-right: 0;   /* ← เพิ่ม */
-    /* จองพื้นที่ไว้เท่ากับ 8 บรรทัดเสมอ (EN ยาวสุดใช้ 8 บรรทัด, TH ใช้ 7 บรรทัด)
-       กันไม่ให้ปุ่ม CTA และการ์ด slider ฝั่งขวาขยับขึ้น-ลงตอนสลับภาษา */
-    min-height: calc(1.05rem * 1.7 * 8);
-    /* กันคำสุดท้ายไปโดดเดี่ยวบรรทัดเดียว (orphan) */
+.copy p {
+    max-width: 520px;
+    margin: 24px 0 30px;
+    color: #aab9c9;
+    font-size: 15px;
+    line-height: 1.9;
+    /* จองพื้นที่ไว้เท่ากับ 8 บรรทัดเสมอ กันปุ่ม CTA ขยับตอนสลับภาษา */
+    min-height: calc(15px * 1.9 * 8);
     text-wrap: pretty;
 }
 
-/* CTA Button */
-.cta-button {
-    min-width: 250px;
-    min-height: 50px;
+/* CTA Button — โทนน้ำเงินเรืองแสงตาม HTML ต้นแบบ */
+.hero .cta-button {
     display: inline-flex;
-    font-family: 'Prompt', 'Nunito', sans-serif;
-    font-size: 16px;
     align-items: center;
-    justify-content: center;
-    text-transform: uppercase;
-    text-align: center;
-    letter-spacing: 1.3px;
-    font-weight: 600;
-    color: #ffffff;
-    background: linear-gradient(135deg, #2a0f69 0%, #070be9 100%);
-    border: none;
-    border-radius: 50px;
-    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25);
-    transition: all 0.3s ease;
-    cursor: pointer;
-    outline: none;
-    position: relative;
-    padding: 1px;
+    gap: 10px;
+    padding: 13px 20px;
+    border-radius: 8px;
+    color: #fff;
+    background: #165bd7;
     text-decoration: none;
+    font-size: 13px;
+    font-family: 'Prompt', 'Nunito', sans-serif;
+    font-weight: 600;
+    box-shadow: 0 0 28px rgba(22, 91, 215, .22);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.cta-button:hover, 
-.cta-button:focus {
+.hero .cta-button span {
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+.hero .cta-button:hover,
+.hero .cta-button:focus {
     transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(99, 102, 241, 0.35);
+    box-shadow: 0 8px 30px rgba(22, 91, 215, .35);
 }
 
-/* ========================================
-   HERO SECTION - Card Slider (Right side)
-   ======================================== */
-.hero-right.card-slider {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 550px;
+.hero .cta-button:hover span {
+    transform: translateX(4px);
+}
+
+.visual {
+    height: 620px;
     position: relative;
 }
 
-.slider__holder {
-    position: relative;
-    width: 100%;
-    height: 500px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.slider__item {
-    position: absolute;
-    width: 320px;
-    height: 480px;
-    border-radius: 16px;
-    overflow: hidden;
-    background: white;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform, opacity;
-    pointer-events: none;
-}
-
-.slider__item img {
+.visual svg {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    overflow: visible;
 }
 
-/* Bullet Navigation */
-.bullets {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 10px;
+.signal-label {
+    position: absolute;
+    left: 10%;
+    top: 13%;
+    font-size: 11px;
+    letter-spacing: .14em;
+    color: #4eabc9;
+    opacity: .9;
+    font-family: 'Prompt', 'Nunito', sans-serif;
 }
 
-.bullets__item {
-    width: 10px;
-    height: 10px;
+.signal-glow {
+    fill: none;
+    stroke: #24b9ff;
+    stroke-width: 4;
+    opacity: .22;
+    filter: blur(7px);
+}
+
+.signal {
+    fill: none;
+    stroke: #43c6ff;
+    stroke-width: 2;
+    filter: drop-shadow(0 0 8px rgba(67, 198, 255, .75));
+}
+
+.signal-dot {
+    fill: #fff;
+    filter: drop-shadow(0 0 9px rgba(67, 198, 255, 1));
+}
+
+.machine {
+    position: absolute;
+    width: 330px;
+    height: 190px;
+    left: 26%;
+    top: 31%;
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+.machine-body {
+    position: absolute;
+    width: 240px;
+    height: 110px;
+    left: 45px;
+    top: 38px;
+    border: 1px solid rgba(116, 205, 242, .35);
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(17, 49, 70, .72), rgba(5, 18, 30, .85));
+    box-shadow: inset 0 0 35px rgba(37, 176, 232, .06);
+}
+
+.machine-top {
+    position: absolute;
+    width: 130px;
+    height: 22px;
+    left: 100px;
+    top: 20px;
+    border: 1px solid rgba(116, 205, 242, .28);
+    border-bottom: 0;
+    border-radius: 7px 7px 0 0;
+}
+
+.machine-foot {
+    position: absolute;
+    width: 25px;
+    height: 30px;
+    bottom: 8px;
+    border: 1px solid rgba(116, 205, 242, .3);
+}
+
+.foot-a { left: 75px; }
+.foot-b { right: 75px; }
+
+.shaft {
+    position: absolute;
+    width: 70px;
+    height: 12px;
+    right: -18px;
+    top: 88px;
+    border: 1px solid rgba(116, 205, 242, .35);
+    border-left: 0;
+}
+
+.sensor {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    left: 154px;
+    top: 26px;
     border-radius: 50%;
-    background: #cbd5e1;
-    transition: all 0.3s;
-    cursor: pointer;
+    background: #52d2ff;
+    box-shadow: 0 0 0 5px rgba(82, 210, 255, .09), 0 0 22px rgba(82, 210, 255, .95);
+    opacity: 0;
 }
 
-.bullets__item:hover {
-    background: #94a3b8;
-    transform: scale(1.2);
+.sensor-line {
+    position: absolute;
+    width: 180px;
+    height: 1px;
+    left: 165px;
+    top: 12px;
+    transform-origin: left center;
+    transform: rotate(-24deg);
+    background: linear-gradient(90deg, rgba(82,210,255,.8), transparent);
+    opacity: 0;
 }
 
-.bullets__item--active {
-    background: #6366f1;
-    transform: scale(1.3);
+.analysis {
+    position: absolute;
+    width: 290px;
+    right: 1%;
+    top: 8%;
+    padding: 18px;
+    border: 1px solid rgba(83, 196, 238, .25);
+    border-radius: 12px;
+    background: rgba(3, 16, 28, .78);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transform: translateY(18px);
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+}
+
+.analysis-title {
+    font-size: 10px;
+    letter-spacing: .14em;
+    color: #66cfff;
+    margin-bottom: 14px;
+    font-family: 'Prompt', 'Nunito', sans-serif;
+    font-weight: 600;
+}
+
+.analysis-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    font-size: 12px;
+    color: #9db0bf;
+    font-family: 'Prompt', 'Nunito', sans-serif;
+}
+
+.analysis-row strong {
+    color: #fff;
+    font-weight: 500;
+}
+
+.status {
+    margin-top: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    color: #ffce72;
+    font-family: 'Prompt', 'Nunito', sans-serif;
+}
+
+.status i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ffce72;
+    box-shadow: 0 0 10px rgba(255, 206, 114, .8);
+}
+
+.spectrum {
+    position: absolute;
+    width: 300px;
+    height: 110px;
+    right: 5%;
+    bottom: 9%;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.spectrum .bar {
+    position: absolute;
+    bottom: 0;
+    width: 3px;
+    background: #4dcaff;
+    box-shadow: 0 0 9px rgba(77, 202, 255, .5);
+    transform-origin: bottom;
+}
+
+.final-message {
+    position: absolute;
+    right: 5%;
+    bottom: 13%;
+    opacity: 0;
+    text-align: right;
+}
+
+.final-message .small {
+    color: #5bcaff;
+    letter-spacing: .16em;
+    font-size: 10px;
+    margin-bottom: 12px;
+    font-family: 'Prompt', 'Nunito', sans-serif;
+    font-weight: 600;
+}
+
+.final-message h2 {
+    margin: 0;
+    font-size: clamp(30px, 3vw, 48px);
+    line-height: 1.05;
+    color: #ffffff;
+    font-family: 'Prompt', 'Nunito', sans-serif;
+    font-weight: 700;
+}
+
+.final-message p {
+    margin: 14px 0 0;
+    color: #8fa4b6;
+    font-size: 13px;
+    font-family: 'Prompt', 'Nunito', sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .signal,
+    .signal-glow {
+        stroke-dashoffset: 0 !important;
+    }
+    .final-message {
+        opacity: 1 !important;
+    }
+}
+
+@media (max-width: 850px) {
+    .home .hero-wrap { height: 500vh; }
+    .hero-inner {
+        width: min(100% - 36px, 650px);
+        grid-template-columns: 1fr;
+        padding-top: 70px;
+    }
+    .copy {
+        padding: 0;
+        align-self: start;
+        transform: none;
+    }
+    .copy h1 {
+        /* ลดขนาดลงจาก clamp(38px, 3.6vw, 58px) เดิม — ที่ความกว้างหน้าจอมือถือ
+           ฟอนต์ 38px ทำให้คำว่า "เทคโนโลยีการบำรุงรักษา" ยาวเกินบรรทัด
+           เบราว์เซอร์เลยตัดคำแทรกกลางคำ ("...บำรุง" ขึ้นบรรทัดใหม่แยกจาก "รักษา")
+           ลดเพดานบนจาก 38px เหลือ 34px ให้แน่ใจว่าเล็กลงจริงตลอดช่วง breakpoint นี้
+           (ของเดิมใช้ 7.2vw ซึ่งพอความกว้างหน้าจอเกิน ~528px ค่าจะกลับไปชนเพดาน
+           38px เท่าเดิม ไม่ช่วยอะไร) */
+        font-size: clamp(26px, 5vw, 34px);
+    }
+    .copy p { max-width: 600px; }
+    .visual {
+        height: 390px;
+        margin-top: -40px;
+    }
+    .machine { left: 5%; top: 28%; transform: scale(.82); transform-origin: left top; }
+    .analysis { right: 0; transform: scale(.78); transform-origin: right top; }
+    .spectrum { right: 0; bottom: 0; transform: scale(.75); transform-origin: right bottom; }
+    .final-message { right: 0; bottom: 4%; }
 }
 
 /* ========================================
@@ -223,10 +447,15 @@ html {
 }
 
 .service-card {
-    background: #ffffff;
-    border-radius: 20px;
-    padding: 40px 30px;
-    text-align: center;
+    position: relative;
+    background: #eef2f7;
+    border-radius: 24px;
+    overflow: hidden;
+    padding: 34px 28px;
+    display: flex;
+    align-items: center;
+    min-height: 260px;
+    text-align: left;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     opacity: 0;
     transform: translateY(50px);
@@ -245,59 +474,103 @@ html {
     border-color: rgba(99, 102, 241, 0.2);
 }
 
+/* ฝั่งซ้าย: ไอคอน + หัวข้อ + คำอธิบาย + ลิงก์ */
+.service-body {
+    position: relative;
+    z-index: 2;
+    max-width: 62%;
+}
+
 .service-icon {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 25px;
-    background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
-    border-radius: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1b2a5b 0%, #24346b 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
-    color: #6366f1;
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.15);
-    transform: translateY(0) scale(1);
+    font-size: 1.3rem;
+    color: #ffffff;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 14px rgba(27, 42, 91, 0.25);
     transition: all 0.5s ease;
 }
 
-.service-card.animate .service-icon {
-    transform: translateY(-10px) scale(1.05);
-}
-
 .service-card:hover .service-icon {
-    background: linear-gradient(135deg, #1a1ef6 0%, #4415b1 100%);
-    color: #ffffff;
-    transform: translateY(-10px) scale(1.1) rotate(5deg);
+    transform: scale(1.08) rotate(5deg);
 }
 
 .service-card h3 {
-    font-size: 1.5rem;
-    color: #1e293b;
-    margin-bottom: 15px;
-    font-weight: 600;
-    transform: translateY(0);
-    transition: all 0.5s ease 0.1s;
-}
-
-.service-card.animate h3 {
-    transform: translateY(0);
+    font-size: 1.3rem;
+    color: #16234f;
+    margin-bottom: 12px;
+    font-weight: 700;
 }
 
 .service-card p {
-    color: #64748b;
+    color: #5b6472;
     line-height: 1.7;
-    font-size: 0.95rem;
-    transform: translateY(0);
-    transition: all 0.5s ease 0.2s;
-    /* จองพื้นที่ไว้เท่ากับ 5 บรรทัดเสมอ กันการ์ดสูงไม่เท่ากันตอนสลับภาษา TH/EN */
-    min-height: calc(0.95rem * 1.7 * 5);
+    font-size: 0.9rem;
+    margin-bottom: 18px;
+    /* จองพื้นที่ไว้เท่ากับ 3 บรรทัดเสมอ กันการ์ดสูงไม่เท่ากันตอนสลับภาษา TH/EN */
+    min-height: calc(0.9rem * 1.7 * 3);
     /* กันคำสุดท้ายไปโดดเดี่ยวบรรทัดเดียว (orphan) */
     text-wrap: pretty;
 }
 
-.service-card.animate p {
-    transform: translateY(0);
+.service-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #2554f5;
+    font-weight: 600;
+    font-size: 0.92rem;
+    text-decoration: none;
+}
+
+.service-link i {
+    font-size: 0.78rem;
+    transition: transform 0.3s ease;
+}
+
+.service-link:hover i {
+    transform: translateX(4px);
+}
+
+/* ฝั่งขวา: รูปสินค้า/รูปภาพ เฟดขอบซ้ายกลืนเข้ากับพื้นการ์ด */
+.service-image {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 56%;
+    overflow: hidden;
+}
+
+.service-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* เฟด — ให้ขอบซ้าย/บน/ล่างของรูปกลืนเข้ากับสีพื้นการ์ด (#eef2f7) แทนการตัดขอบภาพแข็งๆ */
+.service-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(90deg,
+            #eef2f7 0%,
+            rgba(238, 242, 247, 0.85) 14%,
+            rgba(238, 242, 247, 0.4) 32%,
+            rgba(238, 242, 247, 0) 58%),
+        linear-gradient(180deg,
+            rgba(238, 242, 247, 0.55) 0%,
+            rgba(238, 242, 247, 0) 22%,
+            rgba(238, 242, 247, 0) 78%,
+            rgba(238, 242, 247, 0.55) 100%);
+    pointer-events: none;
 }
 
 /* VI Section Container */
@@ -386,55 +659,10 @@ html {
    RESPONSIVE DESIGN
    ======================================== */
 
-/* Tablet & Medium Screens (max-width: 1200px) */
-@media (max-width: 1200px) {
-    .hero-container {
-        grid-template-columns: 1fr;
-        gap: 3rem;
-    }
-
-    .hero-left {
-        padding-right: 0;
-        text-align: center;
-    }
-
-    .hero-left h1 {
-        font-size: 3rem;
-    }
-
-    .hero-left p {
-        margin-left: auto;
-        margin-right: auto;
-    }
-}
-
 /* Mobile & Small Screens (max-width: 768px) */
 @media (max-width: 768px) {
-    .hero {
-        padding: 2rem;
-    }
-
-    .hero-left h1 {
-        font-size: 2.5rem;
-    }
-
-    .hero-left p {
-        font-size: 1rem;
-        min-height: calc(1rem * 1.7 * 8);
-    }
-
-    .hero-right.card-slider {
-        height: 450px;
-    }
-
-    .slider__holder {
-        height: 400px;
-    }
-
-    .slider__item {
-        width: 240px;
-        height: 360px;
-    }
+    /* Hero scroll-story ตอนนี้ responsive ในตัวเองแล้ว (ดู @media (max-width: 850px)
+       ในบล็อก HERO SECTION ด้านบน) จึงไม่ต้อง override ที่นี่อีก */
 
     .section-title {
         font-size: 2rem;
@@ -445,7 +673,12 @@ html {
     }
 
     .service-card {
-        padding: 30px 20px;
+        min-height: 220px;
+        padding: 28px 22px;
+    }
+
+    .service-body {
+        max-width: 58%;
     }
 
     /* VI Section Mobile */
@@ -479,23 +712,6 @@ html {
 
 /* Extra Small Screens (max-width: 480px) */
 @media (max-width: 480px) {
-    .hero-left h1 {
-        font-size: 2rem;
-    }
-    
-    .hero-right.card-slider {
-        height: 400px;
-    }
-
-    .slider__holder {
-        height: 350px;
-    }
-
-    .slider__item {
-        width: 200px;
-        height: 300px;
-    }
-
     .logo-box {
         max-width: 180px;
     }

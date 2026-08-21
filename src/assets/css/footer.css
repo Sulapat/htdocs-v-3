@@ -27,13 +27,20 @@ body {
 
 /* Layout: contact | links | social — matches the HTML source order,
    so no order/grid-area tricks are needed to keep columns in place.
-   Columns are sized exactly to their content (flex: 0 0 auto) and
-   space-between spaces them evenly, so gaps stay visually consistent
-   no matter how long the text in each column is. */
+   ✅ FIX v2: การ fix ความกว้าง .footer-contact ตายตัว (320px) + margin-left:auto
+   บน .footer-social แก้ปัญหาตำแหน่งขยับได้ แต่ทำให้ทุกอย่างไปกองชิดซ้าย
+   ไม่ได้อยู่กึ่งกลาง footer จริงๆ
+
+   เปลี่ยนมาใช้เทคนิค "flex sandwich": ให้ .footer-contact และ .footer-social
+   (ซ้าย/ขวาของ .footer-links) เป็น flex: 1 1 0 เท่ากันทั้งคู่ — ไม่ว่าเนื้อหา
+   ข้างในแต่ละฝั่งจะยาวสั้นแค่ไหน (ที่อยู่ไทย/อังกฤษยาวไม่เท่ากัน) ทั้งสองฝั่ง
+   จะถูกบังคับให้ "กว้างเท่ากันเสมอ" (แบ่งพื้นที่ที่เหลือคนละครึ่งเป๊ะ)
+   ผลคือ .footer-links ตรงกลางอยู่กึ่งกลาง container จริงๆ ตามคณิตศาสตร์
+   (ซ้าย = ขวา เสมอ) ไม่ผูกกับความยาวข้อความฝั่งไหนเลย ไม่ต้องพึ่ง
+   margin-left:auto หรือความกว้างตายตัวอีกต่อไป */
 .footer-container {
     display: flex;
     align-items: flex-start;
-    justify-content: space-between;
     flex-wrap: nowrap;
     gap: 2rem;
     max-width: 1200px;
@@ -41,7 +48,8 @@ body {
 }
 
 .footer-col {
-    flex: 0 0 auto;
+    flex: 1 1 0;
+    min-width: 0;
 }
 
 .footer-contact {
@@ -49,6 +57,9 @@ body {
 }
 
 .footer-links {
+    /* คอลัมน์กลาง: ไม่ต้อง flex-grow เพราะกว้างเท่าเนื้อหาจริงพอ
+       (ซ้าย/ขวาที่ grow เท่ากันจะดันให้มันอยู่กึ่งกลางเองโดยอัตโนมัติ) */
+    flex: 0 0 auto;
     text-align: left;
     white-space: nowrap;
 }
@@ -109,7 +120,11 @@ body {
 .footer-social {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* เดิม align-items:center + margin-left:auto (ดันทั้งกล่องไปชิดขวา)
+       ตอนนี้กล่องนี้ grow เท่ากับ .footer-contact แล้ว (อาจกว้างกว่าตัว
+       ไอคอน/QR จริง) เปลี่ยนเป็น flex-end ให้เนื้อหาชิดขอบขวาของกล่องแทน
+       ผลลัพธ์ภาพเหมือนเดิม (ไอคอน/QR ชิดขอบขวาสุดของ footer) */
+    align-items: flex-end;
     justify-content: flex-start;
     text-align: center;
 }
@@ -205,6 +220,10 @@ body {
     .footer-social {
         flex: 1 1 100%;
         order: 3;
+        /* บนมือถือ .footer-social กว้างเต็มแถวอยู่แล้ว (ไม่ได้ sandwich กับ
+           .footer-contact อีกต่อไป) เลยกลับไปจัดกึ่งกลางแบบเดิม แทน flex-end
+           ที่ตั้งไว้สำหรับ layout desktop โดยเฉพาะ */
+        align-items: center;
     }
 
     .footer-contact h3,
