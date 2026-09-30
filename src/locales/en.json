@@ -103,12 +103,16 @@
         "trainingSeminar": {
           "title": "Training & Academic Seminars",
           "items": {
-            "cbm": {
-              "title": "TGI CBM Technical Seminar",
+            "cbm2026": {
+              "title": "TGI CBM Technical Seminar 2026",
+              "description": "Patineer and SVEC joint exhibition booth at a Condition-Based Maintenance seminar, sharing international-standard machinery analysis technology."
+            },
+            "cbm2025": {
+              "title": "TGI CBM Technical Seminar 2025",
               "description": "Joint exhibition booth at a Condition-Based Maintenance seminar, sharing international-standard machinery analysis technology."
             },
             "mtc": {
-              "title": "Patineer MTC Seminar",
+              "title": "Patineer MTC Seminar 2025",
               "description": "A knowledge and technology exchange seminar on engineering inspection and machine maintenance, organized by the Patineer team."
             },
             "inHouseTraining": {

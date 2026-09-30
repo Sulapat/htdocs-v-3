@@ -32,25 +32,25 @@
                         :class="{ open: viDropOpen }">
                       <li>
                         <router-link to="/result?course=BMV" @click="closeAll">
-                          <span class="nav-drop-dot dot-bmv"></span>
+                          <span class="nav-drop-dot" :style="{ background: categoryColors.BMV }"></span>
                           {{ $t('nav.bmv') }}
                         </router-link>
                       </li>
                       <li>
                         <router-link to="/result?course=C2VA" @click="closeAll">
-                          <span class="nav-drop-dot dot-va2"></span>
+                          <span class="nav-drop-dot" :style="{ background: categoryColors.C2VA }"></span>
                           {{ $t('nav.c2va') }}
                         </router-link>
                       </li>
                       <li>
                         <router-link to="/result?course=C3VA" @click="closeAll">
-                          <span class="nav-drop-dot dot-va3"></span>
+                          <span class="nav-drop-dot" :style="{ background: categoryColors.C3VA }"></span>
                           {{ $t('nav.c3va') }}
                         </router-link>
                       </li>
                       <li>
                         <router-link to="/result?course=C4VA" @click="closeAll">
-                          <span class="nav-drop-dot dot-va4"></span>
+                          <span class="nav-drop-dot" :style="{ background: categoryColors.C4VA }"></span>
                           {{ $t('nav.c4va') }}
                         </router-link>
                       </li>
@@ -95,6 +95,8 @@
 </template>
 
 <script>
+import { getCategories } from '@/services/api.js';
+
 export default {
   name: 'AppNav',
   data() {
@@ -106,7 +108,20 @@ export default {
       // ก็ตาม เพราะช่องว่างจริงระหว่างโลโก้กับปุ่มเปลี่ยนภาษาแคบกว่าความกว้างเมนู (ดู checkNavFit)
       isCompact: false,
       // currentLang อ่านจาก vue-i18n locale ปัจจุบัน (sync กับ localStorage ผ่าน i18n.js)
-      currentLang: this.$i18n.locale
+      currentLang: this.$i18n.locale,
+      // ── สีจุด dot ใน dropdown "VI Certified Analysts" ──
+      // ✅ FIX: เดิม hardcode สีไว้ตรงๆ ใน nav.css (.dot-bmv/.dot-va2/.dot-va3/.dot-va4)
+      // ซึ่งเป็นคนละ "แหล่งความจริง" กับสีแท็กหมวดหมู่ในหน้า Courses.vue ที่ดึงจาก
+      // getCategories() (API เดียวกัน) ทำให้สีสองที่ไม่ตรงกัน (เช่น BMV เขียวใน nav
+      // แต่ม่วงในการ์ด Courses) ตอนนี้ดึงจาก API เดียวกับ Courses.vue ตรงนี้แทน
+      // ให้ค่าเริ่มต้น (fallback) เป็นสีเดิมไว้ก่อน เผื่อ API ยังโหลดไม่เสร็จ/ล้มเหลว
+      // dropdown จะได้ไม่ว่างเปล่าไม่มีสีเลย
+      categoryColors: {
+        BMV:  '#10b981',
+        C2VA: '#3b82f6',
+        C3VA: '#f59e0b',
+        C4VA: '#ef4444'
+      }
     }
   },
   // เพิ่ม Watcher เพื่อจับการเปลี่ยนแปลงของตัวแปรเปิด/ปิดเมนู
@@ -128,6 +143,10 @@ export default {
     window.addEventListener('resize', this.handleResize);
     window.addEventListener('scroll', this.handleNavbarScroll);
     document.addEventListener('click', this.handleClickOutside);
+
+    // โหลดสีจริงของแต่ละหมวดจาก API (แหล่งเดียวกับที่ Courses.vue ใช้) มาทับค่า fallback
+    // ไม่ต้อง await เพราะ dropdown ใช้ fallback แสดงไปก่อนได้ระหว่างรอ ไม่บล็อก mount
+    this.loadCategoryColors();
 
     // เช็คว่าเมนูจะทับกับโลโก้/ปุ่มเปลี่ยนภาษาไหมตั้งแต่โหลดหน้าแรก
     // ใช้ document.fonts.ready เพราะฟอนต์โหลดช้ากว่า DOM มักทำให้วัดความกว้างข้อความผิดถ้าเช็คเร็วเกินไป
@@ -166,13 +185,31 @@ export default {
     document.removeEventListener('click', this.handleClickOutside);
   },
   methods: {
+    // ── โหลดสีหมวดหมู่จาก API เดียวกับ Courses.vue ──
+    // ผูก dropdown นี้กับ "แหล่งความจริง" เดียวกับที่การ์ด Courses ใช้ ไม่ต้อง sync มือ
+    // ไม่ผูกกับ locale เพราะ 'color' เป็นค่าคงที่ต่อหมวด ไม่เปลี่ยนตามภาษา (ต่างจาก label)
+    // เรียกครั้งเดียวตอน mount พอ ไม่ต้องดึงซ้ำตอนสลับภาษา
+    async loadCategoryColors() {
+      try {
+        const categoriesData = await getCategories(this.$i18n.locale);
+        const merged = { ...this.categoryColors };
+        categoriesData.forEach(c => {
+          if (c.code && c.color) merged[c.code] = c.color;
+        });
+        this.categoryColors = merged;
+      } catch (e) {
+        // เงียบไว้พอ ไม่ให้ navbar พังเพราะ fetch สีพลาด — ใช้สี fallback ที่ตั้งไว้ต่อไป
+        console.warn('โหลดสีหมวดหมู่ไม่สำเร็จ ใช้สี fallback แทน:', e);
+      }
+    },
     // ฟังก์ชันสำหรับล็อคและปลดล็อค Scroll แบบเด็ดขาด
     toggleBodyScroll(isLock) {
       const body = document.body;
       if (isLock) {
         body.style.overflow = 'hidden';
         body.style.height = '100vh'; // บังคับความสูงเท่าหน้าจอ
-        body.style.touchAction = 'none'; // ปิดการสัมผัสเพื่อเลื่อนบนมือถือ
+        // ไม่ตั้ง touch-action:none ที่ body แล้ว เพราะจะบล็อกการปัด/ลากเลื่อนภายในเมนู hamburger ด้วย
+        // (เมนูใช้ overscroll-behavior:contain กันการเลื่อนทะลุไปหน้าเว็บด้านหลังแทน)
       } else {
         body.style.overflow = '';
         body.style.height = '';

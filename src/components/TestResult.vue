@@ -31,7 +31,7 @@
                 aria-haspopup="listbox"
               >
                 <span class="dropdown-trigger-label">
-                  <span class="dropdown-dot" :class="dotClass(selectedCourse)"></span>
+                  <span class="dropdown-dot" :class="dotClass(selectedCourse)" :style="dotColor(selectedCourse) ? { background: dotColor(selectedCourse) } : {}"></span>
                   {{ courseOptions.find(c => c.value === selectedCourse)?.label }}
                 </span>
                 <svg class="dropdown-chevron" xmlns="https://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -55,7 +55,7 @@
                     role="option"
                     @click="onSelectCourse(course.value)"
                   >
-                    <span class="dropdown-dot" :class="dotClass(course.value)"></span>
+                    <span class="dropdown-dot" :class="dotClass(course.value)" :style="dotColor(course.value) ? { background: dotColor(course.value) } : {}"></span>
                     <span class="dropdown-item-label">{{ course.label }}</span>
                     <svg v-if="selectedCourse === course.value" class="dropdown-check" xmlns="https://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                       <polyline points="20 6 9 17 4 12"/>
@@ -139,7 +139,7 @@
               </div>
             </div>
             <div class="result-level-row">
-              <span v-for="tag in parseLevelTags(result.certifications)" :key="tag.code" class="result-course-tag" :class="tag.class">
+              <span v-for="tag in parseLevelTags(result.certifications)" :key="tag.code" class="result-course-tag" :class="tag.class" :style="tag.color ? { '--tag-color': tag.color } : {}">
                 {{ tag.code }}
               </span>
             </div>
@@ -193,7 +193,7 @@
               </div>
             </div>
             <div class="result-level-row">
-              <span v-for="tag in parseLevelTags(result.certifications)" :key="tag.code" class="result-course-tag" :class="tag.class">
+              <span v-for="tag in parseLevelTags(result.certifications)" :key="tag.code" class="result-course-tag" :class="tag.class" :style="tag.color ? { '--tag-color': tag.color } : {}">
                 {{ tag.code }}
               </span>
             </div>
@@ -215,9 +215,9 @@ import { ref, watch, computed, nextTick, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 // ✅ เอา mock data (sampledata.js) ออก เปลี่ยนมาใช้ getMembers จริงจาก api.js
-import { getMembers } from '@/services/api.js'
+import { getMembers, getCategories } from '@/services/api.js'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 // โหลดรูปภาพทั้งหมดใน assets/images/candidates/ ชื่อไฟล์ตรงกับ id (เช่น 1.png, 2.png)
 const candidateImages = import.meta.glob('@/assets/images/candidates/*.{png,jpg,jpeg,webp}', { eager: true })
@@ -238,6 +238,44 @@ const COURSE_TO_CERT = {
   C2VA: 'CATII',
   C3VA: 'CATIII',
   C4VA: 'CATIV',
+}
+
+// ทิศทางกลับของ COURSE_TO_CERT (cert_code -> course key) ไว้ map สีแท็กบนการ์ด
+// ให้ตรงกับ key ที่ categoryColors ใช้ (BMV/C2VA/C3VA/C4VA) — cert_code (CATII ฯลฯ)
+// เป็นค่าที่ backend ส่งมา ไม่ใช่ key เดียวกับที่ categoryColors ใช้เก็บสี
+const CERT_TO_COURSE = {
+  BMV:    'BMV',
+  CATII:  'C2VA',
+  CATIII: 'C3VA',
+  CATIV:  'C4VA',
+}
+
+// ── สีแท็กบนการ์ด — ผูกกับ "แหล่งความจริง" เดียวกับ dropdown ใน nav.vue (getCategories API) ──
+// ✅ FIX: เดิมสีของ .result-course-tag ถูก hardcode แยกไว้ใน styles.css (.tag-bmv/.tag-va2/...)
+// เป็นคนละแหล่งกับสีที่ nav.vue ใช้ (hardcode แยกอีกชุด) ทำให้สี BMV ในการ์ด (ม่วง) ไม่ตรง
+// กับสี BMV ใน dropdown navbar (เขียว) — ตอนนี้ดึงจาก API เดียวกันแทน
+// ⚠️ สำคัญ: ค่า fallback ด้านล่างต้องตรงกับ categoryColors ใน nav.vue เป๊ะ ๆ (ไม่ใช่ค่าสีเดิม
+// ของการ์ด) เพราะถ้า API ช้า/ล้มเหลว/คืน code ไม่ตรงกับที่คาด ทั้งสองที่จะใช้ fallback ของตัวเอง
+// ต่างหาก — ถ้า fallback ไม่ตรงกันสีก็จะไม่ตรงกันเหมือนเดิมไม่ว่า API จะทำงานหรือไม่ก็ตาม
+const categoryColors = ref({
+  BMV:  '#10b981',
+  C2VA: '#3b82f6',
+  C3VA: '#f59e0b',
+  C4VA: '#ef4444',
+})
+
+async function loadCategoryColors() {
+  try {
+    const categoriesData = await getCategories(locale.value)
+    const merged = { ...categoryColors.value }
+    categoriesData.forEach(c => {
+      if (c.code && c.color) merged[c.code] = c.color
+    })
+    categoryColors.value = merged
+  } catch (e) {
+    // เงียบไว้พอ ไม่ให้หน้าพังเพราะ fetch สีพลาด — ใช้สี fallback ต่อไป
+    console.warn('โหลดสีหมวดหมู่ไม่สำเร็จ ใช้สี fallback แทน:', e)
+  }
 }
 
 // ── ดึงสมาชิกทั้งหมดจาก backend ครั้งเดียว แล้ว filter เองฝั่ง frontend ──
@@ -316,6 +354,8 @@ onMounted(() => {
     selectedCourse.value = courseParam
   }
   loadMembers()
+  // ไม่ await เพราะการ์ดใช้สี fallback แสดงไปก่อนได้ระหว่างรอ ไม่บล็อก mount (เหมือน nav.vue)
+  loadCategoryColors()
 })
 onUnmounted(() => {
   document.removeEventListener('click', handleGlobalClick)
@@ -345,6 +385,15 @@ const dotClass = (val) => ({
   'dot-va3': val === 'C3VA',
   'dot-va4': val === 'C4VA',
 })
+
+// ✅ FIX: จุดสีใน dropdown ค้นหานี้เดิมพึ่งพา .dot-bmv/.dot-va2/... ที่ hardcode สีแยกไว้ใน
+// styles.css (คนละแหล่งกับ categoryColors ที่การ์ด/nav dropdown ใช้) เลยไม่ตรงกันอีกจุดหนึ่ง
+// ตอนนี้ดึงจาก categoryColors ตัวเดียวกันแทน — 'ALL' ไม่มีสีต่อหมวดจริง จึงคงสีเทาเดิมไว้
+// (ปล่อยให้ .dot-all ใน CSS handle แทน ไม่ผูกกับ API)
+const dotColor = (val) => {
+  const course = val === 'ALL' ? null : val
+  return course ? categoryColors.value[course] : null
+}
 
 // ── กันไม่ให้เห็น footer เวลาสลับหมวดหมู่แล้วเนื้อหาสั้นลง ──
 // dropdown ตัวนี้เป็น sticky ตำแหน่ง scroll เดิมจะถูกคงไว้ตอนเปลี่ยนหมวดหมู่ (ไม่เด้งกลับขึ้นบนสุด)
@@ -434,18 +483,22 @@ const pagedSearchData  = computed(() => {
 })
 
 // รับ certifications จาก backend เป็น comma-joined string เช่น "CATII,CATIII" (มาจาก GROUP_CONCAT)
+// tag.color มาจาก categoryColors (API เดียวกับ dropdown ใน nav.vue) แทนที่จะพึ่ง --tag-color
+// ที่ hardcode แยกไว้ใน styles.css เพียงอย่างเดียว — ให้สีตรงกับ dropdown เสมอไม่ว่า backend
+// จะกำหนดสีเป็นอะไรก็ตาม ไม่ต้อง sync มือ 2 ที่ (class ยังคงไว้เผื่อ API ล้มเหลว/โหลดไม่เสร็จ
+// จะได้มีสี fallback จาก CSS ไปก่อน)
 const parseLevelTags = (certifications = '') => {
   const codes = String(certifications || '').split(',').map(c => c.trim()).filter(Boolean)
   const tags = []
   if (codes.includes('CATIV'))
-    tags.push({ code: 'CAT-IV', label: 'Category IV Vibration Analyst', class: 'tag-va4' })
+    tags.push({ code: 'CAT-IV', label: 'Category IV Vibration Analyst', class: 'tag-va4', color: categoryColors.value[CERT_TO_COURSE.CATIV] })
   if (codes.includes('CATIII'))
-    tags.push({ code: 'CAT-III', label: 'Category III Vibration Analyst', class: 'tag-va3' })
+    tags.push({ code: 'CAT-III', label: 'Category III Vibration Analyst', class: 'tag-va3', color: categoryColors.value[CERT_TO_COURSE.CATIII] })
   if (codes.includes('CATII'))
-    tags.push({ code: 'CAT-II', label: 'Category II Vibration Analyst', class: 'tag-va2' })
+    tags.push({ code: 'CAT-II', label: 'Category II Vibration Analyst', class: 'tag-va2', color: categoryColors.value[CERT_TO_COURSE.CATII] })
   if (codes.includes('BMV'))
-    tags.push({ code: 'BMV', label: 'Basic Machinery Vibration', class: 'tag-bmv' })
-  return tags.length ? tags : [{ code: certifications || '-', label: certifications || '-', class: 'tag-default' }]
+    tags.push({ code: 'BMV', label: 'Basic Machinery Vibration', class: 'tag-bmv', color: categoryColors.value[CERT_TO_COURSE.BMV] })
+  return tags.length ? tags : [{ code: certifications || '-', label: certifications || '-', class: 'tag-default', color: null }]
 }
 
 const cardBorderColor = (index, total) => {

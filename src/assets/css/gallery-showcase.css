@@ -405,11 +405,53 @@
   border-radius: 999px;
 }
 
-.gs-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+/* ── Carousel: แสดง 4 การ์ด เลื่อนซ้าย/ขวาได้ ── */
+.gs-carousel {
+  --gs-cards-visible: 4;
+  --gs-cards-gap: 1.5rem;
+  position: relative;
 }
+
+.gs-cards-grid {
+  display: flex;
+  gap: var(--gs-cards-gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 6px 2px 14px;   /* เผื่อพื้นที่ให้ hover/เงา ไม่ถูกตัด */
+  margin: -6px -2px -14px;
+}
+.gs-cards-grid::-webkit-scrollbar { display: none; }
+
+.gs-cards-grid .gs-card {
+  flex: 0 0 calc((100% - (var(--gs-cards-visible) - 1) * var(--gs-cards-gap)) / var(--gs-cards-visible));
+  scroll-snap-align: start;
+  height: auto;
+}
+
+.gs-carousel-btn {
+  position: absolute;
+  top: 38%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--gs-line);
+  background: #fff;
+  color: var(--gs-navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 20px -6px rgba(14, 42, 94, 0.3);
+  transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+.gs-carousel-btn:hover:not(:disabled) { background: var(--gs-accent); color: #fff; border-color: var(--gs-accent); }
+.gs-carousel-btn:disabled { opacity: 0; pointer-events: none; }
+.gs-carousel-btn--prev { left: -22px; }
+.gs-carousel-btn--next { right: -22px; }
 
 .gs-card {
   display: flex;
@@ -527,12 +569,14 @@
 .gs-lightbox {
   position: fixed;
   inset: 0;
-  z-index: 999;
+  z-index: 100000;            /* สูงกว่า navbar ทุกชั้น */
   background: rgba(10, 18, 38, 0.88);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  padding-top: max(2rem, env(safe-area-inset-top));
+  padding-bottom: max(2rem, env(safe-area-inset-bottom));
 }
 
 .gs-modal-fade-enter-active, .gs-modal-fade-leave-active { transition: opacity 0.25s ease; }
@@ -542,6 +586,7 @@
   width: 100%;
   max-width: 860px;
   max-height: 90vh;
+  max-height: 90dvh;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -650,6 +695,32 @@
   .gs-lightbox-nav { width: 38px; height: 38px; }
 }
 
+/* ── มือถือ/แนวนอน (จอเตี้ย): ปุ่มปิดลอยมุมขวาบน มองเห็นเสมอ ไม่ชน navbar ── */
+@media (max-width: 560px), (max-height: 520px) {
+  .gs-lightbox-close {
+    position: fixed;
+    top: max(0.6rem, env(safe-area-inset-top));
+    right: max(0.6rem, env(safe-area-inset-right));
+    z-index: 5;
+    width: 42px;
+    height: 42px;
+    background: rgba(10, 18, 38, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(4px);
+  }
+  .gs-lightbox-header { display: contents; }
+  .gs-lightbox-title { display: none; }
+  .gs-lightbox-close { display: flex; align-items: center; justify-content: center; }
+}
+
+@media (max-height: 520px) {
+  .gs-lightbox { padding: 0.5rem 3.5rem; }
+  .gs-lightbox-panel { max-height: 100%; height: 100%; gap: 0.4rem; }
+  .gs-lightbox-stage { aspect-ratio: auto; flex: 1 1 auto; min-height: 0; }
+  .gs-lightbox-thumbs { display: none; }
+  .gs-lightbox-count { font-size: 0.75rem; }
+}
+
 /* ── Responsive ── */
 @media (max-width: 960px) {
   .gs-hero { padding: calc(80px + 2rem) 5% 2rem; }
@@ -706,7 +777,7 @@
   /* การ์ดในแถวเลื่อนแนวนอน: ลดจาก 260px ให้เห็นการ์ดถัดไปโผล่มาบางส่วน (ใบ้ว่าเลื่อนได้) ชัดขึ้นบนจอแคบ */
   .gs-row-photo { flex-basis: 220px; }
 
-  .gs-cards-grid { grid-template-columns: repeat(2, 1fr); }
+  .gs-carousel { --gs-cards-visible: 2; }
   .gs-stats-bar { grid-template-columns: repeat(2, 1fr); }
 }
 
@@ -720,7 +791,9 @@
   .gs-rows-section { padding: 2.5rem 5%; }
   .gs-row { margin-bottom: 2rem; }
   .gs-row-photo { flex-basis: 200px; }
-  .gs-cards-grid { grid-template-columns: 1fr; }
+  .gs-carousel { --gs-cards-visible: 1; }
+  .gs-carousel-btn--prev { left: -8px; }
+  .gs-carousel-btn--next { right: -8px; }
   .gs-stats-bar { grid-template-columns: 1fr; }
   .gs-cta { flex-direction: column; align-items: flex-start; }
 }

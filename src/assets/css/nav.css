@@ -235,6 +235,72 @@
 }
 
 /* =============================================
+   Mobile / Compact menu — จำกัดความสูงไม่ให้เลยขอบจอ + scrollbar มินิมอล
+   เมื่อกางหัวข้อ VI Certified Analysts แล้วเมนูยาวเกินจอ จะเลื่อนขึ้นลงได้ในตัวเมนูเอง
+   (overflow ใส่เฉพาะโหมด hamburger เท่านั้น — บนเดสก์ท็อป dropdown เป็น absolute
+   ถ้าใส่ overflow ไว้จะถูกตัดหาย)
+   ============================================= */
+@media (max-width: 768px) {
+    .nav-links {
+        max-height: calc(100vh - 82px);    /* 70px (top) + 12px เว้นขอบล่าง */
+        max-height: calc(100dvh - 82px);   /* dvh: ไม่โดนแถบ address bar มือถือบัง */
+        overflow-y: auto;
+        overflow-x: hidden;
+        overscroll-behavior: contain;      /* เลื่อนสุดแล้วไม่ดันหน้าเว็บด้านหลัง */
+        touch-action: pan-y;               /* อนุญาตให้ปัด/ลากเลื่อนแนวตั้งด้วยนิ้ว */
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;             /* Firefox */
+        scrollbar-color: #cbd5e1 transparent;
+    }
+    .nav-links::-webkit-scrollbar {
+        width: 8px;
+    }
+    .nav-links::-webkit-scrollbar-track {
+        background: transparent;
+        margin: 10px 0;                    /* ไม่ให้ track ชนมุมโค้งของกล่อง */
+    }
+    .nav-links::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 999px;
+        border: 2px solid transparent;     /* เว้นขอบให้ thumb ดูเรียวบาง */
+        background-clip: padding-box;
+    }
+    .nav-links::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+        background-clip: padding-box;
+    }
+}
+
+#navbar.nav-compact .nav-links {
+    max-height: calc(100vh - 82px);
+    max-height: calc(100dvh - 82px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+#navbar.nav-compact .nav-links::-webkit-scrollbar {
+    width: 8px;
+}
+#navbar.nav-compact .nav-links::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 10px 0;
+}
+#navbar.nav-compact .nav-links::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+#navbar.nav-compact .nav-links::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+    background-clip: padding-box;
+}
+
+/* =============================================
    Language Switch — segmented pill toggle
    เข้าธีมสีน้ำเงินเดียวกับ nav-dropdown / dot-va2
    ============================================= */
@@ -399,10 +465,11 @@
     flex-shrink: 0;
 }
 .dot-all { background: #94a3b8; }
-.dot-bmv { background: #10b981; }
-.dot-va2 { background: #3b82f6; }
-.dot-va3 { background: #f59e0b; }
-.dot-va4 { background: #ef4444; }
+/* ✅ สีเฉพาะหมวด (BMV/C2VA/C3VA/C4VA) ไม่ hardcode ไว้ที่นี่แล้ว —
+   ย้ายไปดึงจาก getCategories() (API เดียวกับที่ Courses.vue ใช้ทำสีแท็กในการ์ด)
+   แล้วเซตผ่าน inline style ใน nav.vue โดยตรง (ดู categoryColors ใน nav.vue)
+   เพื่อให้สีตรงกันเสมอไม่ว่า backend จะกำหนดสีเป็นอะไรก็ตาม ไม่ต้อง sync มือ 2 ที่
+   (.dot-all คงไว้เพราะเป็นจุด "ทั้งหมด" แยกต่างหาก ไม่เกี่ยวกับสีต่อหมวดที่เพี้ยน) */
 
 /* Mobile: dropdown แบบ inline แทน absolute */
 @media (max-width: 768px) {

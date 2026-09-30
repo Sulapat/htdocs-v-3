@@ -33,10 +33,27 @@ const routes = [
   { path: '/showcase', component: GalleryShowcase },
 ]
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes,
   scrollBehavior() {
     return { top: 0 }
   }
 })
+
+// ✅ FIX: บัค footer ค้าง/เบลอเฉพาะหน้า /courses
+// Courses.vue เก็บตำแหน่ง scroll ไว้ใน sessionStorage ('coursesScrollY') ตอนกดเข้าไปดู
+// course detail แล้วดึงกลับมาเลื่อน scroll กลับตำแหน่งเดิมตอน mount ใหม่ — ค่านี้ควรมีอายุ
+// แค่ "course detail -> กลับมา /courses" เที่ยวเดียวเท่านั้น แต่ sessionStorage อยู่ข้ามทั้ง
+// session ถ้าผู้ใช้ออกจากหน้า detail ไปที่อื่น (เช่น /clients) แทนที่จะกลับมา /courses ตรง ๆ
+// ค่าเก่าจะยังค้างอยู่ แล้วถูกดึงมาใช้ผิด ๆ ตอนวนกลับมา /courses ทีหลังจากหน้าอื่น ทำให้
+// scrollTo กระโดดไปตำแหน่งลึกที่ไม่สัมพันธ์กับเนื้อหาจริง จนไปชนกับ reveal ของ footer
+// ล้างทิ้งทุกครั้งที่ "หน้าก่อนหน้า" ไม่ใช่ course detail — รันด้วย beforeEach เพราะยืนยันได้ว่า
+// ทำงานก่อน Courses.vue mount แน่นอน (ต่างจาก afterEach ที่อาจชนจังหวะกับ onMounted)
+router.beforeEach((to, from) => {
+  if (to.path === '/courses' && !/^\/courses\//.test(from.path)) {
+    sessionStorage.removeItem('coursesScrollY')
+  }
+})
+
+export default router

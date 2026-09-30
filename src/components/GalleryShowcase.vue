@@ -118,7 +118,18 @@
     <section v-if="cardCategory" class="gs-cards-section">
       <h2 class="gs-cards-title">{{ cardCategory.title }}</h2>
 
-      <div class="gs-cards-grid">
+      <div class="gs-carousel">
+        <button
+          type="button"
+          class="gs-carousel-btn gs-carousel-btn--prev"
+          :disabled="cardsAtStart"
+          :aria-label="$t('service.gallery.ui.prev')"
+          @click="scrollCards(-1)"
+        >
+          <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <div class="gs-cards-grid" ref="cardsTrack" @scroll.passive="updateCardsEdge">
         <div
           v-for="item in cardCategory.items"
           :key="item.slug"
@@ -141,6 +152,17 @@
             </span>
           </div>
         </div>
+        </div>
+
+        <button
+          type="button"
+          class="gs-carousel-btn gs-carousel-btn--next"
+          :disabled="cardsAtEnd"
+          :aria-label="$t('service.gallery.ui.next')"
+          @click="scrollCards(1)"
+        >
+          <i class="fas fa-chevron-right"></i>
+        </button>
       </div>
     </section>
 
@@ -148,6 +170,8 @@
     <!-- ============================================
          Lightbox — popup แสดงรูปทั้งหมดของแต่ละหัวข้อ เลื่อนดูได้
          ============================================ -->
+    <!-- Teleport ไปที่ body เพื่อให้อยู่เหนือ navbar เสมอ (ไม่ติด stacking context ของหน้า) -->
+    <teleport to="body">
     <transition name="gs-modal-fade">
       <div
         v-if="lightboxOpen"
@@ -216,6 +240,7 @@
         </div>
       </div>
     </transition>
+    </teleport>
   </div>
 </template>
 
@@ -237,6 +262,25 @@ function getGalleryImages(categorySlug, itemSlug) {
     .map(path => galleryImages[path].default)
 }
 
+// ── ค้นหาโฟลเดอร์ CBMxxxx อัตโนมัติ ──
+// โฟลเดอร์ที่ชื่อขึ้นต้น CBM ตามด้วยปี 4 หลัก (เช่น CBM2025, CBM2026, CBM2027)
+// จะถูกสร้างเป็นการ์ดเองทันที ไม่ต้องแก้โค้ด — แค่เพิ่มรูปลงโฟลเดอร์
+// เรียงปีใหม่สุดขึ้นก่อน
+function discoverCbmItems() {
+  const years = new Set()
+  Object.keys(galleryImages).forEach(path => {
+    const m = path.match(/\/images\/gallery\/training_academic_seminar\/CBM(\d{4})\//i)
+    if (m) years.add(m[1])
+  })
+  return [...years]
+    .sort((a, b) => b - a)
+    .map(year => ({
+      itemKey: `cbm${year}`,   // key ใน th.json / en.json
+      slug: `CBM${year}`,      // ชื่อโฟลเดอร์รูป
+      fallbackTitle: `CBM ${year}`
+    }))
+}
+
 export default {
   name: 'GalleryShowcase',
   data() {
@@ -244,6 +288,10 @@ export default {
       heroSlide: 0,
       heroTimer: null,
       rowScrollRefs: {},
+
+      // ── Cards carousel (อบรม/สัมมนา) ──
+      cardsAtStart: true,
+      cardsAtEnd: false,
 
       // ── Lightbox / popup ──
       lightboxOpen: false,
@@ -269,7 +317,7 @@ export default {
           categoryKey: 'trainingSeminar',
           slug: 'training_academic_seminar',
           items: [
-            { itemKey: 'cbm', slug: 'CBM' },
+            ...discoverCbmItems(),
             { itemKey: 'mtc', slug: 'MTC' },
             { itemKey: 'inHouseTraining', slug: 'in_house_training' },
             { itemKey: 'publicTraining', slug: 'public_training' }
@@ -283,8 +331,9 @@ export default {
         description: this.$t(`service.gallery.categories.${category.categoryKey}.description`),
         items: category.items.map(item => ({
           slug: item.slug,
-          title: this.$t(`service.gallery.categories.${category.categoryKey}.items.${item.itemKey}.title`),
-          description: this.$t(`service.gallery.categories.${category.categoryKey}.items.${item.itemKey}.description`),
+          // ถ้ายังไม่ได้เพิ่มข้อความใน json → ใช้ชื่อสำรอง (เช่น "CBM 2027") และไม่แสดงรายละเอียด
+          title: this.tOr(`service.gallery.categories.${category.categoryKey}.items.${item.itemKey}.title`, item.fallbackTitle || item.slug),
+          description: this.tOr(`service.gallery.categories.${category.categoryKey}.items.${item.itemKey}.description`, ''),
           images: getGalleryImages(category.slug, item.slug)
         }))
       }))
@@ -311,12 +360,23 @@ export default {
   },
   mounted() {
     this.startHeroAutoplay()
+    window.addEventListener('resize', this.updateCardsEdge)
+    this.$nextTick(this.updateCardsEdge)
+  },
+  watch: {
+    // ภาษาเปลี่ยน → คำนวณสถานะปุ่มใหม่
+    cardCategory() { this.$nextTick(this.updateCardsEdge) }
   },
   beforeUnmount() {
     clearInterval(this.heroTimer)
+    window.removeEventListener('resize', this.updateCardsEdge)
     document.removeEventListener('keydown', this.onLightboxKeydown)
   },
   methods: {
+    // แปลข้อความ ถ้าไม่มี key ใน json ให้คืนค่า fallback แทนการโชว์ชื่อ key
+    tOr(key, fallback) {
+      return this.$te(key) ? this.$t(key) : fallback
+    },
     startHeroAutoplay() {
       clearInterval(this.heroTimer)
       this.heroTimer = setInterval(() => {
@@ -343,6 +403,22 @@ export default {
       const maxScroll = el.scrollWidth - el.clientWidth
       const next = el.scrollLeft + cardWidth + 16
       el.scrollTo({ left: next > maxScroll ? 0 : next, behavior: 'smooth' })
+    },
+
+    // ── Cards carousel: เลื่อนทีละ 1 การ์ด ──
+    scrollCards(dir) {
+      const el = this.$refs.cardsTrack
+      if (!el) return
+      const card = el.querySelector('.gs-card')
+      if (!card) return
+      const gap = parseFloat(getComputedStyle(el).columnGap) || 0
+      el.scrollBy({ left: dir * (card.offsetWidth + gap), behavior: 'smooth' })
+    },
+    updateCardsEdge() {
+      const el = this.$refs.cardsTrack
+      if (!el) return
+      this.cardsAtStart = el.scrollLeft <= 2
+      this.cardsAtEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 2
     },
 
     // ── Lightbox / popup ──

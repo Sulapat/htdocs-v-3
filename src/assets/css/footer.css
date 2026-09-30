@@ -22,7 +22,39 @@ body {
     background: #1a1a1a;
     color: #f1f1f1;
     padding: 2rem 2rem 1rem;
-    position: relative;
+    /* ── Reveal footer ──
+       เดิม position: relative ทำให้ footer อยู่ใน document flow ปกติ (ดันเนื้อหา
+       ก่อนหน้าขึ้นเมื่อ scroll ผ่าน ไม่มี "ซ่อนหลัง" อะไรเลย)
+       เปลี่ยนเป็น fixed ค้างอยู่ล่างสุดของจอตลอดเวลา แล้วให้ z-index ต่ำกว่า
+       .page-content (ดู App.vue) เพื่อให้เนื้อหาหลักซึ่งมีพื้นหลังทึบวางทับอยู่
+       "ข้างหน้า" เสมอ จนกว่าจะ scroll ผ่านช่องว่างท้ายเนื้อหา (margin-bottom
+       ที่เท่ากับความสูง footer พอดี — คำนวณจาก --footer-height ใน App.vue)
+       ตอนนั้น footer ที่ fixed อยู่ตำแหน่งเดิมเป๊ะจะค่อยๆ โผล่ขึ้นมาให้เห็น
+       ตาม progress ของ scroll จริง ไม่ต้องพึ่ง JS ขับ motion เลย */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 0;
+    /* .footer เอง "ไม่ขยับ" ตำแหน่งจริงเลย (fixed อยู่ล่างจอตลอด) — ตัวที่ทำ
+       ให้เกิดความรู้สึก "มุดออกมาจากใต้เนื้อหา" คือ .footer-inner ด้านล่าง
+       เผื่อ overflow ไว้กันเงา/ขอบของ inner ที่เลื่อนออกมาโผล่เกินขอบ footer
+       ตอนยังไม่เผยเต็มที่ */
+    overflow: hidden;
+}
+
+/* ── .footer-inner: เนื้อหาจริงทั้งหมดของ footer ──
+   ขยับ (translateY) + fade (opacity) ตามค่า --reveal-progress ที่ footer.vue
+   คำนวณสดทุกเฟรมตอน scroll (0 = ยังไม่เผยเลย, 1 = เผยเต็มที่/สุด scroll)
+   ทิศทาง translateY: เริ่มที่ +36px (เลื่อนลงไปซ่อนใต้ขอบ footer เอง) แล้วไล่ขึ้น
+   มาที่ 0 พร้อม fade opacity 0 → 1 พร้อมกัน ให้ความรู้สึกเหมือน "โผล่/มุดขึ้นมา"
+   จากใต้เนื้อหาด้านบนแทนที่จะโผล่มาเต็มทันทีแบบไม่มี transition เลย
+   ไม่ใส่ CSS transition เพราะค่าถูกอัปเดตทุกเฟรมของ scroll อยู่แล้ว (1:1 กับ scroll
+   จริง) — ใส่ transition จะทำให้มันวิ่งตามหลัง scroll ไม่ทัน รู้สึกหน่วง/laggy แทน */
+.footer-inner {
+    transform: translateY(calc((1 - var(--reveal-progress, 0)) * 36px));
+    opacity: var(--reveal-progress, 0);
+    will-change: transform, opacity;
 }
 
 /* Layout: contact | links | social — matches the HTML source order,
